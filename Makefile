@@ -2,9 +2,11 @@
 STOW_PACKAGES := shared opencode pi-mono
 STOW          := $(shell command -v stow 2>/dev/null)
 
-# Shared agents source (inside the stow-managed ~/.ai-agents tree)
-AGENTS_SRC    := $(HOME)/.ai-agents/agents
-AGENTS_DST    := $(HOME)/.config/opencode/agents
+# Shared resources → opencode symlink mappings
+# Format: source (under ~/.ai-agents/) → destination (under ~/.config/opencode/)
+SHARED_SRC_BASE := $(HOME)/.ai-agents
+SHARED_DST_BASE := $(HOME)/.config/opencode
+SHARED_LINKS    := agents skills commands rules
 
 .PHONY: help
 help: ## Display this help
@@ -32,7 +34,7 @@ submodules: ## Initialize and update git submodules
 	@echo "✓ Submodules ready"
 
 .PHONY: install
-install: check submodules stow-install link-agents ## Install all packages and extra symlinks
+install: check submodules stow-install link-shared ## Install all packages and extra symlinks
 	@echo "✓ Installation complete"
 
 .PHONY: stow-install
@@ -62,23 +64,27 @@ install-ln: ## Install using ln -s (fallback when stow is unavailable)
 		done; \
 	done
 
-.PHONY: link-agents
-link-agents: ## Create ~/.config/opencode/agents -> ~/.ai-agents/agents symlink
-	@mkdir -p "$(HOME)/.config/opencode"
-	@if [ ! -d "$(AGENTS_SRC)" ]; then \
-		echo "⚠ $(AGENTS_SRC) not found - skipping agents symlink (run stow-install first)"; \
-	elif [ -L "$(AGENTS_DST)" ]; then \
-		ln -sfn "$(AGENTS_SRC)" "$(AGENTS_DST)"; \
-		echo "✓ agents symlink updated: $(AGENTS_DST) -> $(AGENTS_SRC)"; \
-	elif [ -e "$(AGENTS_DST)" ]; then \
-		echo "⚠ $(AGENTS_DST) exists and is not a symlink - skipping (remove it manually)"; \
-	else \
-		ln -sfn "$(AGENTS_SRC)" "$(AGENTS_DST)"; \
-		echo "✓ agents symlink created: $(AGENTS_DST) -> $(AGENTS_SRC)"; \
-	fi
+.PHONY: link-shared
+link-shared: ## Create ~/.config/opencode/{agents,skills,commands,rules} -> ~/.ai-agents/... symlinks
+	@mkdir -p "$(SHARED_DST_BASE)"
+	@for name in $(SHARED_LINKS); do \
+		src="$(SHARED_SRC_BASE)/$$name"; \
+		dst="$(SHARED_DST_BASE)/$$name"; \
+		if [ ! -d "$$src" ]; then \
+			echo "⚠ $$src not found - skipping (run stow-install first)"; \
+		elif [ -L "$$dst" ]; then \
+			ln -sfn "$$src" "$$dst"; \
+			echo "✓ $$name symlink updated: $$dst -> $$src"; \
+		elif [ -e "$$dst" ]; then \
+			echo "⚠ $$dst exists and is not a symlink - skipping (remove it manually)"; \
+		else \
+			ln -sfn "$$src" "$$dst"; \
+			echo "✓ $$name symlink created: $$dst -> $$src"; \
+		fi; \
+	done
 
 .PHONY: uninstall
-uninstall: unlink-agents stow-uninstall ## Uninstall all packages and remove extra symlinks
+uninstall: unlink-shared stow-uninstall ## Uninstall all packages and remove extra symlinks
 	@echo "✓ Uninstallation complete"
 
 .PHONY: stow-uninstall
@@ -104,12 +110,15 @@ uninstall-ln: ## Remove ln -s links (fallback)
 		done; \
 	done
 
-.PHONY: unlink-agents
-unlink-agents: ## Remove ~/.config/opencode/agents symlink
-	@if [ -L "$(AGENTS_DST)" ]; then \
-		rm -f "$(AGENTS_DST)"; \
-		echo "✓ Removed agents symlink: $(AGENTS_DST)"; \
-	fi
+.PHONY: unlink-shared
+unlink-shared: ## Remove ~/.config/opencode/{agents,skills,commands,rules} symlinks
+	@for name in $(SHARED_LINKS); do \
+		dst="$(SHARED_DST_BASE)/$$name"; \
+		if [ -L "$$dst" ]; then \
+			rm -f "$$dst"; \
+			echo "✓ Removed $$name symlink: $$dst"; \
+		fi; \
+	done
 
 .PHONY: restow
 restow: ## Restow all packages
@@ -119,7 +128,7 @@ ifdef STOW
 else
 	@$(MAKE) -s uninstall-ln install-ln
 endif
-	@$(MAKE) -s link-agents
+	@$(MAKE) -s link-shared
 	@echo "✓ Restow complete"
 
 ##@ Utilities
@@ -134,14 +143,17 @@ status: ## Show installation status for all packages
 		echo "  $$pkg -> $(HOME)"; \
 	done
 	@echo ""
-	@echo "Extra symlinks:"
-	@if [ -L "$(AGENTS_DST)" ]; then \
-		echo "  ✓ $(AGENTS_DST) -> $$(readlink $(AGENTS_DST))"; \
-	elif [ -e "$(AGENTS_DST)" ]; then \
-		echo "  ⚠ $(AGENTS_DST) exists but is not a symlink"; \
-	else \
-		echo "  ✗ $(AGENTS_DST) not linked"; \
-	fi
+	@echo "Shared symlinks ($(SHARED_DST_BASE)/ -> $(SHARED_SRC_BASE)/):"
+	@for name in $(SHARED_LINKS); do \
+		dst="$(SHARED_DST_BASE)/$$name"; \
+		if [ -L "$$dst" ]; then \
+			echo "  ✓ $$name -> $$(readlink $$dst)"; \
+		elif [ -e "$$dst" ]; then \
+			echo "  ⚠ $$name exists but is not a symlink"; \
+		else \
+			echo "  ✗ $$name not linked"; \
+		fi; \
+	done
 
 .PHONY: clean
 clean: ## Remove broken symlinks under $HOME/.ai-agents and $HOME/.config/opencode
