@@ -106,6 +106,7 @@ ai-coding-agents/
 │           ├── mcp-builder/
 │           ├── mermaid-diagrams/
 │           ├── project-docs/
+│           ├── reachy-mini-sdk/     # git submodule
 │           ├── worktrunk/
 │           ├── writing-clearly-and-concisely/
 │           └── ...
@@ -180,11 +181,11 @@ search, session management, git checkpoints, usage tracking, and more).
 ## Installation
 
 ```bash
-# Clone
-git clone https://github.com/jjmartres/ai-coding-agents.git
+# Clone (include submodules)
+git clone --recurse-submodules https://github.com/jjmartres/ai-coding-agents.git
 cd ai-coding-agents
 
-# Stow all packages and create the agents symlink
+# Stow all packages, init submodules, and create the agents symlink
 make install
 
 # (Optional) Install pre-commit hooks
@@ -198,7 +199,8 @@ here; changes take effect immediately.
 
 ```
 Installation
-  install              Stow all packages + create agents symlink
+  install              Stow all packages + init submodules + create agents symlink
+  submodules           Initialize and update git submodules
   stow-install         Stow all packages only
   link-agents          Create ~/.config/opencode/agents symlink only
   uninstall            Remove agents symlink + unstow all packages
@@ -312,6 +314,16 @@ node --version
 
 # Run the check manually
 pre-commit run validate-jsonc --all-files
+```
+
+**Submodule missing or empty**
+
+```bash
+# If you cloned without --recurse-submodules
+make submodules
+
+# Or manually
+git submodule update --init --recursive
 ```
 
 ## Contributing
