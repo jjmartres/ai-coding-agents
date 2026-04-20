@@ -19,6 +19,7 @@ All extensions are globally active across every project.
 | [sessions-management.ts](#sessions-managementts) | Session naming, browsing, creation, deletion |
 | [skills-searcher.ts](#skills-searcherts) | `$`-triggered skill picker in the editor |
 | [skills.ts](#skillsts) | Auto-inject skill guidelines from context |
+| [todo.ts](#todots) | LLM-managed todo list with branch-aware state |
 | [tps.ts](#tpsts) | Tokens-per-second notification after each turn |
 | [usage.ts](#usagets) | Interactive usage statistics dashboard |
 
@@ -270,6 +271,44 @@ Each skill is injected **at most once per session**.
 | `python-dev-guidelines` | `.py`, `python`, `pytest`, `pip`, `poetry` |
 | `shell-script-guidelines` | `.sh`, `bash`, `shell script`, `zsh` |
 | `brave-search` | "search the web", `google`, `brave search` |
+
+---
+
+## todo.ts
+
+Registers a `todo` tool for the LLM and a `/todos` command for the user.
+State is stored inside **tool-result details** (not external files), so todo
+state automatically matches the current session branch — branching to an earlier
+point in history restores the todo list to exactly what it was at that point.
+
+### State reconstruction
+
+On `session_start` and `session_tree` events the extension replays every `todo`
+tool-result entry on the active branch in order, rebuilding the in-memory list
+without touching the filesystem.
+
+### LLM tool — `todo`
+
+| Action | Required params | Effect |
+|---|---|---|
+| `list` | — | Returns all todos as `[ ] #id: text` lines |
+| `add` | `text` | Appends a new todo and returns its assigned ID |
+| `toggle` | `id` | Flips the done/undone state of the given todo |
+| `clear` | — | Removes all todos and resets the ID counter |
+
+### Commands
+
+| Command | Description |
+|---|---|
+| `/todos` | Open an interactive overlay showing the current todo list (interactive mode only) |
+
+### Dashboard keybindings
+
+| Key | Action |
+|---|---|
+| `Esc` / `Ctrl+C` | Close the overlay |
+
+No configuration required.
 
 ---
 

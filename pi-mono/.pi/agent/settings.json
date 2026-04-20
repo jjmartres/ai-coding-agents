@@ -32,5 +32,6 @@
     "openrouter/x-ai/grok-code-fast-1",
     "calculon/Qwen3.5-9B-MLX-4bit",
     "calculon/gemma-4-e4b-it-8bit"
-  ]
+  ],
+  "packages": ["npm:lsp-pi"]
 }
