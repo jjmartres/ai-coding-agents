@@ -3,19 +3,12 @@
   "defaultThinkingLevel": "medium",
   "defaultProvider": "anthropic",
   "defaultModel": "claude-sonnet-4-6",
-  "agents": [
-    "~/.ai-agents/agents"
-  ],
+  "sessionDir": "~/.pi/sessions",
+  "agents": ["~/.ai-agents/agents"],
   "defaultAgent": "devops-engineer",
-  "rules": [
-    "~/.ai-agents/rules"
-  ],
-  "skills": [
-    "~/.ai-agents/skills"
-  ],
-  "prompts": [
-    "~/.ai-agents/commands"
-  ],
+  "rules": ["~/.ai-agents/rules"],
+  "skills": ["~/.ai-agents/skills"],
+  "prompts": ["~/.ai-agents/commands"],
   "enableSkillCommands": true,
   "theme": "catppuccin-macchiato",
   "quietStartup": true,

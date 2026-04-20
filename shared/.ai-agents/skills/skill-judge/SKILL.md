@@ -122,7 +122,6 @@ Does the Skill transfer expert **thinking patterns** along with **necessary doma
 The difference between experts and novices isn't "knowing how to operate" — it's "how to think about the problem." But thinking patterns alone aren't enough when Claude lacks domain-specific procedural knowledge.
 
 **Key distinction**:
-
 | Type | Example | Value |
 |------|---------|-------|
 | **Thinking patterns** | "Before designing, ask: What makes this memorable?" | High — shapes decision-making |
@@ -571,7 +570,6 @@ Max = 120 points
 ```
 
 **Grade Scale** (percentage-based):
-
 | Grade | Percentage | Meaning |
 |-------|------------|---------|
 | A | 90%+ (108+) | Excellent — production-ready expert Skill |
