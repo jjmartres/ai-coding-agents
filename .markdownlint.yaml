@@ -1,0 +1,21 @@
+# .markdownlint.yaml - Markdown linting rules
+
+# Disable overly strict rules for technical documentation
+MD013: false  # Line length - code examples often exceed 80 chars
+MD041: false  # First line heading - not required for all files
+MD024: false  # Duplicate headings - allow for long pages
+MD025: false  # Multiple top-level headings - acceptable in long docs
+MD029: false  # Ordered list item prefix - allow flexible numbering
+MD033: false  # Allow inline HTML for special formatting
+MD034: false  # Allow bare URLs in documentation
+MD035: false  # Horizontal rule style - allow any style
+MD036: false  # Emphasis as heading - allow for examples/notes
+MD040: false  # Fenced code language - not always applicable
+MD046: false  # Code block style - allow both fenced and indented
+
+MD003: false  # Heading style - allow both atx and setext
+MD028: false  # Blank line in blockquote - used intentionally for readability
+MD052: false  # Reference links - prose uses [1][2][3] numbered citations, not markdown refs
+
+# Keep other quality checks enabled
+default: true

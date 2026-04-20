@@ -1,0 +1,3 @@
+[submodule "shared/.ai-agents/skills/reachy-mini-sdk"]
+	path = shared/.ai-agents/skills/reachy-mini-sdk
+	url = https://github.com/jjmartres/reachy-mini-sdk-skill

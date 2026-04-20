@@ -1,0 +1,104 @@
+default_stages: [pre-push]
+
+repos:
+  - repo: local
+    hooks:
+      - id: check-stowrc-exists
+        name: Verify .stowrc exists
+        entry: bash
+        language: system
+        pass_filenames: false
+        always_run: true
+        args:
+          - -c
+          - |
+            if [ ! -f .stowrc ]; then
+              echo "⚠ WARNING: .stowrc not found"
+              exit 1
+            fi
+
+      - id: validate-makefile
+        name: Validate Makefile syntax
+        entry: bash
+        language: system
+        pass_filenames: false
+        files: ^Makefile$
+        args:
+          - -c
+          - |
+            make -n help > /dev/null 2>&1 || {
+              echo "❌ Makefile has syntax errors"
+              exit 1
+            }
+
+      - id: typecheck-extensions
+        name: Typecheck pi-mono extensions
+        entry: bash
+        language: system
+        pass_filenames: false
+        files: ^pi-mono/\.pi/agent/extensions/.*\.ts$
+        args:
+          - -c
+          - |
+            if ! command -v tsc >/dev/null 2>&1; then
+              echo "⚠ tsc not found, skipping TypeScript typecheck (run: npm install -g typescript)"
+              exit 0
+            fi
+            tsc --noEmit \
+              --strict \
+              --target ES2022 \
+              --module NodeNext \
+              --moduleResolution NodeNext \
+              --allowImportingTsExtensions \
+              --esModuleInterop \
+              --skipLibCheck \
+              pi-mono/.pi/agent/extensions/*.ts || {
+              echo "❌ TypeScript typecheck failed in pi-mono/.pi/agent/extensions/"
+              exit 1
+            }
+            echo "✓ TypeScript typecheck passed"
+
+      - id: validate-jsonc
+        name: Validate JSONC (JSON with Comments)
+        entry: node scripts/validate-jsonc.js
+        language: system
+        files: \.jsonc$
+        pass_filenames: true
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+        name: Trim trailing whitespace
+      - id: end-of-file-fixer
+        name: Fix end of files
+      - id: check-yaml
+        name: Check YAML syntax
+      - id: check-added-large-files
+        name: Check for large files
+        args: ["--maxkb=1000"]
+      - id: check-merge-conflict
+        name: Check for merge conflicts
+      - id: detect-private-key
+        name: Detect private keys
+      - id: mixed-line-ending
+        name: Fix mixed line endings
+        args: ["--fix=lf"]
+      - id: check-json
+        name: Check JSON syntax
+        exclude: \.jsonc$
+
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.44.0
+    hooks:
+      - id: markdownlint
+        name: Lint markdown files in shared/
+        files: ^shared/
+        args: ["--fix", "--config", ".markdownlint.yaml"]
+
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.10.0.1
+    hooks:
+      - id: shellcheck
+        name: Lint shell scripts
+        args: ["--severity=warning"]
