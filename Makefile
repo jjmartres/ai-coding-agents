@@ -25,8 +25,14 @@ else
 endif
 	@echo "✓ Setup verified"
 
+.PHONY: submodules
+submodules: ## Initialize and update git submodules
+	@echo "Initializing submodules..."
+	@git submodule update --init --recursive
+	@echo "✓ Submodules ready"
+
 .PHONY: install
-install: check stow-install link-agents ## Install all packages and extra symlinks
+install: check submodules stow-install link-agents ## Install all packages and extra symlinks
 	@echo "✓ Installation complete"
 
 .PHONY: stow-install
