@@ -5,12 +5,10 @@
 </div>
 
 <p align="center">
-  <a href="https://github.com/jjmartres/ai-coding-agents">
-    <img src="https://img.shields.io/github/last-commit/jjmartres/ai-coding-agents?label=Last%20update&style=flat-square" alt="Last Update" />
-  </a>
-  <a href="https://github.com/jjmartres/ai-coding-agents/issues">
-    <img src="https://img.shields.io/github/issues/jjmartres/ai-coding-agents" alt="GitHub Issues" />
-  </a>
+  <a href="https://awesome.re"><img src="https://awesome.re/badge.svg" alt="Awesome" /></a>
+  <a href="https://github.com/jjmartres/ai-coding-agents"><img src="https://img.shields.io/github/last-commit/jjmartres/ai-coding-agents?label=Last%20update&style=flat-square" alt="Last Update" /></a>
+  <a href="https://github.com/jjmartres/ai-coding-agents/issues"><img src="https://img.shields.io/github/issues/jjmartres/ai-coding-agents" alt="GitHub Issues" /></a>
+  <a href="https://github.com/jjmartres/ai-coding-agents/pulls"><img src="https://img.shields.io/github/issues-pr/jjmartres/ai-coding-agents" alt="GitHub Pull Requests" /></a>
 </p>
 
 ---
