@@ -1,0 +1,29 @@
+{
+  "providers": {
+    "calculon": {
+      "baseUrl": "http://calculon.local:8000/v1",
+      "api": "openai-completions",
+      "apiKey": "CALCULON_API_KEY",
+      "models": [
+        {
+          "id": "Qwen3.5-9B-MLX-4bit",
+          "name": "Qwen3.5-9B-MLX-4bit (Calculon)",
+          "reasoning": false,
+          "input": ["text", "image"],
+          "contextWindow": 128000,
+          "maxTokens": 32000,
+          "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 }
+        },
+        {
+          "id": "gemma-4-e4b-it-8bit",
+          "name": "Gemma-4-e4b-it-8bit (Calculon)",
+          "reasoning": false,
+          "input": ["text", "image"],
+          "contextWindow": 128000,
+          "maxTokens": 32000,
+          "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 }
+        }
+      ]
+    }
+  }
+}

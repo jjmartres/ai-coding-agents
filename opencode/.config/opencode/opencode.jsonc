@@ -1,0 +1,83 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "google-vertex/gemini-3.1-pro-preview",
+  "small_model": "google-vertex/gemini-2.5-flash",
+  "enabled_providers": ["google-vertex", "openrouter", "anthropic", "calculon"],
+  "provider": {
+    "google-vertex": {
+      "models": {
+        "gemini-2.5-flash": {
+          "temperature": true,
+        },
+        "gemini-2.5-pro": {
+          "temperature": true,
+        },
+        "gemini-3.1-pro-preview": {
+          "temperature": true,
+        },
+      },
+      "options": {
+        "project": "{env:VERTEXAI_PROJECT_ID}",
+        "location": "{env:VERTEXAI_REGION}",
+      },
+    },
+    "anthropic": {
+      "models": {
+        "claude-opus-4-6": {
+          "temperature": true,
+        },
+        "claude-sonnet-4-6": {
+          "temperature": true,
+        },
+        "claude-haiku-4-5": {
+          "temperature": true,
+        },
+      },
+      "options": {
+        "apiKey": "{env:ANTHROPIC_API_KEY}",
+      },
+    },
+    "calculon": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "calculon",
+      "options": {
+        "baseURL": "http://calculon.local:8000/v1",
+        "apiKey": "{env:OMLX_API_KEY}",
+      },
+      "models": {
+        "Qwen3.5-9B-MLX-4bit": {
+          "name": "Qwen3.5-9B-MLX-4bit",
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"],
+          },
+          "attachment": true,
+        },
+        "gemma-4-e4b-it-8bit": {
+          "name": "gemma-4-e4b-it-8bit",
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"],
+          },
+          "attachment": true,
+        },
+      },
+    },
+  },
+  "default_agent": "plan",
+  "autoupdate": true,
+  "instructions": ["~/.ai-agents/rules/*.md"],
+  "share": "disabled",
+  "plugin": [
+    "@franlol/opencode-md-table-formatter@latest",
+    "opencode-websearch-cited@1.2.0",
+    "opencode-cost-guard",
+  ],
+  "mcp": {
+    "smartplaylist": {
+      "type": "remote",
+      "url": "http://personal.local:8000/mcp",
+      "enabled": true,
+    },
+  },
+}

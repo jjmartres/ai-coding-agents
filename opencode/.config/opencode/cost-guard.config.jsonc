@@ -1,0 +1,15 @@
+{
+  // Cost limit in USD. Triggers an alert when exceeded.
+  // Default: 20.0
+  "maxCostUsd": 20.0,
+
+  // Percentage of maxCostUsd at which an early warning fires.
+  // Set to 0 to disable the early warning entirely.
+  // Default: 80
+  "warnAtPercent": 80,
+
+  // "warn"  → sends a warning message in the session (non-blocking)
+  // "block" → sends a message and marks the session as stopped
+  // Default: "warn"
+  "mode": "warn"
+}

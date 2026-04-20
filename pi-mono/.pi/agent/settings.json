@@ -1,0 +1,43 @@
+{
+  "lastChangelogVersion": "0.67.68",
+  "defaultThinkingLevel": "medium",
+  "defaultProvider": "anthropic",
+  "defaultModel": "claude-sonnet-4-6",
+  "agents": [
+    "~/.ai-agents/agents"
+  ],
+  "defaultAgent": "devops-engineer",
+  "rules": [
+    "~/.ai-agents/rules"
+  ],
+  "skills": [
+    "~/.ai-agents/skills"
+  ],
+  "prompts": [
+    "~/.ai-agents/commands"
+  ],
+  "enableSkillCommands": true,
+  "theme": "catppuccin-macchiato",
+  "quietStartup": true,
+  "enabledModels": [
+    "anthropic/claude-haiku-4-5",
+    "anthropic/claude-opus-4-6",
+    "anthropic/claude-opus-4-7",
+    "anthropic/claude-sonnet-4-6",
+    "google-vertex/gemini-2.5-flash",
+    "google-vertex/gemini-2.5-pro",
+    "google-vertex/gemini-3-flash-preview",
+    "google-vertex/gemini-3.1-pro-preview",
+    "openrouter/anthropic/claude-haiku-4.5",
+    "openrouter/anthropic/claude-opus-4.6",
+    "openrouter/anthropic/claude-sonnet-4.6",
+    "openrouter/qwen/qwen3-coder-30b-a3b-instruct",
+    "openrouter/qwen/qwen3.6-plus",
+    "openrouter/x-ai/grok-4",
+    "openrouter/x-ai/grok-4.1-fast",
+    "openrouter/x-ai/grok-4.20",
+    "openrouter/x-ai/grok-code-fast-1",
+    "calculon/Qwen3.5-9B-MLX-4bit",
+    "calculon/gemma-4-e4b-it-8bit"
+  ]
+}
