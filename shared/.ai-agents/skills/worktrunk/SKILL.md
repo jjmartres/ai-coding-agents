@@ -8,8 +8,6 @@ description: >
   multiple AI agent sessions in parallel across isolated git branches, or automate
   dev server / database / dependency setup per worktree. Always use this skill for any
   question involving the `wt` CLI, worktree lifecycle automation, or the worktrunk plugin.
-license: MIT
-compatibility: opencode
 ---
 
 # Worktrunk Skill
@@ -20,14 +18,14 @@ Worktrunk (`wt`) is a CLI for git worktree management designed to run AI agents
 
 ## Quick Reference
 
-| Task | Command |
-|---|---|
-| Create worktree + switch | `wt switch --create feat` |
+| Task                            | Command                             |
+| ------------------------------- | ----------------------------------- |
+| Create worktree + switch        | `wt switch --create feat`           |
 | Create worktree + launch Claude | `wt switch --create feat -x claude` |
-| List all worktrees | `wt list` |
-| Merge & clean up | `wt merge main` |
-| Remove current worktree | `wt remove` |
-| Commit staged changes | `wt step commit` |
+| List all worktrees              | `wt list`                           |
+| Merge & clean up                | `wt merge main`                     |
+| Remove current worktree         | `wt remove`                         |
+| Commit staged changes           | `wt step commit`                    |
 
 ## Installation
 
@@ -113,16 +111,16 @@ common patterns (dev servers, databases, cold-start elimination).
 
 ### Hook Types at a Glance
 
-| Hook | When | Blocking |
-|---|---|---|
-| `post-create` | After creation | Yes (blocks --execute) |
-| `post-start` | After creation | No (background) |
-| `post-switch` | Every switch | No |
-| `pre-commit` | Before merge commit | Yes |
-| `pre-merge` | Before merge | Yes |
-| `post-merge` | After merge | Yes |
-| `pre-remove` | Before removal | Yes |
-| `post-remove` | After removal | No |
+| Hook          | When                | Blocking               |
+| ------------- | ------------------- | ---------------------- |
+| `post-create` | After creation      | Yes (blocks --execute) |
+| `post-start`  | After creation      | No (background)        |
+| `post-switch` | Every switch        | No                     |
+| `pre-commit`  | Before merge commit | Yes                    |
+| `pre-merge`   | Before merge        | Yes                    |
+| `post-merge`  | After merge         | Yes                    |
+| `pre-remove`  | Before removal      | Yes                    |
+| `post-remove` | After removal       | No                     |
 
 ### Essential Hook Patterns
 
@@ -154,19 +152,19 @@ build = "npm run build"
 
 In hook commands (Jinja2 syntax):
 
-| Variable | Value |
-|---|---|
-| `{{ branch }}` | Branch name |
-| `{{ repo }}` | Repository directory name |
-| `{{ worktree_path }}` | Absolute path to this worktree |
-| `{{ default_branch }}` | Default branch name |
-| `{{ target }}` | Target branch (merge hooks only) |
+| Variable               | Value                            |
+| ---------------------- | -------------------------------- |
+| `{{ branch }}`         | Branch name                      |
+| `{{ repo }}`           | Repository directory name        |
+| `{{ worktree_path }}`  | Absolute path to this worktree   |
+| `{{ default_branch }}` | Default branch name              |
+| `{{ target }}`         | Target branch (merge hooks only) |
 
-| Filter | Example | Output |
-|---|---|---|
-| `sanitize` | `{{ branch \| sanitize }}` | `/` and `\` → `-` |
-| `sanitize_db` | `{{ branch \| sanitize_db }}` | DB-safe identifier |
-| `hash_port` | `{{ branch \| hash_port }}` | Stable port 10000-19999 |
+| Filter        | Example                       | Output                  |
+| ------------- | ----------------------------- | ----------------------- |
+| `sanitize`    | `{{ branch \| sanitize }}`    | `/` and `\` → `-`       |
+| `sanitize_db` | `{{ branch \| sanitize_db }}` | DB-safe identifier      |
+| `hash_port`   | `{{ branch \| hash_port }}`   | Stable port 10000-19999 |
 
 ## LLM Commit Messages
 

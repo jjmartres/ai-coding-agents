@@ -1,8 +1,6 @@
 ---
 name: file-organizer
 description: Intelligently organizes your files and folders across your computer by understanding context, finding duplicates, suggesting better structures, and automating cleanup tasks. Reduces cognitive load and keeps your digital workspace tidy without manual effort.
-license: MIT
-compatibility: opencode
 ---
 
 # File Organizer
@@ -159,27 +157,27 @@ When a user requests file organization help:
    # Organization Plan for [Directory]
 
    ## Current State
+
    - X files across Y folders
    - [Size] total
    - File types: [breakdown]
    - Issues: [list problems]
 
    ## Proposed Structure
-
    ```
 
    [Directory]/
    ├── Work/
-   │   ├── Projects/
-   │   ├── Documents/
-   │   └── Archive/
+   │ ├── Projects/
+   │ ├── Documents/
+   │ └── Archive/
    ├── Personal/
-   │   ├── Photos/
-   │   ├── Documents/
-   │   └── Media/
+   │ ├── Photos/
+   │ ├── Documents/
+   │ └── Media/
    └── Downloads/
-       ├── To-Sort/
-       └── Archive/
+   ├── To-Sort/
+   └── Archive/
 
    ```
 
@@ -226,7 +224,7 @@ When a user requests file organization help:
 
    After organizing:
 
-   ```markdown
+   ````markdown
    # Organization Complete! ✨
 
    ## What Changed
@@ -261,8 +259,11 @@ When a user requests file organization help:
    # Find duplicates
    [custom command]
    ```
+   ````
 
    Want to organize another folder?
+
+   ```
 
    ```
 
@@ -297,6 +298,7 @@ When a user requests file organization help:
 # Found 23 Sets of Duplicates (156 MB total)
 
 ## Duplicate Set 1: "proposal.pdf"
+
 - `/Documents/proposal.pdf` (2.3 MB, modified: 2024-03-15)
 - `/Documents/old/proposal.pdf` (2.3 MB, modified: 2024-03-15)
 - `/Desktop/proposal.pdf` (2.3 MB, modified: 2024-03-10)
@@ -317,24 +319,24 @@ Delete the other 2 copies?
 # Analysis of ~/Projects
 
 ## Current Structure Issues
+
 - Mix of active and archived projects (3+ years old)
 - No consistent naming convention
 - Some projects at root, others in random subfolders
 - Duplicate folders (project-name, project-name-old, project-name-v2)
 
 ## Proposed Structure
-
 ```
 
 Projects/
 ├── Active/
-│   ├── client-work/
-│   ├── side-projects/
-│   └── learning/
+│ ├── client-work/
+│ ├── side-projects/
+│ └── learning/
 ├── Archive/
-│   ├── 2022/
-│   ├── 2023/
-│   └── 2024/
+│ ├── 2022/
+│ ├── 2023/
+│ └── 2024/
 └── Templates/
 
 ```

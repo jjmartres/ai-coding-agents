@@ -1,8 +1,6 @@
 ---
 name: content-research-writer
 description: Assists in writing high-quality content by conducting research, adding citations, improving hooks, iterating on outlines, and providing real-time feedback on each section. Transforms your writing process from solo effort to collaborative partnership.
-compatibility: opencode
-license: MIT
 ---
 
 # Content Research Writer
@@ -103,10 +101,12 @@ When a user requests writing assistance:
    # Article Outline: [Title]
 
    ## Hook
+
    - [Opening line/story/statistic]
    - [Why reader should care]
 
    ## Introduction
+
    - Context and background
    - Problem statement
    - What this article covers
@@ -114,27 +114,32 @@ When a user requests writing assistance:
    ## Main Sections
 
    ### Section 1: [Title]
+
    - Key point A
    - Key point B
    - Example/evidence
    - [Research needed: specific topic]
 
    ### Section 2: [Title]
+
    - Key point C
    - Key point D
    - Data/citation needed
 
    ### Section 3: [Title]
+
    - Key point E
    - Counter-arguments
    - Resolution
 
    ## Conclusion
+
    - Summary of main points
    - Call to action
    - Final thought
 
    ## Research To-Do
+
    - [ ] Find data on [topic]
    - [ ] Get examples of [concept]
    - [ ] Source citation for [claim]
@@ -149,7 +154,6 @@ When a user requests writing assistance:
 3. **Conduct Research**
 
    When user requests research on a topic:
-
    - Search for relevant information
    - Find credible sources
    - Extract key facts, quotes, and data
@@ -173,7 +177,7 @@ When a user requests writing assistance:
 
    Citations:
    [1] McKinsey Global Institute. (2024). "The Economic Potential
-       of Generative AI"
+   of Generative AI"
    [2] Stack Overflow Developer Survey (2024)
    [3] Smith, J. (2024). MIT Technology Review interview
 
@@ -192,16 +196,19 @@ When a user requests writing assistance:
    **Suggested Alternatives**:
 
    Option 1: [Bold statement]
+
    > [Example]
-   *Why it works: [explanation]*
+   > _Why it works: [explanation]_
 
    Option 2: [Personal story]
+
    > [Example]
-   *Why it works: [explanation]*
+   > _Why it works: [explanation]_
 
    Option 3: [Surprising data]
+
    > [Example]
-   *Why it works: [explanation]*
+   > _Why it works: [explanation]_
 
    **Questions to hook**:
    - Does it create curiosity?
@@ -217,6 +224,7 @@ When a user requests writing assistance:
    # Feedback: [Section Name]
 
    ## What Works Well ✓
+
    - [Strength 1]
    - [Strength 2]
    - [Strength 3]
@@ -224,32 +232,39 @@ When a user requests writing assistance:
    ## Suggestions for Improvement
 
    ### Clarity
+
    - [Specific issue] → [Suggested fix]
    - [Complex sentence] → [Simpler alternative]
 
    ### Flow
+
    - [Transition issue] → [Better connection]
    - [Paragraph order] → [Suggested reordering]
 
    ### Evidence
+
    - [Claim needing support] → [Add citation or example]
    - [Generic statement] → [Make more specific]
 
    ### Style
+
    - [Tone inconsistency] → [Match your voice better]
    - [Word choice] → [Stronger alternative]
 
    ## Specific Line Edits
 
    Original:
+
    > [Exact quote from draft]
 
    Suggested:
+
    > [Improved version]
 
    Why: [Explanation]
 
    ## Questions to Consider
+
    - [Thought-provoking question 1]
    - [Thought-provoking question 2]
 
@@ -259,7 +274,6 @@ When a user requests writing assistance:
 6. **Preserve Writer's Voice**
 
    Important principles:
-
    - **Learn their style**: Read existing writing samples
    - **Suggest, don't replace**: Offer options, not directives
    - **Match tone**: Formal, casual, technical, friendly
@@ -304,7 +318,7 @@ When a user requests writing assistance:
 
    1. Author. (Year). "Title". Publication.
    2. Author. (Year). "Title". Publication.
-   ...
+      ...
    ```
 
 8. **Final Review and Polish**
@@ -317,6 +331,7 @@ When a user requests writing assistance:
    ## Overall Assessment
 
    **Strengths**:
+
    - [Major strength 1]
    - [Major strength 2]
    - [Major strength 3]
@@ -324,21 +339,25 @@ When a user requests writing assistance:
    **Impact**: [Overall effectiveness assessment]
 
    ## Structure & Flow
+
    - [Comments on organization]
    - [Transition quality]
    - [Pacing assessment]
 
    ## Content Quality
+
    - [Argument strength]
    - [Evidence sufficiency]
    - [Example effectiveness]
 
    ## Technical Quality
+
    - Grammar and mechanics: [assessment]
    - Consistency: [assessment]
    - Citations: [completeness check]
 
    ## Readability
+
    - Clarity score: [evaluation]
    - Sentence variety: [evaluation]
    - Paragraph length: [evaluation]
@@ -351,6 +370,7 @@ When a user requests writing assistance:
    4. **Title**: [Options if needed]
 
    ## Pre-Publish Checklist
+
    - [ ] All claims sourced
    - [ ] Citations formatted
    - [ ] Examples clear
@@ -391,15 +411,18 @@ When a user requests writing assistance:
 ## Research Compiled
 
 ### Recent Data
+
 - Gartner: 80% of PMs will use AI tools by 2025 [1]
 - Survey: 45% report faster feature shipping [2]
 - Case study: Airbnb's AI-assisted prioritization [3]
 
 ### Expert Quotes
+
 - "AI amplifies PM judgment, not replaces it" - Marty Cagan
 - [Additional quotes with citations]
 
 ### Real Examples
+
 1. **Company A**: Used AI for user research synthesis
    - Result: 60% time savings
    - Source: [citation]
@@ -414,17 +437,21 @@ All added to your outline with proper citations.
 ### Example 3: Hook Improvement
 
 **User's Original Hook**:
+
 > "Product management is changing because of AI. In this article, I'll discuss some ways AI affects product managers."
 
 **Improved Options**:
 
 **Option 1 (Data-driven)**:
+
 > "Last month, I asked AI to analyze 500 customer interviews. It took 30 minutes instead of 3 weeks. Product management will never be the same."
 
 **Option 2 (Question)**:
+
 > "What if you could talk to every customer, read every review, and analyze every support ticket—all before your morning coffee?"
 
 **Option 3 (Story)**:
+
 > "Sarah spent two weeks building the wrong feature. Not because she didn't understand her users, but because she couldn't process the hundreds of interviews fast enough to spot the pattern."
 
 ### Example 4: Section Feedback
@@ -437,6 +464,7 @@ All added to your outline with proper citations.
 # Feedback: Common Mistakes Section
 
 ## What Works Well ✓
+
 - Strong examples (the Slack notification story)
 - Clear structure (3 mistakes, clean layout)
 - Practical advice for each mistake
@@ -444,19 +472,25 @@ All added to your outline with proper citations.
 ## Suggestions
 
 ### Make It More Specific
+
 Your second point says "Bad prioritization" but could be stronger:
 
 Current:
+
 > "Many teams prioritize badly by focusing on features instead of outcomes."
 
 Suggested:
+
 > "I've watched teams ship 14 features in a quarter yet move none of their key metrics. They prioritized activity over progress."
 
 ### Add Data
+
 The third mistake would benefit from evidence:
+
 > "[Add citation]: Studies show teams without regular user contact are 3x more likely to build unused features [needs source]"
 
 ### Flow Improvement
+
 Consider reordering: Mistake 3 → Mistake 2 → Mistake 1
 This builds from small to big impact.
 

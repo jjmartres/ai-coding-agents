@@ -8,8 +8,6 @@ description: >
   uploading files, downloading responses, managing sessions, inspecting request/response headers,
   or piping HTTP calls in shell scripts. Use this skill even when the user just says "call the API",
   "send a request", "hit this endpoint", or "test with httpie" ¿ don't wait for explicit httpie mention.
-license: mit
-compatibility: opencode
 ---
 
 # HTTPie CLI Skill

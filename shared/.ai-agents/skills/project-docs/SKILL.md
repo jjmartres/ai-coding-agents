@@ -1,8 +1,6 @@
 ---
 name: project-docs
 description: Generate comprehensive, professional project documentation structures including README, ARCHITECTURE, USER_GUIDE, DEVELOPER_GUIDE, and CONTRIBUTING files. Use when the user requests project documentation creation, asks to "document a project", needs standard documentation files, or wants to set up docs for a new repository. Adapts to Python/Go projects and OpenSource/internal contexts.
-license: MIT
-compatibility: opencode
 ---
 
 # Project Documentation Generator
