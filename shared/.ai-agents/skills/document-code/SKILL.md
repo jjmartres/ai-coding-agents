@@ -1,8 +1,6 @@
 ---
-name: code-docs
+name: document-code
 description: Apply Google Style documentation standards to Python, Go, TypeScript, and Terraform code. Use when writing or reviewing code that needs docstrings/comments/JSDoc, when asked to "document this code", "add docstrings", "follow Google Style", or when improving code documentation quality. Supports Python docstrings, Go comments, TypeScript JSDoc, and Terraform variable/output descriptions. Enforces consistent, professional documentation standards.
-license: MIT
-compatibility: opencode
 ---
 
 # Code Documentation Standards
@@ -227,9 +225,9 @@ func ReadConfig(path string) (*Config, error) {
 ### TypeScript JSDoc and Type Hints
 
 With TypeScript, types are enforced by the compiler so JSDoc should focus on
-*semantics*, not re-stating types. Use `@param`, `@returns`, and `@throws`:
+_semantics_, not re-stating types. Use `@param`, `@returns`, and `@throws`:
 
-```ts
+````ts
 /**
  * Fetches user profile data from the remote API.
  *
@@ -247,7 +245,7 @@ With TypeScript, types are enforced by the compiler so JSDoc should focus on
 export async function fetchUserProfile(userId: string): Promise<UserProfile> {
   // implementation
 }
-```
+````
 
 Named exports only – never `export default`. File-level `@fileoverview` when
 the module's purpose is not obvious from its name.

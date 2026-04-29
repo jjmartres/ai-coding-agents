@@ -134,7 +134,7 @@ Only `description` is required. All other frontmatter keys are optional.
 **Existing categories:**
 
 ```
-00-system/
+00-general/
 01-core/
 02-languages/
 03-infrastructure/

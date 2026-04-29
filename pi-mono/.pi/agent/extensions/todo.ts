@@ -1,13 +1,26 @@
 /**
- * Todo Extension - Demonstrates state management via session entries
+ * @fileoverview Todo Extension.
  *
- * This extension:
- * - Registers a `todo` tool for the LLM to manage todos
- * - Registers a `/todos` command for users to view the list
+ * Registers a `todo` tool for the LLM and a `/todos` command for the user.
+ * State is stored inside **tool-result details** (not external files), so the
+ * todo list automatically matches the current session branch. Branching to an
+ * earlier point in history restores the list to exactly what it was at that
+ * point.
  *
- * State is stored in tool result details (not external files), which allows
- * proper branching - when you branch, the todo state is automatically
- * correct for that point in history.
+ * State reconstruction:
+ *   On `session_start` and `session_tree` the extension replays every `todo`
+ *   tool-result entry on the active branch in order, rebuilding in-memory state
+ *   without touching the filesystem.
+ *
+ * LLM tool — `todo`:
+ *   - `list`   — return all todos as `[ ] #id: text` lines
+ *   - `add`    — append a new todo (requires `text`)
+ *   - `toggle` — flip done/undone state (requires `id`)
+ *   - `clear`  — remove all todos and reset the ID counter
+ *
+ * Commands:
+ *   `/todos` — open an interactive overlay showing the current todo list
+ *              (interactive mode only).
  */
 
 import { StringEnum } from "@mariozechner/pi-ai";
@@ -15,16 +28,30 @@ import type { ExtensionAPI, ExtensionContext, Theme } from "@mariozechner/pi-cod
 import { matchesKey, Text, truncateToWidth } from "@mariozechner/pi-tui";
 import { Type } from "@sinclair/typebox";
 
+/** A single todo item managed by the todo tool. */
 interface Todo {
+	/** Unique auto-incrementing identifier assigned at creation time. */
 	id: number;
+	/** Human-readable description of the task. */
 	text: string;
+	/** Whether the task has been marked as complete. */
 	done: boolean;
 }
 
+/**
+ * Structured details stored in a `todo` tool-result entry.
+ *
+ * Persisted alongside the plain-text content so the extension can replay
+ * state on session load without re-parsing the text representation.
+ */
 interface TodoDetails {
+	/** Action that produced this result. */
 	action: "list" | "add" | "toggle" | "clear";
+	/** Full todo list state at the time of this result. */
 	todos: Todo[];
+	/** Next ID to assign; preserved across tool calls. */
 	nextId: number;
+	/** Error message when the action could not be completed. */
 	error?: string;
 }
 
@@ -35,7 +62,10 @@ const TodoParams = Type.Object({
 });
 
 /**
- * UI component for the /todos command
+ * UI component rendered by the `/todos` command.
+ *
+ * Displays the current todo list in a styled overlay with a completion
+ * summary and per-item status indicators. Closes on `Esc` or `Ctrl+C`.
  */
 class TodoListComponent {
 	private todos: Todo[];
@@ -102,14 +132,28 @@ class TodoListComponent {
 	}
 }
 
+/**
+ * Registers the `todo` tool and the `/todos` command.
+ *
+ * In-memory state is reconstructed from the session branch on every
+ * `session_start` and `session_tree` event so the list always matches the
+ * active branch of the conversation tree.
+ *
+ * @param pi - The pi extension API.
+ */
 export default function (pi: ExtensionAPI) {
 	// In-memory state (reconstructed from session on load)
 	let todos: Todo[] = [];
 	let nextId = 1;
 
 	/**
-	 * Reconstruct state from session entries.
-	 * Scans tool results for this tool and applies them in order.
+	 * Reconstructs in-memory todo state from the active session branch.
+	 *
+	 * Scans every tool-result entry with `toolName === "todo"` in order and
+	 * applies the stored `TodoDetails` snapshot, leaving the final entry's
+	 * state as the current list.
+	 *
+	 * @param ctx - Extension context providing session branch access.
 	 */
 	const reconstructState = (ctx: ExtensionContext) => {
 		todos = [];

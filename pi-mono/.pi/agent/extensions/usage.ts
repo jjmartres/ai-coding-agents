@@ -1,10 +1,25 @@
 /**
- * /usage - Usage statistics dashboard
+ * @fileoverview Usage Statistics Extension.
  *
- * Shows an inline view with usage stats grouped by provider.
- * - Tab cycles: Today → This Week → Last Week → All Time
- * - Arrow keys navigate providers
- * - Enter expands/collapses to show models
+ * Provides an interactive `/usage` dashboard that aggregates token and cost
+ * data from all session files on disk. Stats are grouped by provider and
+ * broken down by model, covering four time windows: Today, This Week,
+ * Last Week, and All Time.
+ *
+ * Navigation:
+ *   `Tab` / `←` `→`   — cycle time period
+ *   `↑` / `↓`        — select provider
+ *   `Enter` / `Space` — expand/collapse per-model breakdown
+ *   `q` / `Esc`       — close
+ *
+ * Deduplication: branched session files share copied history. A
+ * `timestamp:totalTokens` hash ensures each assistant message is counted
+ * only once across all files.
+ *
+ * Token formula (as of v0.2.0):
+ *   Tokens  = input + output + cacheWrite
+ *   ↑In     = input + cacheWrite
+ *   Cache   = cacheRead + cacheWrite
  */
 
 import type {
@@ -227,6 +242,19 @@ interface ParsedSessionFile {
   messages: SessionMessage[];
 }
 
+/**
+ * Parses a single `.jsonl` session file and extracts assistant message stats.
+ *
+ * Deduplicates messages across branched files using a `timestamp:totalTokens`
+ * hash added to `seenHashes`. Lines that fail JSON parsing are skipped
+ * silently. Yields to the event loop every 500 lines to keep the UI
+ * responsive on large files.
+ *
+ * @param filePath   - Absolute path to the `.jsonl` session file.
+ * @param seenHashes - Shared deduplication set across all session files.
+ * @param signal     - Optional abort signal to cancel mid-parse.
+ * @returns Parsed session data, or `null` on error or empty file.
+ */
 async function parseSessionFile(
   filePath: string,
   seenHashes: Set<string>,
@@ -433,6 +461,16 @@ function addMessagesToUsageData(
   if (sessionContributed.allTime) data.allTime.totals.sessions++;
 }
 
+/**
+ * Collects and aggregates usage statistics from all session files on disk.
+ *
+ * Walks the sessions directory recursively, parses each `.jsonl` file, and
+ * buckets each assistant message into the appropriate time windows. Respects
+ * the `PI_CODING_AGENT_DIR` environment variable for non-default installs.
+ *
+ * @param signal - Optional abort signal to cancel collection mid-way.
+ * @returns Fully aggregated `UsageData`, or `null` if aborted or on error.
+ */
 async function collectUsageData(
   signal?: AbortSignal,
 ): Promise<UsageData | null> {
@@ -578,6 +616,29 @@ function getTableLayout(width: number): TableLayout {
 }
 
 // =============================================================================
+// Formatting helpers — JSDoc
+// =============================================================================
+
+/**
+ * Formats a cost value as a dollar string.
+ *
+ * Precision scales with magnitude: sub-cent values show four decimal places;
+ * larger values round progressively.
+ *
+ * @param cost - Cost in USD.
+ * @returns Formatted string such as `"$0.0042"`, `"$1.23"`, or `"$142"`.
+ */
+// (implemented above as formatCost)
+
+/**
+ * Formats a token count as a compact human-readable string.
+ *
+ * @param count - Raw token count.
+ * @returns Strings like `"42"`, `"1.2k"`, `"345k"`, or `"1.4M"`.
+ */
+// (implemented above as formatTokens)
+
+// =============================================================================
 // Component
 // =============================================================================
 
@@ -590,6 +651,20 @@ const TAB_LABELS: Record<TabName, string> = {
 
 const TAB_ORDER: TabName[] = ["today", "thisWeek", "lastWeek", "allTime"];
 
+/**
+ * Interactive TUI component that renders the usage statistics dashboard.
+ *
+ * Manages its own keyboard navigation state: active time-period tab,
+ * selected provider row, and the set of expanded providers. All rendering
+ * is width-responsive — columns are dropped progressively on narrow terminals
+ * so the table always fits without truncation.
+ *
+ * Lifecycle:
+ *   1. Constructed with pre-loaded `UsageData`.
+ *   2. `handleInput()` processes key events and triggers re-renders.
+ *   3. `render()` produces the full line array for each frame.
+ *   4. `done()` callback closes the overlay.
+ */
 class UsageComponent {
   private activeTab: TabName = "allTime";
   private data: UsageData;

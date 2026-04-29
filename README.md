@@ -35,6 +35,7 @@
 - [Development](#development)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
+- [Architecture](docs/ARCHITECTURE.md)
 
 ## What this repo is
 
@@ -42,7 +43,7 @@ Three [GNU Stow](https://www.gnu.org/software/stow/) packages, all targeting
 `$HOME`, that deploy:
 
 - **80+ agent persona files** shared between opencode and pi-mono
-- **19 reusable skill packs** covering diagrams, code review, Jira, Datadog, and more
+- **19 reusable skill packs** covering diagrams, code docs, Jira, Datadog, robotics, and more
 - **12 slash commands** for common workflows (commit, review, test, …)
 - **opencode-specific** configuration: `opencode.jsonc`, MCP servers, themes, plugins
 - **pi-mono-specific** configuration: settings, models, TypeScript extensions
@@ -86,30 +87,38 @@ ai-coding-agents/
 │       ├── commands/                # Shared slash commands
 │       │   ├── commit.md
 │       │   ├── commit-and-create-mr.md
+│       │   ├── compose-email.md
 │       │   ├── datadog.md
 │       │   ├── documentation.md
+│       │   ├── fix-renovate-mr.md
+│       │   ├── memory-bank.md
+│       │   ├── next-sprint-design.md
+│       │   ├── prepare-dataset.md
 │       │   ├── review.md
-│       │   ├── sync-branch.md
-│       │   ├── test.md
-│       │   └── ...
+│       │   ├── specify.polish.md
+│       │   └── test.md
 │       ├── rules/
 │       │   └── memory-bank.md
 │       └── skills/                  # Reusable skill packs
 │           ├── asdf/
-│           ├── code-docs/
+│           ├── content-research-writer/
 │           ├── datadog/
+│           ├── document-code/
+│           ├── document-project/
+│           ├── file-organizer/
 │           ├── glab/
 │           ├── httpie/
 │           ├── humanizer/
 │           ├── jira/
+│           ├── karpathy-guidelines/
 │           ├── marp-slide/
 │           ├── mcp-builder/
+│           ├── meeting-insights-analyzer/
 │           ├── mermaid-diagrams/
-│           ├── project-docs/
 │           ├── reachy-mini-sdk/     # git submodule
+│           ├── work-on-ticket/
 │           ├── worktrunk/
-│           ├── writing-clearly-and-concisely/
-│           └── ...
+│           └── writing-clearly-and-concisely/
 │
 ├── opencode/                        # Stow package 2 — opencode-specific
 │   └── .config/opencode/
@@ -136,6 +145,7 @@ ai-coding-agents/
 │           ├── sessions-management.ts
 │           ├── skills-searcher.ts
 │           ├── skills.ts
+│           ├── todo.ts
 │           ├── tps.ts
 │           └── usage.ts
 │
@@ -160,17 +170,22 @@ skill packs, slash commands, and rules. Stow maps the contents of
 opencode application config: main `opencode.jsonc`, cost-guard settings,
 TUI theme preferences, plugins, and Catppuccin UI themes.
 
-**Agents symlink (not managed by Stow)**
+**Shared symlinks (not managed by Stow)**
 
-opencode expects its agent files at `~/.config/opencode/agents/`. Stow cannot
-deliver the same source directory to two different destinations, so `make
-install` creates this symlink separately:
+opencode expects agents, skills, commands, and rules under
+`~/.config/opencode/`. Stow cannot map the same source directory to two
+different destinations, so `make install` creates these four symlinks
+separately:
 
 ```
-~/.config/opencode/agents  →  ~/.ai-agents/agents
+~/.config/opencode/agents    →  ~/.ai-agents/agents
+~/.config/opencode/skills    →  ~/.ai-agents/skills
+~/.config/opencode/commands  →  ~/.ai-agents/commands
+~/.config/opencode/rules     →  ~/.ai-agents/rules
 ```
 
-Run `make link-agents` to create it on its own. See `make status` to verify it.
+Run `make link-shared` to create them independently. See `make status` to
+verify.
 
 ### `pi-mono/` → `~/.pi/`
 
@@ -199,16 +214,16 @@ here; changes take effect immediately.
 
 ```
 Installation
-  install              Stow all packages + init submodules + create agents symlink
+  install              Stow all packages + init submodules + create shared symlinks
   submodules           Initialize and update git submodules
   stow-install         Stow all packages only
-  link-agents          Create ~/.config/opencode/agents symlink only
-  uninstall            Remove agents symlink + unstow all packages
+  link-shared          Create ~/.config/opencode/{agents,skills,commands,rules} symlinks
+  uninstall            Remove shared symlinks + unstow all packages
   restow               Re-run stow (use after adding/removing files)
 
 Utilities
   check                Verify setup (directories, stow binary, .stowrc)
-  status               Show linked packages and agents symlink state
+  status               Show linked packages and shared symlinks state
   clean                Remove broken symlinks under ~/.ai-agents and ~/.config/opencode
 
 Pre-commit hooks
@@ -289,11 +304,11 @@ make install
 **Agents not loading in opencode**
 
 ```bash
-# Verify the extra symlink exists
-ls -la ~/.config/opencode/agents
+# Verify the shared symlinks exist
+ls -la ~/.config/opencode/agents ~/.config/opencode/skills
 
-# Recreate it if missing
-make link-agents
+# Recreate them if missing
+make link-shared
 ```
 
 **TypeScript typecheck fails**

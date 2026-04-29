@@ -8,25 +8,25 @@ Skills are reusable instruction packs that inject domain-specific guidance into 
 
 | Skill | Description | Compatibility |
 |-------|-------------|---------------|
-| [asdf](#asdf) | Universal version manager — installs, configures, and troubleshoots asdf and `.tool-versions` files across all shells and runtimes. | opencode |
-| [code-docs](#code-docs) | Apply Google Style documentation standards to Python, Go, TypeScript, and Terraform code. | opencode |
-| [content-research-writer](#content-research-writer) | Collaborative writing assistant that conducts research, adds citations, refines outlines, and gives section-by-section feedback. | opencode |
-| [datadog](#datadog) | Search Datadog logs, query metrics, tail logs in real-time, trace distributed requests, and investigate errors. | opencode |
-| [file-organizer](#file-organizer) | Intelligently organizes files and folders by understanding context, finding duplicates, and suggesting better structures. | opencode |
-| [glab](#glab) | Expert guidance for using the GitLab CLI (`glab`) to manage issues, MRs, pipelines, and repositories. | opencode |
-| [httpie](#httpie) | Make HTTP requests, test APIs, call REST endpoints, and debug web services using the HTTPie CLI (`http` command). | opencode |
-| [humanizer](#humanizer) | Remove signs of AI-generated writing from text to make it sound natural and human-written. | opencode |
-| [jira](#jira) | Create, view, update, and manage Jira issues, sprints, and backlogs. | opencode |
-| [marp-slide](#marp-slide) | Create professional Marp presentation slides with 7 built-in themes. | opencode |
-| [mcp-builder](#mcp-builder) | Guide for creating high-quality MCP (Model Context Protocol) servers in Python or Node/TypeScript. | opencode |
-| [meeting-insights-analyzer](#meeting-insights-analyzer) | Analyze meeting transcripts to uncover behavioral patterns, communication insights, and actionable feedback. | opencode |
-| [mermaid-diagrams](#mermaid-diagrams) | Comprehensive guide for creating software diagrams using Mermaid syntax. | opencode |
-| [notion](#notion) | Manage Notion pages and databases from the CLI using notion-cli. | opencode |
-| [project-docs](#project-docs) | Generate comprehensive project documentation structures: README, ARCHITECTURE, USER_GUIDE, DEVELOPER_GUIDE, and CONTRIBUTING. | opencode |
-| [skill-judge](#skill-judge) | Evaluate Agent Skill design quality against official specifications and best practices. | opencode |
-| [work-on-ticket](#work-on-ticket) | Fetch Jira ticket details, create a named branch, and initiate task planning. | opencode |
-| [worktrunk](#worktrunk) | Use the `wt` CLI for git worktree management, parallel AI agent sessions, and lifecycle automation. | opencode |
-| [writing-clearly-and-concisely](#writing-clearly-and-concisely) | Apply Strunk's timeless rules for clearer, stronger prose in documentation, commits, and UI text. | opencode |
+| [asdf](#asdf) | Universal version manager — installs, configures, and troubleshoots asdf and `.tool-versions` files across all shells and runtimes. | opencode, pi-mono |
+| [content-research-writer](#content-research-writer) | Collaborative writing assistant that conducts research, adds citations, refines outlines, and gives section-by-section feedback. | opencode, pi-mono |
+| [datadog](#datadog) | Search Datadog logs, query metrics, tail logs in real-time, trace distributed requests, and investigate errors. | opencode, pi-mono |
+| [document-code](#document-code) | Apply Google Style documentation standards to Python, Go, TypeScript, and Terraform code. | opencode, pi-mono |
+| [document-project](#document-project) | Generate comprehensive project documentation structures: README, ARCHITECTURE, USER_GUIDE, DEVELOPER_GUIDE, and CONTRIBUTING. | opencode, pi-mono |
+| [file-organizer](#file-organizer) | Intelligently organizes files and folders by understanding context, finding duplicates, and suggesting better structures. | opencode, pi-mono |
+| [glab](#glab) | Expert guidance for using the GitLab CLI (`glab`) to manage issues, MRs, pipelines, and repositories. | opencode, pi-mono |
+| [httpie](#httpie) | Make HTTP requests, test APIs, call REST endpoints, and debug web services using the HTTPie CLI (`http` command). | opencode, pi-mono |
+| [humanizer](#humanizer) | Remove signs of AI-generated writing from text to make it sound natural and human-written. | opencode, pi-mono |
+| [jira](#jira) | Create, view, update, and manage Jira issues, sprints, and backlogs. | opencode, pi-mono |
+| [karpathy-guidelines](#karpathy-guidelines) | Behavioral guidelines to reduce common LLM coding mistakes: avoid overcomplication, make surgical changes, surface assumptions. | opencode, pi-mono |
+| [marp-slide](#marp-slide) | Create professional Marp presentation slides with 7 built-in themes. | opencode, pi-mono |
+| [mcp-builder](#mcp-builder) | Guide for creating high-quality MCP (Model Context Protocol) servers in Python or Node/TypeScript. | opencode, pi-mono |
+| [meeting-insights-analyzer](#meeting-insights-analyzer) | Analyze meeting transcripts to uncover behavioral patterns, communication insights, and actionable feedback. | opencode, pi-mono |
+| [mermaid-diagrams](#mermaid-diagrams) | Comprehensive guide for creating software diagrams using Mermaid syntax. | opencode, pi-mono |
+| [reachy-mini-sdk](#reachy-mini-sdk) | Programming guide for the Reachy Mini robot using the Python SDK and REST API. | opencode, pi-mono |
+| [work-on-ticket](#work-on-ticket) | Fetch Jira ticket details, create a named branch, and initiate task planning. | opencode, pi-mono |
+| [worktrunk](#worktrunk) | Use the `wt` CLI for git worktree management, parallel AI agent sessions, and lifecycle automation. | opencode, pi-mono |
+| [writing-clearly-and-concisely](#writing-clearly-and-concisely) | Apply Strunk's timeless rules for clearer, stronger prose in documentation, commits, and UI text. | opencode, pi-mono |
 
 ---
 
@@ -38,7 +38,7 @@ Provides a complete reference for installing and configuring the asdf universal 
 
 ---
 
-## code-docs
+## document-code
 
 **Trigger:** "document this code", "add docstrings", "follow Google Style", reviewing code that needs docstrings or JSDoc.
 
@@ -134,15 +134,7 @@ Comprehensive reference for Mermaid diagram syntax covering class diagrams, sequ
 
 ---
 
-## notion
-
-**Trigger:** Managing Notion content, creating or reading pages, querying databases, or adding blocks from the CLI.
-
-Provides `notion-cli` command patterns for creating pages, reading page content, searching the workspace, querying and updating database entries, and managing blocks and properties. Covers authentication setup and common content management workflows.
-
----
-
-## project-docs
+## document-project
 
 **Trigger:** "document a project", requests for standard documentation files, or setting up docs for a new repository.
 
@@ -150,11 +142,19 @@ Generates a complete, professional documentation structure tailored to Python or
 
 ---
 
-## skill-judge
+## karpathy-guidelines
 
-**Trigger:** Reviewing, auditing, or improving `SKILL.md` files and skill packages.
+**Trigger:** Writing, reviewing, or refactoring code; any task where precision and minimal-change discipline matter.
 
-Evaluates Agent Skill design quality against official specifications and community best practices. Scores skills across multiple dimensions — description clarity, trigger precision, content depth, example quality, and frontmatter completeness — and provides actionable improvement suggestions with a final grade.
+Provides behavioral guidelines derived from Andrej Karpathy's observations on common LLM coding mistakes. Instructs the agent to avoid overcomplication, make surgical targeted changes, surface assumptions explicitly, and define verifiable success criteria before acting. Reduces hallucinated complexity and unnecessary rewrites.
+
+---
+
+## reachy-mini-sdk
+
+**Trigger:** Programming Reachy Mini robots, controlling head/antennas/body movements, accessing sensors, recording motions, or building AI applications for the robot.
+
+Covers the Python SDK v1.2.6 and REST API for the Reachy Mini robot. Includes SDK patterns, coordinate systems, interpolation methods, app management, and OpenAPI client generation. Useful for robotics demos and Hugging Face deployments.
 
 ---
 

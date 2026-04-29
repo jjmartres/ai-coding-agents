@@ -16,6 +16,15 @@
 
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 
+/**
+ * Registers git-checkpoint lifecycle hooks.
+ *
+ * Captures a `git stash create` reference before every LLM turn and offers
+ * to restore the working tree when the user navigates to an earlier branch
+ * point in the session tree.
+ *
+ * @param pi - The pi extension API.
+ */
 export default function (pi: ExtensionAPI) {
   /** Maps session entry IDs to their corresponding `git stash create` refs. */
   const checkpoints = new Map<string, string>();

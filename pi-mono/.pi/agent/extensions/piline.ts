@@ -23,6 +23,16 @@ import type { AssistantMessage, Model } from "@mariozechner/pi-ai";
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { truncateToWidth, visibleWidth } from "@mariozechner/pi-tui";
 
+/**
+ * Registers the Piline footer and the `/piline` toggle command.
+ *
+ * The footer is installed automatically on `session_start`. It replaces pi's
+ * default status line with a two-sided layout showing context usage on the
+ * left and environment context (Kubernetes, git, session, agent, model) on
+ * the right.
+ *
+ * @param pi - The pi extension API.
+ */
 export default function (pi: ExtensionAPI) {
   let isCustomFooter = false;
   let cachedBranch = "";
@@ -39,7 +49,12 @@ export default function (pi: ExtensionAPI) {
     requestRender?.();
   });
 
-  // Update branch periodically
+  /**
+   * Refreshes the cached git branch by running `git branch --show-current`.
+   *
+   * Silently clears the cached value on error (e.g. not inside a git repo).
+   * Times out after 1 second to avoid stalling the footer render.
+   */
   async function updateBranch() {
     try {
       const result = await pi.exec("git", ["branch", "--show-current"], {
@@ -51,7 +66,12 @@ export default function (pi: ExtensionAPI) {
     }
   }
 
-  // Update local Kubernetes context
+  /**
+   * Refreshes the cached Kubernetes context via `kubectl config current-context`.
+   *
+   * Silently clears the cached value when kubectl is not installed or fails.
+   * Times out after 1 second.
+   */
   async function updateKubeContext() {
     try {
       const result = await pi.exec("kubectl", ["config", "current-context"], {
@@ -63,7 +83,17 @@ export default function (pi: ExtensionAPI) {
     }
   }
 
-  // Build footer renderer function to avoid code duplication
+  /**
+   * Builds the footer renderer closure for `ctx.ui.setFooter()`.
+   *
+   * Returns a function that, each frame, reads live session stats, computes
+   * token usage, and returns a single terminal line fitting the given width.
+   * Captures `requestRender` so other parts of the extension can trigger
+   * re-renders without holding a direct reference to the TUI object.
+   *
+   * @param ctx - Extension context for the active session.
+   * @returns Footer renderer compatible with `ctx.ui.setFooter()`.
+   */
   function buildFooterRenderer(ctx: ExtensionAPI["ctx"]) {
     return (tui: any, theme: any) => {
       requestRender = () => tui.requestRender();
@@ -168,6 +198,13 @@ export default function (pi: ExtensionAPI) {
   });
 
   // Poll for session name changes (handles both /name cmd and Ctrl+R interactive rename)
+  /**
+   * Starts a 500 ms interval that polls `pi.getSessionName()` and triggers a
+   * render whenever the name changes.
+   *
+   * Handles both the `/name` command and the interactive `Ctrl+R` rename flow,
+   * neither of which fires an event that extensions can listen to.
+   */
   function startNamePoller() {
     stopNamePoller();
     cachedSessionName = pi.getSessionName() || "";
@@ -180,6 +217,11 @@ export default function (pi: ExtensionAPI) {
     }, 500);
   }
 
+  /**
+   * Clears the session-name polling interval if one is running.
+   *
+   * Safe to call multiple times; a no-op when no poller is active.
+   */
   function stopNamePoller() {
     if (namePollerTimer !== undefined) {
       clearInterval(namePollerTimer);

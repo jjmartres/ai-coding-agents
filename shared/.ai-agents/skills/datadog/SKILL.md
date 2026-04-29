@@ -1,8 +1,6 @@
 ---
 name: datadog
 description: "Use this skill when you need to search Datadog logs, query metrics, tail logs in real-time, trace distributed requests, investigate errors, compare time periods, find log patterns, check service health, or export observability data."
-license: MIT
-compatibility: opencode
 ---
 
 # Datadog
@@ -190,11 +188,11 @@ datadog metrics query --query "sum:trace.http.request.errors{service:api}.as_cou
 
 ## Global Flags
 
-| Flag | Description |
-|------|-------------|
-| `--pretty` | Human-readable output with colors |
-| `--output <file>` | Export results to JSON file |
-| `--site <site>` | Datadog site (e.g., `datadoghq.eu`) |
+| Flag              | Description                         |
+| ----------------- | ----------------------------------- |
+| `--pretty`        | Human-readable output with colors   |
+| `--output <file>` | Export results to JSON file         |
+| `--site <site>`   | Datadog site (e.g., `datadoghq.eu`) |
 
 ## Time Formats
 
@@ -260,14 +258,14 @@ datadog errors --from 24h --output error-report.json
 
 ## Datadog Query Syntax
 
-| Operator | Example | Description |
-|----------|---------|-------------|
-| `AND` | `service:api status:error` | Both conditions |
-| `OR` | `status:error OR status:warn` | Either condition |
-| `-` | `-status:info` | Exclude |
-| `*` | `service:api-*` | Wildcard |
-| `>=` `<=` | `@http.status_code:>=400` | Numeric comparison |
-| `[TO]` | `@duration:[1000 TO 5000]` | Range |
+| Operator  | Example                       | Description        |
+| --------- | ----------------------------- | ------------------ |
+| `AND`     | `service:api status:error`    | Both conditions    |
+| `OR`      | `status:error OR status:warn` | Either condition   |
+| `-`       | `-status:info`                | Exclude            |
+| `*`       | `service:api-*`               | Wildcard           |
+| `>=` `<=` | `@http.status_code:>=400`     | Numeric comparison |
+| `[TO]`    | `@duration:[1000 TO 5000]`    | Range              |
 
 ### Common Attributes
 

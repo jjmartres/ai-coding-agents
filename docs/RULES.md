@@ -16,10 +16,10 @@ Compensates for the AI's complete memory reset between sessions. Because the mod
 
 ### Storage location
 
-All Memory Bank files are stored in `.opencode/memory-bank/` inside the project root. The directory is created automatically at the start of the first session if it does not exist.
+All Memory Bank files are stored in `.ai-agents/memory-bank/` inside the project root. The directory is created automatically at the start of the first session if it does not exist. If a legacy `.opencode/memory-bank/` directory is found, the rule migrates it automatically.
 
 ```
-.opencode/
+.ai-agents/
 └── memory-bank/
     ├── projectbrief.md
     ├── productContext.md

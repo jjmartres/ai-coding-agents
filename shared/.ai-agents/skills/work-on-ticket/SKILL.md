@@ -1,8 +1,6 @@
 ---
 name: work-on-ticket
 description: Fetches Jira ticket details, creates an appropriately named branch, and initiates the task planning workflow. Use when the user says "work on [TICKET_ID]" or similar phrases.
-license: MIT
-compatibility: opencode
 ---
 
 # Work on Ticket
@@ -35,11 +33,12 @@ Ticket ID format: `[A-Z]+-[0-9]+` (e.g., AGP-782, AICC-123)
 Use the MCP Zapier tool to fetch the ticket:
 
 ```typescript
-mcp__zapier-frontend__jira_software_cloud_find_issue_by_key({
-  instructions: "Get details for ticket [TICKET_ID]",
-  key: "[TICKET_ID]",
-  fields: "summary,description,issuetype,priority,status"
-})
+mcp__zapier -
+  frontend__jira_software_cloud_find_issue_by_key({
+    instructions: "Get details for ticket [TICKET_ID]",
+    key: "[TICKET_ID]",
+    fields: "summary,description,issuetype,priority,status",
+  });
 ```
 
 **Extract from response:**
@@ -321,7 +320,7 @@ if (user.isAdmin) return true;
 
 ```typescript
 // Before writing Vitest tests, invoke:
-Skill({ skill: "vitest-tdd" })
+Skill({ skill: "vitest-tdd" });
 ```
 
 ## Important Notes

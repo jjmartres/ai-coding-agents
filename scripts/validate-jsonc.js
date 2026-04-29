@@ -1,6 +1,18 @@
 #!/usr/bin/env node
-// Validates JSONC files (JSON with comments and trailing commas).
-// Usage: node validate-jsonc.js file1.jsonc file2.jsonc ...
+/**
+ * Validates JSONC files (JSON with C-style comments and trailing commas).
+ *
+ * Processing pipeline for each file:
+ *   1. Strip single-line `//` comments (preserving `//` inside strings).
+ *   2. Strip multi-line `/* ... *\/` comments.
+ *   3. Remove trailing commas before `}` or `]`.
+ *   4. Parse the result with `JSON.parse`.
+ *
+ * Exits with code 1 if any file fails validation; 0 on success.
+ *
+ * Usage:
+ *   node validate-jsonc.js file1.jsonc file2.jsonc ...
+ */
 
 const fs = require("fs");
 

@@ -1,8 +1,6 @@
 ---
 name: meeting-insights-analyzer
 description: Analyzes meeting transcripts and recordings to uncover behavioral patterns, communication insights, and actionable feedback. Identifies when you avoid conflict, use filler words, dominate conversations, or miss opportunities to listen. Perfect for professionals seeking to improve their communication and leadership skills.
-compatibility: opencode
-license: MIT
 ---
 
 # Meeting Insights Analyzer
@@ -144,6 +142,7 @@ When a user requests meeting analysis:
    1. **[Meeting Name/Date]** - [Timestamp]
 
       **What Happened**:
+
       > [Actual quote from transcript]
 
       **Why This Matters**:
@@ -169,11 +168,13 @@ When a user requests meeting analysis:
    ## Key Patterns Identified
 
    ### 1. [Primary Pattern]
+
    - **Observed**: [What you saw]
    - **Impact**: [Why it matters]
    - **Recommendation**: [How to improve]
 
    ### 2. [Second Pattern]
+
    [Same structure]
 
    ## Communication Strengths
@@ -228,6 +229,7 @@ communication or avoided addressing tensions directly.
 **Example 1: 1:1 with Sarah** - 00:14:32
 
 **What Happened**:
+
 > "So, I was thinking... maybe we could, like, potentially
 > consider looking at the timeline again? I mean, if you
 > think that makes sense. But whatever you think is best!"

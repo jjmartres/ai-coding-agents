@@ -84,6 +84,16 @@ function detectSkillFromPath(path: string): string | null {
   return null;
 }
 
+/**
+ * Registers skill auto-injection hooks.
+ *
+ * Monitors the user's prompt text and file-path arguments in tool calls.
+ * When a trigger pattern matches a registered skill, the skill's `SKILL.md`
+ * content is injected into the LLM context. Each skill is injected at most
+ * once per session.
+ *
+ * @param pi - The pi extension API.
+ */
 export default function (pi: ExtensionAPI) {
   /**
    * Tracks which skills have already been injected in the current session to

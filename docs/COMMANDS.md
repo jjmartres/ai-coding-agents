@@ -108,9 +108,10 @@ Fix Renovate dependency-update merge requests end to end.
 
 ## `/memory-bank`
 
-Manage the project memory bank stored in `.opencode/memory-bank/`.
+Manage the project memory bank stored in `.ai-agents/memory-bank/`.
 
-- Creates the `.opencode/memory-bank/` directory structure if it does not exist.
+- Creates the `.ai-agents/memory-bank/` directory structure if it does not exist.
+- If a legacy `.opencode/memory-bank/` directory is found, migrates it to `.ai-agents/memory-bank/` automatically.
 - Updates all memory bank files to reflect the current project state (see [RULES.md](RULES.md) for the full memory bank rule).
 
 **Example:**
@@ -171,19 +172,24 @@ Review the ten most recent git commits and suggest improvements.
 
 ---
 
-## `/sync-branch`
+## `/specify.polish`
 
-Sync a feature branch with the latest target branch.
+Full quality-gate workflow: tests, code documentation, project documentation, changelog, AGENTS.md, knowledge graph, memory bank, and merge request.
 
-- Fetches the latest upstream refs with `git fetch origin --prune`.
-- Identifies the target branch from `$ARGUMENTS` (defaults to `develop`).
-- Rebases the current branch onto `origin/<target-branch>`.
-- Resolves any conflicts, then force-pushes with `--force-with-lease` to update the remote branch.
+- Reads `.specify/memory/constitution.md` to apply project-specific overrides.
+- Runs `make test-in-ci` with coverage and surfaces all failures.
+- Audits code documentation and applies `document-code` skill to fill gaps.
+- Regenerates project documentation with `document-project` and `mermaid-diagrams` skills.
+- Updates `CHANGELOG.md` under `[Unreleased]` using Keep a Changelog format.
+- Updates `AGENTS.md` to reflect any new agents, skills, or tools introduced.
+- Updates the Graphify knowledge graph if `graphify-out/` exists.
+- Syncs the memory bank via `/memory-bank`.
+- Commits with a conventional commit message and opens a GitLab merge request.
 
 **Example:**
 
 ```
-/sync-branch main
+/specify.polish
 ```
 
 ---

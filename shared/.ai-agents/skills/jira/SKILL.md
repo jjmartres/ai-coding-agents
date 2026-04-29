@@ -1,8 +1,6 @@
 ---
 name: jira
 description: Use when the user mentions Jira issues (e.g., "PROJ-123"), asks about tickets, wants to create/view/update issues, check sprint status, or manage their Jira workflow. Triggers on keywords like "jira", "issue", "ticket", "sprint", "backlog", or issue key patterns.
-license: MIT
-compatibility: opencode
 ---
 
 # Jira
@@ -26,11 +24,11 @@ Natural language interaction with Jira. Supports multiple backends.
    → GUIDE USER TO SETUP
 ```
 
-| Backend | When to Use | Reference |
-|---------|-------------|-----------|
-| **CLI** | `jira` command available | `references/commands.md` |
-| **MCP** | Atlassian MCP tools available | `references/mcp.md` |
-| **None** | Neither available | Guide to install CLI |
+| Backend  | When to Use                   | Reference                |
+| -------- | ----------------------------- | ------------------------ |
+| **CLI**  | `jira` command available      | `references/commands.md` |
+| **MCP**  | Atlassian MCP tools available | `references/mcp.md`      |
+| **None** | Neither available             | Guide to install CLI     |
 
 ---
 
@@ -38,19 +36,19 @@ Natural language interaction with Jira. Supports multiple backends.
 
 > Skip this section if using MCP backend.
 
-| Intent | Command |
-|--------|---------|
-| View issue | `jira issue view ISSUE-KEY` |
-| List my issues | `jira issue list -a$(jira me)` |
-| My in-progress | `jira issue list -a$(jira me) -s"In Progress"` |
-| Create issue | `jira issue create -tType -s"Summary" -b"Description"` |
-| Move/transition | `jira issue move ISSUE-KEY "State"` |
-| Assign to me | `jira issue assign ISSUE-KEY $(jira me)` |
-| Unassign | `jira issue assign ISSUE-KEY x` |
-| Add comment | `jira issue comment add ISSUE-KEY -b"Comment text"` |
-| Open in browser | `jira open ISSUE-KEY` |
-| Current sprint | `jira sprint list --state active` |
-| Who am I | `jira me` |
+| Intent          | Command                                                |
+| --------------- | ------------------------------------------------------ |
+| View issue      | `jira issue view ISSUE-KEY`                            |
+| List my issues  | `jira issue list -a$(jira me)`                         |
+| My in-progress  | `jira issue list -a$(jira me) -s"In Progress"`         |
+| Create issue    | `jira issue create -tType -s"Summary" -b"Description"` |
+| Move/transition | `jira issue move ISSUE-KEY "State"`                    |
+| Assign to me    | `jira issue assign ISSUE-KEY $(jira me)`               |
+| Unassign        | `jira issue assign ISSUE-KEY x`                        |
+| Add comment     | `jira issue comment add ISSUE-KEY -b"Comment text"`    |
+| Open in browser | `jira open ISSUE-KEY`                                  |
+| Current sprint  | `jira sprint list --state active`                      |
+| Who am I        | `jira me`                                              |
 
 ---
 
@@ -58,17 +56,17 @@ Natural language interaction with Jira. Supports multiple backends.
 
 > Skip this section if using CLI backend.
 
-| Intent | MCP Tool |
-|--------|----------|
-| Search issues | `mcp__atlassian__searchJiraIssuesUsingJql` |
-| View issue | `mcp__atlassian__getJiraIssue` |
-| Create issue | `mcp__atlassian__createJiraIssue` |
-| Update issue | `mcp__atlassian__editJiraIssue` |
+| Intent          | MCP Tool                                     |
+| --------------- | -------------------------------------------- |
+| Search issues   | `mcp__atlassian__searchJiraIssuesUsingJql`   |
+| View issue      | `mcp__atlassian__getJiraIssue`               |
+| Create issue    | `mcp__atlassian__createJiraIssue`            |
+| Update issue    | `mcp__atlassian__editJiraIssue`              |
 | Get transitions | `mcp__atlassian__getTransitionsForJiraIssue` |
-| Transition | `mcp__atlassian__transitionJiraIssue` |
-| Add comment | `mcp__atlassian__addCommentToJiraIssue` |
-| User lookup | `mcp__atlassian__lookupJiraAccountId` |
-| List projects | `mcp__atlassian__getVisibleJiraProjects` |
+| Transition      | `mcp__atlassian__transitionJiraIssue`        |
+| Add comment     | `mcp__atlassian__addCommentToJiraIssue`      |
+| User lookup     | `mcp__atlassian__lookupJiraAccountId`        |
+| List projects   | `mcp__atlassian__getVisibleJiraProjects`     |
 
 See `references/mcp.md` for full MCP patterns.
 
@@ -188,14 +186,14 @@ To use Jira, you need one of:
 - Basic status checks (`jira issue view KEY`)
 - Opening issues in browser
 
-| Task | Load Reference? |
-|------|-----------------|
-| View single issue | No |
-| List my tickets | No |
-| Create with description | **Yes** — CLI needs `/tmp` pattern |
-| Transition issue | **Yes** — need transition ID workflow |
-| JQL search | **Yes** — for complex queries |
-| Link issues | **Yes** — MCP limitation, need script |
+| Task                    | Load Reference?                       |
+| ----------------------- | ------------------------------------- |
+| View single issue       | No                                    |
+| List my tickets         | No                                    |
+| Create with description | **Yes** — CLI needs `/tmp` pattern    |
+| Transition issue        | **Yes** — need transition ID workflow |
+| JQL search              | **Yes** — for complex queries         |
+| Link issues             | **Yes** — MCP limitation, need script |
 
 References:
 
