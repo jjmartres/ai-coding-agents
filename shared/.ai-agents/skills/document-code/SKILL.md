@@ -1,5 +1,5 @@
 ---
-name: code-docs
+name: document-code
 description: Apply Google Style documentation standards to Python, Go, TypeScript, and Terraform code. Use when writing or reviewing code that needs docstrings/comments/JSDoc, when asked to "document this code", "add docstrings", "follow Google Style", or when improving code documentation quality. Supports Python docstrings, Go comments, TypeScript JSDoc, and Terraform variable/output descriptions. Enforces consistent, professional documentation standards.
 ---
 
