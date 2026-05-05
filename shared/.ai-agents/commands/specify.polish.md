@@ -54,7 +54,7 @@ Apply the following skills where relevant:
 ### 7. Update Graphify knowledge graph (if applicable)
 
 - Check whether a `graphify-out/` directory exists at the project root
-- If it exists, run: `graphify . --update --out ./graphify-out`
+- If it exists, run: `graphify update . --out ./graphify-out`
 - If not, skip silently
 
 ### 8. Sync memory bank
