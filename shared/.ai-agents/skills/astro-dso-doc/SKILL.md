@@ -139,6 +139,24 @@ Tell the user the full path of the generated file, and remind them:
 
 ---
 
+### Step 6 — Copy Description to Clipboard
+
+Run the following command to place the PixInsight description text directly into the clipboard:
+
+```bash
+cat project.json | jq -r '.description' | pbcopy
+```
+
+If the command succeeds (exit code 0), tell the user:
+
+> ✓ Description copied to clipboard — paste it directly into the PixInsight project Description field.
+
+If it fails (e.g. `jq` or `pbcopy` not found), show the fallback message:
+
+> ⚠ Clipboard copy unavailable. Open `project.json` and copy the value of the `description` key manually.
+
+---
+
 ## Template Placeholders Reference
 
 See `references/template.html` for the full annotated template.
