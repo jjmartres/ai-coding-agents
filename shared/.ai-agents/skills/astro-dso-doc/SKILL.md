@@ -208,6 +208,7 @@ Apply the following structural modifications based on the detected workflow mode
 All phases present. Sections 04 (Luminance linear) and 09 (LRGB Integration) are included.
 
 **RGB workflow** (no Luminance):
+
 - Remove section 04 entirely (Phase 02 — Luminance Processing)
 - Remove section 09 entirely (Phase 07 — LRGB Integration)
 - Update section numbers accordingly (03→03, 05→04, 06→05, 07→06, 08→07, 10→08, 11→09)
@@ -216,6 +217,7 @@ All phases present. Sections 04 (Luminance linear) and 09 (LRGB Integration) are
 - Remove Luminance legend item
 
 **HOO / SHO narrowband workflow**:
+
 - Remove section 04 (Luminance linear) — keep section 09 if Luminance is present
 - In section 05 (RGB linear): rename to "Narrowband Processing (Linear)"
   - Replace `ChannelCombination` step with: "PixelMath — HOO / SHO palette assembly"
@@ -228,18 +230,22 @@ All phases present. Sections 04 (Luminance linear) and 09 (LRGB Integration) are
 - Update export filenames to `{{DSO_ID}}_HOO_final.*` or `{{DSO_ID}}_SHO_final.*`
 
 **HαRGB workflow**:
+
 - Keep full LRGB structure
 - Add one step after `ChannelCombination` in section 05: "PixelMath — Integrate Hα into Red channel (HαRGB blend)"
 - Uncomment Hα legend item and data cell
 - Tag the new step with `tag-ha` and `tag-rgb`
 
 **Smart telescope / pre-stacked** (single session file per filter, `stacking` = "Internal stacking by instrument"):
+
 - Replace the entire Phase 01 (section 03) with a single step:
+
   ```
   Import pre-stacked masters
   Copy the stacked output files into the project folder.
   No WBPP run required — calibration and stacking handled by the instrument.
   ```
+
 - Remove Blink Comparator steps
 
 #### 5b.5 — Save the file
@@ -251,6 +257,7 @@ EOF
 ```
 
 Tell the user:
+
 - **Processing Checklist** → `doc/processing-checklist.html`
 
 Checklist state (checked steps) persists across browser reloads via `localStorage`, keyed by DSO slug.
@@ -285,6 +292,7 @@ Build the AstroBin post fields JSON from all previously collected data (Steps 2,
 #### 5c.2 — Dataset link (telescope.live)
 
 If `site` or `telescope` contains "telescope.live" or "Telescope.live":
+
 - Set `link` to `"https://app.telescope.live/archive"` as the default dataset URL.
 - If the user provided a specific dataset URL in Block D, use it instead.
 - Otherwise set `link` to `""`.
@@ -292,6 +300,7 @@ If `site` or `telescope` contains "telescope.live" or "Telescope.live":
 #### 5c.3 — Equipment objects
 
 **imaging_telescopes** — one object per telescope:
+
 ```json
 {
   "name": "Telescope.live Remote Observatory",
@@ -300,10 +309,12 @@ If `site` or `telescope` contains "telescope.live" or "Telescope.live":
   "type": "REFRACTOR"
 }
 ```
+
 Parse aperture (mm) and focal length (mm) from the telescope string if present (e.g. `"50mm f/4"` → `aperture: 50, focal_length: 200`).
 Type heuristics: contains "Newton" or "Newtonian" → `"NEWTONIAN"`, "Cassegrain" or "SCT" → `"SCT"`, "Refractor" or "APO" or "ED" or "f/" → `"REFRACTOR"`, "Reflector" → `"REFLECTOR"`, otherwise `"OTHER"`.
 
 **imaging_cameras** — one object:
+
 ```json
 {
   "name": "QHY 600M",
@@ -311,9 +322,11 @@ Type heuristics: contains "Newton" or "Newtonian" → `"NEWTONIAN"`, "Cassegrain
   "modified": false
 }
 ```
+
 Type: if camera name contains "IMX", "CMOS", "ASI", "QHY", "ZWO", "Atik Horizon" → `"CCD"` (AstroBin uses CCD for all dedicated astro cameras). `modified` always `false` unless user stated "modded" or "full spectrum".
 
 **software** — always:
+
 ```json
 [{"name": "PixInsight", "version": ""}]
 ```
@@ -374,6 +387,7 @@ Produce one object per filter channel. Parse per-channel data from the `sessions
 ```
 
 Field rules:
+
 - `number` — sub count for this filter channel
 - `duration` — sub duration in seconds (parse from filename or session string, e.g. `300s`, `300.00s`)
 - `binning` — always `1` unless user specified otherwise
@@ -409,6 +423,7 @@ EOF
 ```
 
 **Example output** (M104, LRGB, Telescope.live):
+
 ```json
 {
   "title": "Sombrero Galaxy (NGC 4594)",
@@ -487,6 +502,7 @@ EOF
 ```
 
 Tell the user:
+
 - **AstroBin post fields** → `astrobin.json`
 - Fields `imaging_telescopes`, `imaging_cameras`, `filters`, `acquisition_details` map 1:1 to AstroBin's "Equipment" and "Acquisition" sections.
 - `image_file` must be filled manually when uploading.
