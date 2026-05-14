@@ -188,7 +188,6 @@
       }
 
       /* ══ BASE ══════════════════════════════════════════════════ */
-
       * {
         margin: 0;
         padding: 0;
@@ -365,6 +364,7 @@
         flex-wrap: wrap;
         gap: 10px;
         margin-top: 32px;
+        align-items: center;
       }
       .badge {
         font-family: "Space Mono", monospace;
@@ -373,6 +373,11 @@
         padding: 5px 14px;
         border-radius: 2px;
         text-transform: uppercase;
+        text-decoration: none;
+        transition: opacity 0.2s;
+      }
+      .badge:hover {
+        opacity: 0.8;
       }
       .badge-mauve {
         background: rgba(198, 160, 246, 0.12);
@@ -818,12 +823,34 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
       }
       footer .foot-left {
         font-family: "Space Mono", monospace;
         font-size: 10px;
         letter-spacing: 2px;
         color: var(--overlay0);
+      }
+      footer .foot-center {
+        font-family: "Space Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 2px;
+      }
+      footer .foot-center a {
+        color: var(--teal);
+        text-decoration: none;
+        border: 1px solid rgba(139, 213, 202, 0.3);
+        border-radius: 2px;
+        padding: 5px 12px;
+        background: rgba(139, 213, 202, 0.06);
+        transition:
+          background 0.2s,
+          border-color 0.2s;
+      }
+      footer .foot-center a:hover {
+        background: rgba(139, 213, 202, 0.12);
+        border-color: rgba(139, 213, 202, 0.5);
       }
       footer .foot-right {
         font-family: "Crimson Pro", serif;
@@ -889,6 +916,13 @@
         <span class="badge badge-blue">{{BADGE_2}}</span>
         <span class="badge badge-teal">{{BADGE_3}}</span>
         <span class="badge badge-peach">{{BADGE_4}}</span>
+        <!-- ══ LINK TO PROCESSING CHECKLIST (hero badge) ═════════
+             Always present — links to the companion checklist file.
+             Do NOT remove or modify this anchor.
+        ════════════════════════════════════════════════════════ -->
+        <a href="processing-checklist.html" class="badge badge-sapphire">
+          Processing Checklist →
+        </a>
       </div>
     </header>
 
@@ -948,14 +982,7 @@
         </div>
       </section>
 
-      <!-- ══ 02 — CATALOG DESIGNATIONS ══════════════════════════
-    {{CATALOG_ROWS}} → one or more <tr> blocks:
-    <tr>
-      <td>DESIGNATION</td>
-      <td>CATALOG NAME (YEAR)</td>
-      <td>Notes about this designation</td>
-    </tr>
-    ═════════════════════════════════════════════════════════ -->
+      <!-- ══ 02 — CATALOG DESIGNATIONS ══════════════════════════ -->
       <section class="section">
         <div class="section-header">
           <span class="section-number">02</span>
@@ -976,10 +1003,7 @@
         </table>
       </section>
 
-      <!-- ══ 03 — SCIENTIFIC DESCRIPTION ══════════════════════════
-    {{SCIENTIFIC_DESCRIPTION}} → 3–5 <p> blocks of prose.
-    Use <strong> for key terms, <em> for values/names.
-    ════════════════════════════════════════════════════════════ -->
+      <!-- ══ 03 — SCIENTIFIC DESCRIPTION ══════════════════════════ -->
       <section class="section">
         <div class="section-header">
           <span class="section-number">03</span>
@@ -989,19 +1013,7 @@
         <div class="prose">{{SCIENTIFIC_DESCRIPTION}}</div>
       </section>
 
-      <!-- ══ 04 — KEY STAR / NOTABLE SOURCE [OPTIONAL] ═══════════
-    Remove this entire section if no dominant ionizing star or
-    notable source exists (e.g. for most galaxies and clusters).
-
-    {{STAR_NAME}}          → e.g. "HD 42088"
-    {{STAR_CLASS_DESC}}    → e.g. "O6.5 V — Main sequence supergiant"
-    {{STAR_PROPS}}         → one or more prop blocks:
-      <div>
-        <div class="star-prop-label">LABEL</div>
-        <div class="star-prop-value">VALUE</div>
-      </div>
-    {{STAR_DESCRIPTION}}   → 2–3 sentence prose paragraph
-    ════════════════════════════════════════════════════════════ -->
+      <!-- ══ 04 — KEY STAR / NOTABLE SOURCE [OPTIONAL] ═══════════ -->
       <section class="section">
         <div class="section-header">
           <span class="section-number">04</span>
@@ -1016,14 +1028,7 @@
         </div>
       </section>
 
-      <!-- ══ 05 — DISCOVERY & HISTORY ════════════════════════════
-    {{TIMELINE_ITEMS}} → one or more:
-    <div class="timeline-item">
-      <div class="timeline-year">YEAR or DATE</div>
-      <div class="timeline-text">Description. <strong>Name</strong> etc.</div>
-    </div>
-    Colors cycle automatically through nth-child selectors (up to 6).
-    ════════════════════════════════════════════════════════════ -->
+      <!-- ══ 05 — DISCOVERY & HISTORY ════════════════════════════ -->
       <section class="section">
         <div class="section-header">
           <span class="section-number">05</span>
@@ -1037,10 +1042,7 @@
 
       <div class="divider"></div>
 
-      <!-- ══ 06 — PHYSICAL STRUCTURE ══════════════════════════════
-    {{PHYSICAL_STRUCTURE}} → 3–4 <p> blocks of prose.
-    Focus on astrophysics: structure, processes, emission lines relevant to imaging.
-    ════════════════════════════════════════════════════════════ -->
+      <!-- ══ 06 — PHYSICAL STRUCTURE ══════════════════════════════ -->
       <section class="section">
         <div class="section-header">
           <span class="section-number">06</span>
@@ -1050,24 +1052,7 @@
         <div class="prose">{{PHYSICAL_STRUCTURE}}</div>
       </section>
 
-      <!-- ══ 07 — OBSERVATION TIPS ════════════════════════════════
-    {{OBSERVATION_TIPS}} → tip-card blocks.
-    Available modifier classes: (none=teal) / warn / info / great / alert
-
-    Example:
-    <div class="tip-card info">
-      <div class="tip-card-title">Visibility Window</div>
-      <div class="tip-card-text">...</div>
-    </div>
-
-    Suggested tip topics:
-    - Visibility Window (info)
-    - Surface Brightness (warn)
-    - Filter Recommendation (great)
-    - Framing & FOV (none/teal)
-    - Processing Approach (info)
-    - Specific challenges (warn or alert)
-    ════════════════════════════════════════════════════════════ -->
+      <!-- ══ 07 — OBSERVATION TIPS ════════════════════════════════ -->
       <section class="section">
         <div class="section-header">
           <span class="section-number">07</span>
@@ -1079,16 +1064,7 @@
 
       <div class="divider"></div>
 
-      <!-- ══ 08 — ACQUISITION DATA ════════════════════════════════
-    {{INSTRUMENT}}       → e.g. "SkyWatcher Esprit 100ED (550mm f/5.5)"
-    {{CAMERA}}           → e.g. "ZWO ASI2600MM Pro" or same as instrument if built-in
-    {{FILTER}}           → e.g. "Dual-band built-in (Hα + OIII)"
-    {{SITE}}             → e.g. "Mountain Dark Site"
-    {{SITE_COORDS}}      → e.g. "Alps, France · 44.8°N / 6.3°E · ~1200m" (use what user provides)
-    {{SESSION_COUNT}}    → integer
-    {{STACKING_NOTE}}    → e.g. "Stacked in PixInsight" or "Internal stacking by instrument"
-    {{SESSION_FILES}}    → <span class="session-file">filename</span> per file
-    ════════════════════════════════════════════════════════════ -->
+      <!-- ══ 08 — ACQUISITION DATA ════════════════════════════════ -->
       <section class="section">
         <div class="section-header">
           <span class="section-number">08</span>
@@ -1144,10 +1120,7 @@
         </div>
       </section>
 
-      <!-- ══ AUTHOR NOTES [OPTIONAL] ══════════════════════════════
-    Remove this section entirely if no notes provided.
-    {{AUTHOR_NOTES}} → raw text (whitespace preserved via pre-wrap)
-    ════════════════════════════════════════════════════════════ -->
+      <!-- ══ 09 — AUTHOR NOTES [OPTIONAL] ══════════════════════════ -->
       <section class="section">
         <div class="section-header">
           <span class="section-number">09</span>
@@ -1157,16 +1130,9 @@
         <div class="notes-block">{{AUTHOR_NOTES}}</div>
       </section>
 
-      <!-- ══ REFERENCES ════════════════════════════════════════════
-    {{REFERENCES_ROWS}} → one or more <tr> blocks:
-    <tr>
-      <td>SOURCE NAME</td>
-      <td>Full citation or description</td>
-    </tr>
-    ════════════════════════════════════════════════════════════ -->
+      <!-- ══ 10 — REFERENCES ════════════════════════════════════════ -->
       <section class="section">
         <div class="section-header">
-          <!-- Adjust section number if optional sections were removed -->
           <span class="section-number">10</span>
           <span class="section-title">Key References</span>
           <div class="section-line"></div>
@@ -1192,6 +1158,12 @@
     <footer>
       <div class="foot-left">
         {{DSO_ID}} · Documentation · Generated {{GENERATED_DATE}}
+      </div>
+      <!-- ══ LINK TO PROCESSING CHECKLIST (footer) ════════════════
+           Always present — do NOT remove or modify this block.
+      ════════════════════════════════════════════════════════════ -->
+      <div class="foot-center">
+        <a href="processing-checklist.html">⚙ Processing Checklist →</a>
       </div>
       <div class="foot-right">PixInsight Project · {{AUTHOR}}</div>
     </footer>
