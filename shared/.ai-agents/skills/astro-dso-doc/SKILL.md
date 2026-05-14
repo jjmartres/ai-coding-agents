@@ -1,15 +1,16 @@
 ---
 name: astro-dso-doc
-description: Generates a complete, polished HTML documentation page, a processing checklist, AND a ready-to-paste PixInsight project Description field for a deep-sky object (DSO) astrophotography project. Use this skill whenever the user mentions astrophotography, a DSO name (NGC, IC, Messier, Sharpless, etc.), wants to document an imaging session, mentions PixInsight project documentation, wants to create an observation report, or asks to generate a page/document for a nebula, galaxy, cluster, or other deep-sky target. Triggers on phrases like "create doc for NGC XXXX", "generate DSO page", "document my session on", "make a PixInsight doc for", "astro documentation page", "pixinsight project description", "description field pixinsight", "processing checklist", "workflow checklist". Always use this skill — not a generic HTML generator — when the subject is a deep-sky object.
+description: Generates a complete, polished HTML documentation page, a processing checklist, an AstroBin post JSON, AND a ready-to-paste PixInsight project Description field for a deep-sky object (DSO) astrophotography project. Use this skill whenever the user mentions astrophotography, a DSO name (NGC, IC, Messier, Sharpless, etc.), wants to document an imaging session, mentions PixInsight project documentation, wants to create an observation report, or asks to generate a page/document for a nebula, galaxy, cluster, or other deep-sky target. Triggers on phrases like "create doc for NGC XXXX", "generate DSO page", "document my session on", "make a PixInsight doc for", "astro documentation page", "pixinsight project description", "description field pixinsight", "processing checklist", "workflow checklist", "astrobin", "astrobin post", "astrobin upload". Always use this skill — not a generic HTML generator — when the subject is a deep-sky object.
 ---
 
 # Astro DSO Documentation Generator
 
-Generates three deliverables for a deep-sky object (DSO) astrophotography project:
+Generates four deliverables for a deep-sky object (DSO) astrophotography project:
 
 1. **`project.json`** — a flat JSON file containing the PixInsight project description data (copy the `description` field value into the Description box of `.xosm`)
 2. **`doc/index.html`** — a rich, self-contained HTML documentation page (path goes into the Documentation field of `.xosm`), using the Catppuccin flavor palette with a theme switcher.
 3. **`doc/processing-checklist.html`** — an interactive step-by-step PixInsight processing checklist adapted to the target's filter set (LRGB, HOO, SHO, RGB-only, etc.), using the same Catppuccin design system.
+4. **`astrobin.json`** — a structured JSON file containing all AstroBin image post fields, ready to copy-paste into the AstroBin upload form.
 
 ---
 
@@ -150,15 +151,15 @@ Read the full checklist template from `references/processing-checklist-template.
 
 Before filling the template, determine the workflow mode from the `filter` field in project.json:
 
-| Filter value contains                  | Workflow mode | Active channels   |
-| -------------------------------------- | ------------- | ----------------- |
-| `Luminance` + `Red` + `Green` + `Blue` | **LRGB**      | L, R, G, B        |
-| `Red` + `Green` + `Blue` (no Lum)      | **RGB**       | R, G, B           |
-| `Ha` + `OIII` (no RGB)                 | **HOO**       | Hα, OIII          |
-| `Ha` + `OIII` + `SII`                  | **SHO**       | Hα, OIII, SII     |
-| `Ha` + `RGB`                           | **HαRGB**     | Hα, R, G, B       |
-| `Ha` + `OIII` + `RGB`                  | **HOO+RGB**   | Hα, OIII, R, G, B |
-| Single filter only                     | **Mono**      | That channel only |
+| Filter value contains | Workflow mode | Active channels |
+|---|---|---|
+| `Luminance` + `Red` + `Green` + `Blue` | **LRGB** | L, R, G, B |
+| `Red` + `Green` + `Blue` (no Lum) | **RGB** | R, G, B |
+| `Ha` + `OIII` (no RGB) | **HOO** | Hα, OIII |
+| `Ha` + `OIII` + `SII` | **SHO** | Hα, OIII, SII |
+| `Ha` + `RGB` | **HαRGB** | Hα, R, G, B |
+| `Ha` + `OIII` + `RGB` | **HOO+RGB** | Hα, OIII, R, G, B |
+| Single filter only | **Mono** | That channel only |
 
 #### 5b.2 — Parse per-channel exposure times
 
@@ -174,28 +175,28 @@ If per-channel data cannot be parsed, use `—` as the placeholder value.
 
 #### 5b.3 — Fill placeholders
 
-| Placeholder          | Value                                                       |
-| -------------------- | ----------------------------------------------------------- |
-| `{{DSO_ID}}`         | `target` field from project.json (e.g. `NGC 4594`)          |
-| `{{COMMON_NAME}}`    | `common_name` field                                         |
-| `{{CONSTELLATION}}`  | `constellation` field                                       |
-| `{{OBJECT_TYPE}}`    | `object_type` field, uppercased                             |
-| `{{CAMERA}}`         | `camera` field                                              |
-| `{{INSTRUMENT}}`     | `telescope` field                                           |
-| `{{FILTER}}`         | `filter` field                                              |
-| `{{SITE}}`           | `site` field                                                |
-| `{{TOTAL_EXPOSURE}}` | `total_exposure` field (or computed from sessions)          |
-| `{{TOTAL_SUBS}}`     | numeric portion of `subs_integrated` (e.g. `120`)           |
-| `{{LUM_TIME}}`       | parsed Luminance total, e.g. `3h 00m (36 × 300s)`           |
-| `{{RED_TIME}}`       | parsed Red total                                            |
-| `{{GREEN_TIME}}`     | parsed Green total                                          |
-| `{{BLUE_TIME}}`      | parsed Blue total                                           |
-| `{{HA_TIME}}`        | parsed Hα total (omit row if channel absent)                |
-| `{{OIII_TIME}}`      | parsed OIII total (omit row if channel absent)              |
-| `{{SII_TIME}}`       | parsed SII total (omit row if channel absent)               |
-| `{{GENERATED_DATE}}` | today's date `YYYY-MM-DD`                                   |
-| `{{AUTHOR}}`         | user name / location from Block B, or `—`                   |
-| `{{DSO_NOTES}}`      | user notes from Block D — remove entire section 11 if empty |
+| Placeholder | Value |
+|---|---|
+| `{{DSO_ID}}` | `target` field from project.json (e.g. `NGC 4594`) |
+| `{{COMMON_NAME}}` | `common_name` field |
+| `{{CONSTELLATION}}` | `constellation` field |
+| `{{OBJECT_TYPE}}` | `object_type` field, uppercased |
+| `{{CAMERA}}` | `camera` field |
+| `{{INSTRUMENT}}` | `telescope` field |
+| `{{FILTER}}` | `filter` field |
+| `{{SITE}}` | `site` field |
+| `{{TOTAL_EXPOSURE}}` | `total_exposure` field (or computed from sessions) |
+| `{{TOTAL_SUBS}}` | numeric portion of `subs_integrated` (e.g. `120`) |
+| `{{LUM_TIME}}` | parsed Luminance total, e.g. `3h 00m (36 × 300s)` |
+| `{{RED_TIME}}` | parsed Red total |
+| `{{GREEN_TIME}}` | parsed Green total |
+| `{{BLUE_TIME}}` | parsed Blue total |
+| `{{HA_TIME}}` | parsed Hα total (omit row if channel absent) |
+| `{{OIII_TIME}}` | parsed OIII total (omit row if channel absent) |
+| `{{SII_TIME}}` | parsed SII total (omit row if channel absent) |
+| `{{GENERATED_DATE}}` | today's date `YYYY-MM-DD` |
+| `{{AUTHOR}}` | user name / location from Block B, or `—` |
+| `{{DSO_NOTES}}` | user notes from Block D — remove entire section 11 if empty |
 
 Also replace all occurrences of `{{DSO_ID}}` inside `id="step-*"` attributes and the `STORAGE_KEY` constant with a slug version: spaces replaced by hyphens, lowercased (e.g. `ngc-4594`).
 
@@ -207,7 +208,6 @@ Apply the following structural modifications based on the detected workflow mode
 All phases present. Sections 04 (Luminance linear) and 09 (LRGB Integration) are included.
 
 **RGB workflow** (no Luminance):
-
 - Remove section 04 entirely (Phase 02 — Luminance Processing)
 - Remove section 09 entirely (Phase 07 — LRGB Integration)
 - Update section numbers accordingly (03→03, 05→04, 06→05, 07→06, 08→07, 10→08, 11→09)
@@ -216,7 +216,6 @@ All phases present. Sections 04 (Luminance linear) and 09 (LRGB Integration) are
 - Remove Luminance legend item
 
 **HOO / SHO narrowband workflow**:
-
 - Remove section 04 (Luminance linear) — keep section 09 if Luminance is present
 - In section 05 (RGB linear): rename to "Narrowband Processing (Linear)"
   - Replace `ChannelCombination` step with: "PixelMath — HOO / SHO palette assembly"
@@ -229,22 +228,18 @@ All phases present. Sections 04 (Luminance linear) and 09 (LRGB Integration) are
 - Update export filenames to `{{DSO_ID}}_HOO_final.*` or `{{DSO_ID}}_SHO_final.*`
 
 **HαRGB workflow**:
-
 - Keep full LRGB structure
 - Add one step after `ChannelCombination` in section 05: "PixelMath — Integrate Hα into Red channel (HαRGB blend)"
 - Uncomment Hα legend item and data cell
 - Tag the new step with `tag-ha` and `tag-rgb`
 
 **Smart telescope / pre-stacked** (single session file per filter, `stacking` = "Internal stacking by instrument"):
-
 - Replace the entire Phase 01 (section 03) with a single step:
-
   ```
   Import pre-stacked masters
   Copy the stacked output files into the project folder.
   No WBPP run required — calibration and stacking handled by the instrument.
   ```
-
 - Remove Blink Comparator steps
 
 #### 5b.5 — Save the file
@@ -256,10 +251,245 @@ EOF
 ```
 
 Tell the user:
-
 - **Processing Checklist** → `doc/processing-checklist.html`
 
 Checklist state (checked steps) persists across browser reloads via `localStorage`, keyed by DSO slug.
+
+---
+
+### Step 5c — Generate astrobin.json
+
+Build the AstroBin post fields JSON from all previously collected data (Steps 2, 3, 4).
+
+#### 5c.1 — Field mapping rules
+
+| AstroBin field | Source | Rules |
+|---|---|---|
+| `title` | `common_name` + `target` from project.json | Format: `"Common Name (DSO_ID)"` — e.g. `"Sombrero Galaxy (NGC 4594)"` |
+| `description` | Research data (Step 3) + acquisition summary | 3–5 sentences in English. Scientific summary + total integration + filter set. Plain text, no HTML. |
+| `link` | Telescope.live dataset URL if applicable | See 5c.2 below |
+| `image_file` | — | Always `""` — user uploads the image manually |
+| `imaging_telescopes` | `telescope` from project.json | Array of objects — see 5c.3 |
+| `imaging_cameras` | `camera` from project.json | Array of objects — see 5c.3 |
+| `mounts` | — | Empty array `[]` unless user provided mount info in Block A |
+| `filters` | `filter` from project.json | Array of objects — one per channel — see 5c.4 |
+| `software` | Always PixInsight | Fixed value — see 5c.3 |
+| `location` | `site` + `site_coords` from project.json | Object — see 5c.3 |
+| `acquisition_details` | `sessions` array from project.json | Array of objects — one per filter channel — see 5c.5 |
+| `first_acquisition_date` | Earliest date parsed from sessions | `YYYY-MM-DD` format |
+| `last_acquisition_date` | Latest date parsed from sessions | `YYYY-MM-DD` format |
+| `data_source` | `"OWN"` or `"AMATEUR_HOSTING"` | `"AMATEUR_HOSTING"` if site contains "telescope.live", "itelescope", "lightbuckets", "slooh"; otherwise `"OWN"` |
+| `remote_source` | Remote hosting label | `"TELELIVE"` if telescope.live; `"ITELESCOPE"` if iTelescope; `""` otherwise |
+| `subject_type` | Derived from `object_type` in project.json | See 5c.6 |
+
+#### 5c.2 — Dataset link (telescope.live)
+
+If `site` or `telescope` contains "telescope.live" or "Telescope.live":
+- Set `link` to `"https://app.telescope.live/archive"` as the default dataset URL.
+- If the user provided a specific dataset URL in Block D, use it instead.
+- Otherwise set `link` to `""`.
+
+#### 5c.3 — Equipment objects
+
+**imaging_telescopes** — one object per telescope:
+```json
+{
+  "name": "Telescope.live Remote Observatory",
+  "aperture": null,
+  "focal_length": null,
+  "type": "REFRACTOR"
+}
+```
+Parse aperture (mm) and focal length (mm) from the telescope string if present (e.g. `"50mm f/4"` → `aperture: 50, focal_length: 200`).
+Type heuristics: contains "Newton" or "Newtonian" → `"NEWTONIAN"`, "Cassegrain" or "SCT" → `"SCT"`, "Refractor" or "APO" or "ED" or "f/" → `"REFRACTOR"`, "Reflector" → `"REFLECTOR"`, otherwise `"OTHER"`.
+
+**imaging_cameras** — one object:
+```json
+{
+  "name": "QHY 600M",
+  "type": "CCD",
+  "modified": false
+}
+```
+Type: if camera name contains "IMX", "CMOS", "ASI", "QHY", "ZWO", "Atik Horizon" → `"CCD"` (AstroBin uses CCD for all dedicated astro cameras). `modified` always `false` unless user stated "modded" or "full spectrum".
+
+**software** — always:
+```json
+[{"name": "PixInsight", "version": ""}]
+```
+
+#### 5c.4 — Filters array
+
+Parse the `filter` field from project.json. Produce one object per distinct channel:
+
+```json
+{
+  "name": "Luminance",
+  "type": "L",
+  "bandwidth": null,
+  "vendor": "",
+  "model": ""
+}
+```
+
+Filter type mapping:
+
+| Channel keyword | AstroBin type |
+|---|---|
+| Luminance, Lum, L | `"L"` |
+| Red, R | `"R"` |
+| Green, G | `"G"` |
+| Blue, B | `"B"` |
+| Hα, Ha, H-alpha | `"Ha"` |
+| OIII, O3 | `"OIII"` |
+| SII, S2 | `"SII"` |
+| Dual-band, dual band | produce two objects: `"Ha"` + `"OIII"` |
+| Tri-band, tri band | produce three objects: `"Ha"` + `"OIII"` + `"SII"` |
+
+If the filter string includes a bandwidth (e.g. `"3nm"`, `"6.5nm"`, `"7 nm"`), set `bandwidth` to the numeric value in nm. Extract vendor/model if present (e.g. `"Antlia 3nm Ha"` → `vendor: "Antlia"`, `model: "3nm Ha"`).
+
+#### 5c.5 — Acquisition details (DeepSky sessions)
+
+Produce one object per filter channel. Parse per-channel data from the `sessions` array (same logic as Step 5b.2).
+
+```json
+{
+  "filter": "Luminance",
+  "filter_type": "L",
+  "number": 36,
+  "duration": 300,
+  "binning": 1,
+  "gain": null,
+  "sensor_cooling": null,
+  "darks": null,
+  "flats": null,
+  "flat_darks": null,
+  "bias": null,
+  "bortle": null,
+  "mean_sqm": null,
+  "mean_fwhm": null,
+  "temperature": null,
+  "date": "YYYY-MM-DD"
+}
+```
+
+Field rules:
+- `number` — sub count for this filter channel
+- `duration` — sub duration in seconds (parse from filename or session string, e.g. `300s`, `300.00s`)
+- `binning` — always `1` unless user specified otherwise
+- `gain` — parse from filename if present (e.g. `_GAIN100_`), otherwise `null`
+- `bortle` — parse from Block D notes if user mentioned Bortle class, otherwise `null`
+- `date` — use the first date found for this filter in the sessions array; format `YYYY-MM-DD`
+- All other fields `null` unless explicitly provided by the user
+
+#### 5c.6 — Subject type mapping
+
+| object_type contains | AstroBin subject_type |
+|---|---|
+| Galaxy, Galaxies | `"GALAXY"` |
+| Nebula, HII, H II, Emission | `"NEBULA"` |
+| Cluster, Open cluster | `"OPEN_CLUSTER"` |
+| Globular | `"GLOBULAR_CLUSTER"` |
+| Planetary nebula | `"PLANETARY_NEBULA"` |
+| Supernova remnant, SNR | `"SUPERNOVA_REMNANT"` |
+| Solar system | `"SOLAR_SYSTEM_BODY"` |
+| Other / unknown | `"OTHER"` |
+
+#### 5c.7 — Save the file
+
+Save as `./astrobin.json` (pretty-printed, 2-space indent — unlike project.json this one is for human reading):
+
+```bash
+cat > ./astrobin.json << 'EOF'
+{
+  "title": "...",
+  ...
+}
+EOF
+```
+
+**Example output** (M104, LRGB, Telescope.live):
+```json
+{
+  "title": "Sombrero Galaxy (NGC 4594)",
+  "description": "The Sombrero Galaxy (NGC 4594) is a spectacular Sa/Sb spiral galaxy in Virgo, located approximately 28 million light-years away. Its iconic silhouette features a brilliant central bulge bisected by a prominent dust lane. Imaged in LRGB from the Telescope.live Chile remote observatory using a QHY 600M camera over 10 hours of total integration (36×300s Luminance, 27×300s Red, 29×300s Green, 28×300s Blue). Processed in PixInsight.",
+  "link": "https://app.telescope.live/archive",
+  "image_file": "",
+  "imaging_telescopes": [
+    {
+      "name": "Telescope.live Remote Observatory",
+      "aperture": null,
+      "focal_length": null,
+      "type": "REFRACTOR"
+    }
+  ],
+  "imaging_cameras": [
+    {
+      "name": "QHY 600M",
+      "type": "CCD",
+      "modified": false
+    }
+  ],
+  "mounts": [],
+  "filters": [
+    { "name": "Luminance", "type": "L", "bandwidth": null, "vendor": "", "model": "" },
+    { "name": "Red",       "type": "R", "bandwidth": null, "vendor": "", "model": "" },
+    { "name": "Green",     "type": "G", "bandwidth": null, "vendor": "", "model": "" },
+    { "name": "Blue",      "type": "B", "bandwidth": null, "vendor": "", "model": "" }
+  ],
+  "software": [
+    { "name": "PixInsight", "version": "" }
+  ],
+  "location": {
+    "name": "Chile Remote Observatory",
+    "coords": "Chile · Southern Hemisphere"
+  },
+  "subject_type": "GALAXY",
+  "data_source": "AMATEUR_HOSTING",
+  "remote_source": "TELELIVE",
+  "first_acquisition_date": "2023-02-15",
+  "last_acquisition_date": "2025-03-06",
+  "acquisition_details": [
+    {
+      "filter": "Luminance", "filter_type": "L",
+      "number": 36, "duration": 300, "binning": 1,
+      "gain": null, "sensor_cooling": null,
+      "darks": null, "flats": null, "flat_darks": null, "bias": null,
+      "bortle": null, "mean_sqm": null, "mean_fwhm": null, "temperature": null,
+      "date": "2023-02-15"
+    },
+    {
+      "filter": "Red", "filter_type": "R",
+      "number": 27, "duration": 300, "binning": 1,
+      "gain": null, "sensor_cooling": null,
+      "darks": null, "flats": null, "flat_darks": null, "bias": null,
+      "bortle": null, "mean_sqm": null, "mean_fwhm": null, "temperature": null,
+      "date": "2023-02-15"
+    },
+    {
+      "filter": "Green", "filter_type": "G",
+      "number": 29, "duration": 300, "binning": 1,
+      "gain": null, "sensor_cooling": null,
+      "darks": null, "flats": null, "flat_darks": null, "bias": null,
+      "bortle": null, "mean_sqm": null, "mean_fwhm": null, "temperature": null,
+      "date": "2023-02-15"
+    },
+    {
+      "filter": "Blue", "filter_type": "B",
+      "number": 28, "duration": 300, "binning": 1,
+      "gain": null, "sensor_cooling": null,
+      "darks": null, "flats": null, "flat_darks": null, "bias": null,
+      "bortle": null, "mean_sqm": null, "mean_fwhm": null, "temperature": null,
+      "date": "2023-02-15"
+    }
+  ]
+}
+```
+
+Tell the user:
+- **AstroBin post fields** → `astrobin.json`
+- Fields `imaging_telescopes`, `imaging_cameras`, `filters`, `acquisition_details` map 1:1 to AstroBin's "Equipment" and "Acquisition" sections.
+- `image_file` must be filled manually when uploading.
 
 ---
 
@@ -333,18 +563,45 @@ Key placeholders:
 - `{{AUTHOR}}` — observer name / location
 - `{{DSO_NOTES}}` — free-text processing notes (omit section 11 if empty)
 
-Step tag classes available in the checklist:
+### AstroBin JSON (`astrobin.json`)
 
-| Class      | Color    | Meaning                 |
-| ---------- | -------- | ----------------------- |
-| `tag-lum`  | mauve    | Luminance channel only  |
-| `tag-rgb`  | blue     | RGB channels            |
-| `tag-ha`   | red      | Hα channel              |
-| `tag-oiii` | sapphire | OIII channel            |
-| `tag-nb`   | yellow   | Generic narrowband      |
-| `tag-lrgb` | pink     | LRGB combined step      |
-| `tag-warn` | peach    | Target-specific warning |
-| `tag-tip`  | teal     | Optional / tip          |
+Key fields and their sources:
+
+| Field | Source |
+|---|---|
+| `title` | `"{{COMMON_NAME}} ({{DSO_ID}})"` |
+| `description` | 3–5 sentences from research + acquisition summary |
+| `link` | `"https://app.telescope.live/archive"` if telescope.live, else `""` |
+| `imaging_telescopes[].name` | `telescope` from project.json |
+| `imaging_telescopes[].aperture` | parsed from telescope string (mm) or `null` |
+| `imaging_telescopes[].focal_length` | parsed from telescope string (mm) or `null` |
+| `imaging_telescopes[].type` | heuristic from telescope string |
+| `imaging_cameras[].name` | `camera` from project.json |
+| `imaging_cameras[].type` | always `"CCD"` for dedicated astro cameras |
+| `filters[].type` | mapped from filter channel name |
+| `filters[].bandwidth` | parsed from filter string (nm) or `null` |
+| `software` | always `[{"name": "PixInsight", "version": ""}]` |
+| `location.name` | `site` from project.json |
+| `location.coords` | `site_coords` from project.json |
+| `subject_type` | mapped from `object_type` |
+| `data_source` | `"AMATEUR_HOSTING"` or `"OWN"` |
+| `remote_source` | `"TELELIVE"`, `"ITELESCOPE"`, or `""` |
+| `first_acquisition_date` | earliest date from sessions |
+| `last_acquisition_date` | latest date from sessions |
+| `acquisition_details[].filter` | channel name |
+| `acquisition_details[].number` | sub count for that channel |
+| `acquisition_details[].duration` | sub duration in seconds |
+
+| Class | Color | Meaning |
+|---|---|---|
+| `tag-lum` | mauve | Luminance channel only |
+| `tag-rgb` | blue | RGB channels |
+| `tag-ha` | red | Hα channel |
+| `tag-oiii` | sapphire | OIII channel |
+| `tag-nb` | yellow | Generic narrowband |
+| `tag-lrgb` | pink | LRGB combined step |
+| `tag-warn` | peach | Target-specific warning |
+| `tag-tip` | teal | Optional / tip |
 
 ---
 
@@ -381,24 +638,49 @@ Step tag classes available in the checklist:
 - All `{{DSO_ID}}` occurrences in HTML attributes replaced with the slug version
 - `STORAGE_KEY` constant in the `<script>` block updated to `checklist-{dso-slug}`
 
+**`astrobin.json`:**
+
+- Pretty-printed with 2-space indent (human-readable)
+- `title` follows the format `"Common Name (DSO_ID)"`
+- `description` is plain text, 3–5 sentences, no HTML or markdown
+- `link` set to `"https://app.telescope.live/archive"` for telescope.live data; `""` otherwise
+- `filters` array contains one object per distinct channel — never merge channels
+- `acquisition_details` contains one object per channel with correct `number` and `duration`
+- `data_source` and `remote_source` correctly reflect the imaging site
+- `subject_type` derived from `object_type` using the mapping table in 5c.6
+- `software` always `[{"name": "PixInsight", "version": ""}]`
+- `mounts` always `[]` unless user provided mount information explicitly
+- All numeric fields use numbers, not strings (`300` not `"300"`)
+- All unknown/unparseable fields use `null`, never empty string `""`
+- `first_acquisition_date` and `last_acquisition_date` in `YYYY-MM-DD` format
+
 ---
 
 ## Edge Cases
 
-| Situation                                 | Handling                                                                              |
-| ----------------------------------------- | ------------------------------------------------------------------------------------- |
-| DSO not well-documented                   | Note gaps; still generate all three outputs with available data                       |
-| Directory path given but empty            | Ask user to paste filenames manually                                                  |
-| No session files provided                 | `sessions: []` in JSON; omit Section 08 from index.html; use `—` in checklist         |
-| Galaxy / cluster instead of nebula        | Skip narrowband tip cards; adapt physical description                                 |
-| User skips optional questions             | Use `""` in JSON; use `—` placeholders in HTML                                        |
-| File extensions unexpected                | Accept `.png`, `.jpeg`, `.dng`, `.raf` as well                                        |
-| User wants JSON only                      | Run Steps 1, 2, 4 only — skip Steps 3, 5, 5b                                          |
-| User wants HTML only                      | Run Steps 1, 2, 3, 5 only — skip Steps 4 and 5b                                       |
-| User wants checklist only                 | Run Steps 1, 2, 5b only — skip Steps 3, 4, 5                                          |
+| Situation | Handling |
+|---|---|
+| DSO not well-documented | Note gaps; still generate all three outputs with available data |
+| Directory path given but empty | Ask user to paste filenames manually |
+| No session files provided | `sessions: []` in JSON; omit Section 08 from index.html; use `—` in checklist |
+| Galaxy / cluster instead of nebula | Skip narrowband tip cards; adapt physical description |
+| User skips optional questions | Use `""` in JSON; use `—` placeholders in HTML |
+| File extensions unexpected | Accept `.png`, `.jpeg`, `.dng`, `.raf` as well |
+| User wants JSON only | Run Steps 1, 2, 4 only — skip Steps 3, 5, 5b, 5c |
+| User wants HTML only | Run Steps 1, 2, 3, 5 only — skip Steps 4, 5b, 5c |
+| User wants checklist only | Run Steps 1, 2, 5b only — skip Steps 3, 4, 5, 5c |
 | Smart telescope (no separate calibration) | `calibration: "Handled internally by the instrument"` — replace Phase 01 in checklist |
-| `doc/` already exists                     | Overwrite HTML files silently — never error on existing directory                     |
-| Pure narrowband (HOO / SHO)               | Remove Luminance phase and LRGB combination phase from checklist                      |
-| HαRGB blend                               | Keep LRGB structure; add PixelMath Hα blend step after ChannelCombination             |
-| Per-channel times not parseable           | Use `—` in checklist data cells; do not fail                                          |
-| Sessions array has mixed formats          | Parse best-effort; log assumptions to console                                         |
+| `doc/` already exists | Overwrite HTML files silently — never error on existing directory |
+| Pure narrowband (HOO / SHO) | Remove Luminance phase and LRGB combination phase from checklist |
+| HαRGB blend | Keep LRGB structure; add PixelMath Hα blend step after ChannelCombination |
+| Per-channel times not parseable | Use `—` in checklist data cells; do not fail |
+| Sessions array has mixed formats | Parse best-effort; log assumptions to console |
+| User wants astrobin only | Run Steps 1, 2, 4, 5c only — skip Steps 3, 5, 5b |
+| Dual-band filter (Ha+OIII built-in) | Produce two filter objects in astrobin.json: Ha + OIII |
+| Tri-band filter | Produce three filter objects: Ha + OIII + SII |
+| No date parseable from sessions | Set `first_acquisition_date` and `last_acquisition_date` to `null` |
+| Mount info not provided | `mounts: []` — do not guess or invent |
+| Non-telescope.live remote site | Set `data_source: "AMATEUR_HOSTING"`, `remote_source: ""` |
+| OWN backyard imaging | Set `data_source: "OWN"`, `remote_source: ""` |
+| Gain parseable from filenames | Include numeric gain value in `acquisition_details[].gain` |
+| Bortle class mentioned in notes | Include in all `acquisition_details[].bortle` entries |
