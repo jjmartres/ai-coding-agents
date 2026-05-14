@@ -238,11 +238,13 @@ All phases present. Sections 04 (Luminance linear) and 09 (LRGB Integration) are
 **Smart telescope / pre-stacked** (single session file per filter, `stacking` = "Internal stacking by instrument"):
 
 - Replace the entire Phase 01 (section 03) with a single step:
+
   ```
   Import pre-stacked masters
   Copy the stacked output files into the project folder.
   No WBPP run required — calibration and stacking handled by the instrument.
   ```
+
 - Remove Blink Comparator steps
 
 #### 5b.5 — Save the file
