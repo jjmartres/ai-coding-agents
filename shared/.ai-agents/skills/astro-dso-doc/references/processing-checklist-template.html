@@ -667,16 +667,16 @@
           <span class="section-number">04</span>
           <span class="section-title">Phase 02 — Luminance Processing (Linear)</span>
           <div class="section-line"></div>
-          <span class="section-sub">Master L only</span>
+          <span class="section-sub">Master L only · NO stretch yet</span>
         </div>
-        <div class="phase-note">Process Luminance independently from RGB. It will provide the final sharpness and structural detail in the LRGB combination.</div>
+        <div class="phase-note">Process Luminance in linear space only — BXT and NXT. Do NOT stretch here. LRGBCombination is done on linear masters before any stretch.</div>
         <div class="steps">
 
           <div class="step" id="step-lum-stf" onclick="toggle(this)">
             <div class="checkbox"></div>
             <div>
               <div class="step-name">STF Auto — Luminance visual check</div>
-              <div class="step-detail">Apply auto STF for visual inspection. Do not apply permanently. Verify no calibration artefacts are present.</div>
+              <div class="step-detail">Apply auto STF for visual inspection only. Do not apply permanently. Verify no calibration artefacts are present.</div>
               <div class="step-tags"><span class="tag tag-lum">LUM</span></div>
             </div>
           </div>
@@ -703,7 +703,7 @@
             <div class="checkbox"></div>
             <div>
               <div class="step-name">BlurXterminator — default settings (2nd pass)</div>
-              <div class="step-detail">Full second pass after SPFC on the Luminance master.</div>
+              <div class="step-detail">Full second pass on the Luminance master. Still linear.</div>
               <div class="step-tags"><span class="tag tag-lum">LUM</span></div>
             </div>
           </div>
@@ -712,26 +712,17 @@
             <div class="checkbox"></div>
             <div>
               <div class="step-name">NoiseXterminator — Luminance linear</div>
-              <div class="step-detail">Denoise: 0.70 · Color separation: OFF (mono channel) · Iterations: 2. Conservative settings — preserve fine structural detail.</div>
+              <div class="step-detail">Denoise: 0.70 · Color separation: OFF (mono channel) · Iterations: 2. Conservative — preserve fine structural detail.</div>
               <div class="step-tags"><span class="tag tag-lum">LUM</span></div>
-            </div>
-          </div>
-
-          <div class="step" id="step-lum-stretch" onclick="toggle(this)">
-            <div class="checkbox"></div>
-            <div>
-              <div class="step-name">Stretch — Statistical Stretch or MSAS</div>
-              <div class="step-detail">Seti-Astro Statistical Stretch or MultiscaleAdaptiveStretch. Target Median ~0.09. Adjust HDR Compress and Protect Highlights for the target's dynamic range. Save preview before applying.</div>
-              <div class="step-tags"><span class="tag tag-lum">LUM</span><span class="tag tag-warn">CHECK DYNAMIC RANGE</span></div>
             </div>
           </div>
 
           <div class="step" id="step-lum-save" onclick="toggle(this)">
             <div class="checkbox"></div>
             <div>
-              <div class="step-name">Save stretched Luminance</div>
-              <div class="step-detail">Save as: {{DSO_ID}}_L_stretched.xisf before continuing.</div>
-              <div class="step-tags"><span class="tag tag-tip">BACKUP</span></div>
+              <div class="step-name">Save linear Luminance</div>
+              <div class="step-detail">Save as: {{DSO_ID}}_L_linear.xisf — keep this master open for LRGBCombination. Do not stretch yet.</div>
+              <div class="step-tags"><span class="tag tag-tip">BACKUP</span><span class="tag tag-warn">NO STRETCH YET</span></div>
             </div>
           </div>
 
@@ -744,7 +735,7 @@
           <span class="section-number">05</span>
           <span class="section-title">Phase 03 — RGB Processing (Linear)</span>
           <div class="section-line"></div>
-          <span class="section-sub">Masters R + G + B</span>
+          <span class="section-sub">Masters R + G + B · NO stretch yet</span>
         </div>
         <div class="steps">
 
@@ -761,7 +752,7 @@
             <div class="checkbox"></div>
             <div>
               <div class="step-name">ChannelCombination — assemble RGB</div>
-              <div class="step-detail">Process › ChannelCombination · Mode RGB · R→Red · G→Green · B→Blue. Image will appear very dark or green-dominant — this is normal.</div>
+              <div class="step-detail">Process › ChannelCombination · Mode RGB · R→Red · G→Green · B→Blue. Image will appear very dark or green-dominant — normal in linear space.</div>
               <div class="step-tags"><span class="tag tag-rgb">RGB</span></div>
             </div>
           </div>
@@ -797,7 +788,7 @@
             <div class="checkbox"></div>
             <div>
               <div class="step-name">BlurXterminator — default settings (2nd pass)</div>
-              <div class="step-detail">Full second pass on the RGB combined image.</div>
+              <div class="step-detail">Full second pass on the RGB combined image. Still linear.</div>
               <div class="step-tags"><span class="tag tag-rgb">RGB</span></div>
             </div>
           </div>
@@ -811,29 +802,54 @@
             </div>
           </div>
 
-          <div class="step" id="step-stretch-rgb" onclick="toggle(this)">
+          <div class="step" id="step-save-rgb-linear" onclick="toggle(this)">
             <div class="checkbox"></div>
             <div>
-              <div class="step-name">Stretch RGB — Statistical Stretch or MSAS</div>
-              <div class="step-detail">Seti-Astro Statistical Stretch or MSAS. Target Median ~0.09. Linked Stretch enabled. Adjust HDR Compress if target has high dynamic range. Save preview before applying.</div>
-              <div class="step-tags"><span class="tag tag-rgb">RGB</span><span class="tag tag-warn">CHECK DYNAMIC RANGE</span></div>
+              <div class="step-name">Save linear RGB</div>
+              <div class="step-detail">Save: {{DSO_ID}}_RGB_linear.xisf — keep open for LRGBCombination. Do not stretch yet.</div>
+              <div class="step-tags"><span class="tag tag-tip">BACKUP</span><span class="tag tag-warn">NO STRETCH YET</span></div>
             </div>
           </div>
 
-          <div class="step" id="step-scnr" onclick="toggle(this)">
+        </div>
+      </section>
+
+      <!-- ══ 06 — LRGB INTEGRATION (LINEAR) ═══════════════════════
+      [OPTIONAL] Remove this entire section for pure RGB workflows.
+      ════════════════════════════════════════════════════════════ -->
+      <section class="section">
+        <div class="section-header">
+          <span class="section-number">06</span>
+          <span class="section-title">Phase 04 — LRGB Combination (Linear)</span>
+          <div class="section-line"></div>
+          <span class="section-sub">LRGBCombination · before any stretch · ⭐ key step</span>
+        </div>
+        <div class="phase-note">LRGBCombination must be applied on LINEAR masters — before any stretch. This is the correct workflow: combine in linear space, then stretch the resulting LRGB image once.</div>
+        <div class="steps">
+
+          <div class="step" id="step-lrgb-comb" onclick="toggle(this)">
             <div class="checkbox"></div>
             <div>
-              <div class="step-name">SCNR — remove residual green cast</div>
-              <div class="step-detail">Apply SCNR on the stretched RGB image to eliminate the green dominant typical of CMOS sensors.</div>
-              <div class="step-tags"><span class="tag tag-rgb">RGB</span></div>
+              <div class="step-name">LRGBCombination — on linear masters</div>
+              <div class="step-detail">Process › ColorSpaces › LRGBCombination. Drag onto the linear RGB image. L → {{DSO_ID}}_L_linear (monochrome). R/G/B → leave as &lt;Auto&gt; (uses target channels). All Channel Weights = 1.0. Lightness: 0.5 · Saturation: 0.5. Uncheck Chrominance Noise Reduction.</div>
+              <div class="step-tags"><span class="tag tag-lrgb">LRGB</span><span class="tag tag-warn">LINEAR ONLY — no stretch before this</span></div>
             </div>
           </div>
 
-          <div class="step" id="step-save-rgb" onclick="toggle(this)">
+          <div class="step" id="step-lrgb-check-linear" onclick="toggle(this)">
             <div class="checkbox"></div>
             <div>
-              <div class="step-name">Save RGB linear + stretched</div>
-              <div class="step-detail">Save: {{DSO_ID}}_RGB_linear.xisf and {{DSO_ID}}_RGB_stretched.xisf.</div>
+              <div class="step-name">Visual check — STF Auto on LRGB result</div>
+              <div class="step-detail">Apply auto STF to inspect the linear LRGB image. Verify no color cast, no clipping. The image should look sharper than the RGB alone under STF.</div>
+              <div class="step-tags"><span class="tag tag-lrgb">LRGB</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-lrgb-save-linear" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">Save linear LRGB</div>
+              <div class="step-detail">Save as: {{DSO_ID}}_LRGB_linear.xisf before stretching.</div>
               <div class="step-tags"><span class="tag tag-tip">BACKUP</span></div>
             </div>
           </div>
@@ -841,22 +857,62 @@
         </div>
       </section>
 
-      <!-- ══ 06 — STAR SEPARATION ══════════════════════════════════ -->
+      <!-- ══ 07 — STRETCH LRGB ══════════════════════════════════════ -->
       <section class="section">
         <div class="section-header">
-          <span class="section-number">06</span>
-          <span class="section-title">Phase 04 — Star Separation</span>
+          <span class="section-number">07</span>
+          <span class="section-title">Phase 05 — Stretch LRGB Image</span>
           <div class="section-line"></div>
-          <span class="section-sub">StarXterminator · on stretched RGB</span>
+          <span class="section-sub">GHS · Statistical Stretch · single pass</span>
+        </div>
+        <div class="steps">
+
+          <div class="step" id="step-stretch-lrgb" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">Stretch — GHS or Statistical Stretch</div>
+              <div class="step-detail">Stretch the combined LRGB linear image in one pass. Target Median ~0.09. Adjust Highlight Protection (HP) 0.50–0.70 for targets with high dynamic range. Linked Stretch (SC_RGB). Save preview before applying.</div>
+              <div class="step-tags"><span class="tag tag-lrgb">LRGB</span><span class="tag tag-warn">CHECK DYNAMIC RANGE</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-scnr" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">SCNR — remove residual green cast</div>
+              <div class="step-detail">Apply SCNR on the stretched LRGB image to eliminate any residual green dominant.</div>
+              <div class="step-tags"><span class="tag tag-lrgb">LRGB</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-save-lrgb-stretched" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">Save stretched LRGB</div>
+              <div class="step-detail">Save as: {{DSO_ID}}_LRGB_stretched.xisf before star separation.</div>
+              <div class="step-tags"><span class="tag tag-tip">BACKUP</span></div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ══ 08 — STAR SEPARATION ══════════════════════════════════ -->
+      <section class="section">
+        <div class="section-header">
+          <span class="section-number">08</span>
+          <span class="section-title">Phase 06 — Star Separation</span>
+          <div class="section-line"></div>
+          <span class="section-sub">StarXterminator · on stretched LRGB</span>
         </div>
         <div class="steps">
 
           <div class="step" id="step-sxt" onclick="toggle(this)">
             <div class="checkbox"></div>
             <div>
-              <div class="step-name">StarXterminator — RGB separation</div>
-              <div class="step-detail">Generates {{DSO_ID}}_RGB_stars + {{DSO_ID}}_RGB_starless. Keep both layers open throughout the workflow.</div>
-              <div class="step-tags"><span class="tag tag-rgb">RGB</span></div>
+              <div class="step-name">StarXterminator — LRGB separation</div>
+              <div class="step-detail">Generates {{DSO_ID}}_LRGB_stars + {{DSO_ID}}_LRGB_starless. Keep both layers open throughout the workflow.</div>
+              <div class="step-tags"><span class="tag tag-lrgb">LRGB</span></div>
             </div>
           </div>
 
@@ -865,7 +921,7 @@
             <div>
               <div class="step-name">Curves Transformation — Stars only image</div>
               <div class="step-detail">Channel S (saturation): point X=0.50 → Y=0.58. Enhance stellar color diversity (blues, oranges) without oversaturation.</div>
-              <div class="step-tags"><span class="tag tag-rgb">RGB STARS</span></div>
+              <div class="step-tags"><span class="tag tag-lrgb">LRGB STARS</span></div>
             </div>
           </div>
 
@@ -881,11 +937,11 @@
         </div>
       </section>
 
-      <!-- ══ 07 — STARLESS PROCESSING ════════════════════════════ -->
+      <!-- ══ 09 — STARLESS PROCESSING ════════════════════════════ -->
       <section class="section">
         <div class="section-header">
-          <span class="section-number">07</span>
-          <span class="section-title">Phase 05 — Starless RGB Processing</span>
+          <span class="section-number">09</span>
+          <span class="section-title">Phase 07 — Starless LRGB Processing</span>
           <div class="section-line"></div>
           <span class="section-sub">Detail · contrast · color</span>
         </div>
@@ -896,7 +952,7 @@
             <div>
               <div class="step-name">Blemish Blaster (if needed)</div>
               <div class="step-detail">Remove any residual halos around bright sources. Inspect the starless image carefully at 1:1 before proceeding.</div>
-              <div class="step-tags"><span class="tag tag-rgb">RGB STARLESS</span><span class="tag tag-tip">OPTIONAL</span></div>
+              <div class="step-tags"><span class="tag tag-lrgb">LRGB STARLESS</span><span class="tag tag-tip">OPTIONAL</span></div>
             </div>
           </div>
 
@@ -904,8 +960,8 @@
             <div class="checkbox"></div>
             <div>
               <div class="step-name">GHS — Generalized Hyperbolic Stretch</div>
-              <div class="step-detail">Pull out faint outer structures gently. Set Symmetry Point (SP) from a faint region of the target. Protect Highlights (HP): 0.50–0.70 depending on target dynamics. Stretch factor: 0.2–0.3 for first pass.</div>
-              <div class="step-tags"><span class="tag tag-rgb">RGB STARLESS</span><span class="tag tag-warn">ADJUST HP PER TARGET</span></div>
+              <div class="step-detail">Pull out faint outer structures gently. Set Symmetry Point (SP) from a faint region of the target. Protect Highlights (HP): 0.50–0.70. Stretch factor: 0.2–0.3 for first pass.</div>
+              <div class="step-tags"><span class="tag tag-lrgb">LRGB STARLESS</span><span class="tag tag-warn">ADJUST HP PER TARGET</span></div>
             </div>
           </div>
 
@@ -913,17 +969,17 @@
             <div class="checkbox"></div>
             <div>
               <div class="step-name">Local Histogram Equalization</div>
-              <div class="step-detail">Kernel: 64 · Amount: 0.40–0.60. Brings out structural detail and increases local contrast. Adjust amount to avoid artefacts around bright cores.</div>
-              <div class="step-tags"><span class="tag tag-rgb">RGB STARLESS</span></div>
+              <div class="step-detail">Kernel: 64 · Amount: 0.40–0.60. Brings out structural detail and local contrast. The Luminance channel already provides sharpness — keep amount conservative.</div>
+              <div class="step-tags"><span class="tag tag-lrgb">LRGB STARLESS</span></div>
             </div>
           </div>
 
           <div class="step" id="step-usm" onclick="toggle(this)">
             <div class="checkbox"></div>
             <div>
-              <div class="step-name">Unsharp Mask</div>
-              <div class="step-detail">StdDev: 2.0 · Amount: 0.50 · Target: Lightness (CIE L*). Sharpens fine structural detail. Moderate application — Luminance will handle final sharpness in LRGB.</div>
-              <div class="step-tags"><span class="tag tag-rgb">RGB STARLESS</span></div>
+              <div class="step-name">Unsharp Mask (optional)</div>
+              <div class="step-detail">StdDev: 2.0 · Amount: 0.30–0.50 · Target: Lightness (CIE L*). More conservative than pure RGB workflow — the Lum channel already provides strong sharpness.</div>
+              <div class="step-tags"><span class="tag tag-lrgb">LRGB STARLESS</span><span class="tag tag-tip">OPTIONAL</span></div>
             </div>
           </div>
 
@@ -932,7 +988,7 @@
             <div>
               <div class="step-name">Selective Color Correction — Seti-Astro Toolbox</div>
               <div class="step-detail">Adjust hue, saturation, luminance per color mask. Create targeted masks for core vs outer regions. Warm up brighter zones; preserve cooler tones in faint areas.</div>
-              <div class="step-tags"><span class="tag tag-rgb">RGB STARLESS</span></div>
+              <div class="step-tags"><span class="tag tag-lrgb">LRGB STARLESS</span></div>
             </div>
           </div>
 
@@ -941,18 +997,18 @@
             <div>
               <div class="step-name">NoiseXterminator — 2nd pass on starless</div>
               <div class="step-detail">~70% strength on the final starless. Preserve fine structural details while smoothing residual noise.</div>
-              <div class="step-tags"><span class="tag tag-rgb">RGB STARLESS</span></div>
+              <div class="step-tags"><span class="tag tag-lrgb">LRGB STARLESS</span></div>
             </div>
           </div>
 
         </div>
       </section>
 
-      <!-- ══ 08 — RGB RECOMBINATION ════════════════════════════════ -->
+      <!-- ══ 10 — LRGB RECOMBINATION ═══════════════════════════════ -->
       <section class="section">
         <div class="section-header">
-          <span class="section-number">08</span>
-          <span class="section-title">Phase 06 — RGB Recombination</span>
+          <span class="section-number">10</span>
+          <span class="section-title">Phase 08 — Recombination</span>
           <div class="section-line"></div>
           <span class="section-sub">Rescreen Stars · Cosmic Photons</span>
         </div>
@@ -962,62 +1018,19 @@
             <div class="checkbox"></div>
             <div>
               <div class="step-name">Rescreen Stars — Cosmic Photons script</div>
-              <div class="step-detail">Cleanly recombines {{DSO_ID}}_RGB_starless (processed) + {{DSO_ID}}_RGB_stars (reduced / corrected).</div>
-              <div class="step-tags"><span class="tag tag-rgb">RGB FINAL</span></div>
+              <div class="step-detail">Cleanly recombines {{DSO_ID}}_LRGB_starless (processed) + {{DSO_ID}}_LRGB_stars (reduced / corrected).</div>
+              <div class="step-tags"><span class="tag tag-lrgb">LRGB FINAL</span></div>
             </div>
           </div>
 
         </div>
       </section>
 
-      <!-- ══ 09 — LRGB INTEGRATION ════════════════════════════════
-      [OPTIONAL] Remove this entire section for pure RGB workflows.
-      ════════════════════════════════════════════════════════════ -->
+      <!-- ══ 11 — FINALIZATION ═════════════════════════════════════ -->
       <section class="section">
         <div class="section-header">
-          <span class="section-number">09</span>
-          <span class="section-title">Phase 07 — LRGB Integration</span>
-          <div class="section-line"></div>
-          <span class="section-sub">LRGBCombination · key step</span>
-        </div>
-        <div class="phase-note">The Luminance channel provides all final sharpness and structural detail. The RGB contributes color only. The balance between L weight and saturation controls the final aesthetic.</div>
-        <div class="steps">
-
-          <div class="step" id="step-lum-stx" onclick="toggle(this)">
-            <div class="checkbox"></div>
-            <div>
-              <div class="step-name">Luminance final processing — StarXterminator (optional)</div>
-              <div class="step-detail">Separate stars from the stretched Luminance. Process the Lum starless (GHS, LHE, USM) then rescreen stars before combining. Recommended for best results.</div>
-              <div class="step-tags"><span class="tag tag-lum">LUM</span><span class="tag tag-tip">OPTIONAL</span></div>
-            </div>
-          </div>
-
-          <div class="step" id="step-lrgb-comb" onclick="toggle(this)">
-            <div class="checkbox"></div>
-            <div>
-              <div class="step-name">LRGBCombination</div>
-              <div class="step-detail">Process › ColorSpaces › LRGBCombination. L → {{DSO_ID}}_L_stretched.xisf · RGB → {{DSO_ID}}_RGB_final. Luminance channel weight: 0.5–0.7. Saturation: 0.7–1.0 — adjust to taste.</div>
-              <div class="step-tags"><span class="tag tag-lrgb">LRGB</span></div>
-            </div>
-          </div>
-
-          <div class="step" id="step-lrgb-check" onclick="toggle(this)">
-            <div class="checkbox"></div>
-            <div>
-              <div class="step-name">Post-combination check</div>
-              <div class="step-detail">Verify that structural detail is sharper than in RGB alone. Check color balance (no color cast introduced). Compare against the RGB final at 1:1.</div>
-              <div class="step-tags"><span class="tag tag-lrgb">LRGB</span><span class="tag tag-warn">COMPARE VS RGB</span></div>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- ══ 10 — FINALIZATION ═════════════════════════════════════ -->
-      <section class="section">
-        <div class="section-header">
-          <span class="section-number">10</span>
-          <span class="section-title">Phase 08 — Finalization</span>
+          <span class="section-number">11</span>
+          <span class="section-title">Phase 09 — Finalization</span>
           <div class="section-line"></div>
           <span class="section-sub">Curves · ICC · Export</span>
         </div>
