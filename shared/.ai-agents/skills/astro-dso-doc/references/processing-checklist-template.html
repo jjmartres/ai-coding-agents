@@ -1,0 +1,1168 @@
+<!doctype html>
+<!--
+  ASTRO DSO — PIXINSIGHT PROCESSING CHECKLIST TEMPLATE
+  ======================================================
+  Replace all {{PLACEHOLDER}} tokens before saving.
+  Sections marked [OPTIONAL] can be removed if not applicable.
+  Do NOT change CSS variable names or JS function names.
+
+  PLACEHOLDER REFERENCE
+  ─────────────────────
+  {{DSO_ID}}              → e.g. "NGC 4594"
+  {{COMMON_NAME}}         → e.g. "Sombrero Galaxy"
+  {{CONSTELLATION}}       → e.g. "Virgo"
+  {{OBJECT_TYPE}}         → e.g. "SPIRAL GALAXY"
+  {{CAMERA}}              → e.g. "QHY 600M"
+  {{INSTRUMENT}}          → e.g. "Telescope.live Remote Observatory"
+  {{FILTER}}              → e.g. "LRGB" | "HOO" | "SHO" | "RGB"
+  {{SITE}}                → e.g. "Chile Remote Observatory"
+  {{TOTAL_EXPOSURE}}      → e.g. "10h 00m"
+  {{TOTAL_SUBS}}          → e.g. "120"
+  {{LUM_TIME}}            → e.g. "3h 00m (36 × 300s)"  — omit row if no Lum channel
+  {{RED_TIME}}            → e.g. "2h 15m (27 × 300s)"
+  {{GREEN_TIME}}          → e.g. "2h 25m (29 × 300s)"
+  {{BLUE_TIME}}           → e.g. "2h 20m (28 × 300s)"
+  {{HA_TIME}}             → e.g. "4h 00m (48 × 300s)"  — omit row if no Hα channel
+  {{OIII_TIME}}           → omit row if no OIII channel
+  {{SII_TIME}}            → omit row if no SII channel
+  {{GENERATED_DATE}}      → YYYY-MM-DD
+  {{AUTHOR}}              → e.g. "J.J. Martres · Savoie, France"
+  {{DSO_NOTES}}           → Free-text note about specific processing challenges [OPTIONAL]
+
+  CHECKLIST PHASES
+  ─────────────────
+  Each processing phase is a <section class="phase"> block.
+  Each step is a <div class="step" onclick="toggle(this)"> block.
+  Steps are clickable — checked state is stored in localStorage by step id.
+
+  STEP TAGS (use in .step-tags):
+  .tag-lum    → Luminance only
+  .tag-rgb    → RGB only
+  .tag-ha     → Hα only
+  .tag-nb     → Narrowband (general)
+  .tag-lrgb   → LRGB combined step
+  .tag-warn   → Warning / target-specific attention
+  .tag-tip    → Tip / optional step
+
+  PHASE MODES:
+  Use data-channel="lum"   on .phase to show only with Lum steps
+  Use data-channel="nb"    on .phase for narrowband-specific phases
+  These are purely informational — all phases are always rendered.
+-->
+<html lang="en" data-theme="macchiato">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{DSO_ID}} — Processing Checklist</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ══ CATPPUCCIN — ALL FLAVORS ══════════════════════════════ */
+
+      [data-theme="latte"] {
+        --base: #eff1f5; --mantle: #e6e9ef; --crust: #dce0e8;
+        --surface0: #ccd0da; --surface1: #bcc0cc; --surface2: #acb0be;
+        --overlay0: #9ca0b0; --overlay1: #8c8fa1; --overlay2: #7c7f93;
+        --subtext0: #6c6f85; --subtext1: #5c5f77; --text: #4c4f69;
+        --lavender: #7287fd; --blue: #1e66f5; --sapphire: #209fb5;
+        --sky: #04a5e5; --teal: #179299; --green: #40a02b;
+        --yellow: #df8e1d; --peach: #fe640b; --maroon: #e64553;
+        --red: #d20f39; --mauve: #8839ef; --pink: #ea76cb;
+        --flamingo: #dd7878; --rosewater: #dc8a78;
+        --hero-grad: linear-gradient(160deg,#dce0e8 0%,#e2e5f0 40%,#ece0f4 70%,#eff1f5 100%);
+        --hero-glow: rgba(136,57,239,0.05); --hero-glow2: rgba(30,102,245,0.03);
+        --s1: rgba(76,79,105,0.25); --s2: rgba(114,135,253,0.25); --s3: rgba(32,159,181,0.25);
+        --table-hover: rgba(188,192,204,0.5);
+        --step-checked-bg: rgba(64,160,43,0.08);
+        --step-checked-border: rgba(64,160,43,0.4);
+        --step-hover-bg: rgba(30,102,245,0.06);
+        --step-hover-border: rgba(30,102,245,0.35);
+      }
+      [data-theme="frappe"] {
+        --base: #303446; --mantle: #292c3c; --crust: #232634;
+        --surface0: #414559; --surface1: #51576d; --surface2: #626880;
+        --overlay0: #737994; --overlay1: #838ba7; --overlay2: #949cbb;
+        --subtext0: #a5adce; --subtext1: #b5bfe2; --text: #c6d0f5;
+        --lavender: #babbf1; --blue: #8caaee; --sapphire: #85c1dc;
+        --sky: #99d1db; --teal: #81c8be; --green: #a6d189;
+        --yellow: #e5c890; --peach: #ef9f76; --maroon: #ea999c;
+        --red: #e78284; --mauve: #ca9ee6; --pink: #f4b8e4;
+        --flamingo: #eebebe; --rosewater: #f2d5cf;
+        --hero-grad: linear-gradient(160deg,#232634 0%,#262938 40%,#2e2340 70%,#303446 100%);
+        --hero-glow: rgba(202,158,230,0.08); --hero-glow2: rgba(140,170,238,0.04);
+        --s1: rgba(198,208,245,0.45); --s2: rgba(186,187,241,0.35); --s3: rgba(153,209,219,0.35);
+        --table-hover: rgba(65,69,89,0.7);
+        --step-checked-bg: rgba(166,209,137,0.08);
+        --step-checked-border: rgba(166,209,137,0.35);
+        --step-hover-bg: rgba(140,170,238,0.08);
+        --step-hover-border: rgba(140,170,238,0.35);
+      }
+      [data-theme="macchiato"] {
+        --base: #24273a; --mantle: #1e2030; --crust: #181926;
+        --surface0: #363a4f; --surface1: #494d64; --surface2: #5b5f77;
+        --overlay0: #6e738d; --overlay1: #8087a2; --overlay2: #939ab7;
+        --subtext0: #a5adcb; --subtext1: #b8c0e0; --text: #cad3f5;
+        --lavender: #b7bdf8; --blue: #8aadf4; --sapphire: #7dc4e4;
+        --sky: #91d7e3; --teal: #8bd5ca; --green: #a6da95;
+        --yellow: #eed49f; --peach: #f5a97f; --maroon: #ee99a0;
+        --red: #ed8796; --mauve: #c6a0f6; --pink: #f5bde6;
+        --flamingo: #f0c6c6; --rosewater: #f4dbd6;
+        --hero-grad: linear-gradient(160deg,#181926 0%,#1a1d2e 40%,#2a1f3d 70%,#24273a 100%);
+        --hero-glow: rgba(198,160,246,0.08); --hero-glow2: rgba(138,173,244,0.04);
+        --s1: rgba(202,211,245,0.5); --s2: rgba(183,189,248,0.4); --s3: rgba(145,215,227,0.4);
+        --table-hover: rgba(54,58,79,0.7);
+        --step-checked-bg: rgba(166,218,149,0.08);
+        --step-checked-border: rgba(166,218,149,0.35);
+        --step-hover-bg: rgba(138,173,244,0.08);
+        --step-hover-border: rgba(138,173,244,0.35);
+      }
+      [data-theme="mocha"] {
+        --base: #1e1e2e; --mantle: #181825; --crust: #11111b;
+        --surface0: #313244; --surface1: #45475a; --surface2: #585b70;
+        --overlay0: #6c7086; --overlay1: #7f849c; --overlay2: #9399b2;
+        --subtext0: #a6adc8; --subtext1: #bac2de; --text: #cdd6f4;
+        --lavender: #b4befe; --blue: #89b4fa; --sapphire: #74c7ec;
+        --sky: #89dceb; --teal: #94e2d5; --green: #a6e3a1;
+        --yellow: #f9e2af; --peach: #fab387; --maroon: #eba0ac;
+        --red: #f38ba8; --mauve: #cba6f7; --pink: #f5c2e7;
+        --flamingo: #f2cdcd; --rosewater: #f5e0dc;
+        --hero-grad: linear-gradient(160deg,#11111b 0%,#141420 40%,#221836 70%,#1e1e2e 100%);
+        --hero-glow: rgba(203,166,247,0.08); --hero-glow2: rgba(137,180,250,0.04);
+        --s1: rgba(205,214,244,0.5); --s2: rgba(180,190,254,0.4); --s3: rgba(137,220,235,0.4);
+        --table-hover: rgba(49,50,68,0.7);
+        --step-checked-bg: rgba(166,227,161,0.08);
+        --step-checked-border: rgba(166,227,161,0.35);
+        --step-hover-bg: rgba(137,180,250,0.08);
+        --step-hover-border: rgba(137,180,250,0.35);
+      }
+
+      /* ══ BASE ══════════════════════════════════════════════════ */
+      *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+      html, body { transition: background 0.35s ease, color 0.35s ease; }
+      body {
+        background: var(--base); color: var(--text);
+        font-family: "Crimson Pro", Georgia, serif;
+        font-size: 18px; line-height: 1.7; min-height: 100vh;
+      }
+      body::before {
+        content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+        background-image:
+          radial-gradient(1px 1px at 8% 12%, var(--s1) 0%, transparent 100%),
+          radial-gradient(1px 1px at 23% 58%, var(--s2) 0%, transparent 100%),
+          radial-gradient(1.5px 1.5px at 38% 28%, var(--s3) 0%, transparent 100%),
+          radial-gradient(1px 1px at 52% 77%, var(--s1) 0%, transparent 100%),
+          radial-gradient(1px 1px at 67% 19%, var(--s2) 0%, transparent 100%),
+          radial-gradient(2px 2px at 78% 48%, var(--s3) 0%, transparent 100%),
+          radial-gradient(1px 1px at 88% 73%, var(--s1) 0%, transparent 100%),
+          radial-gradient(1px 1px at 14% 88%, var(--s2) 0%, transparent 100%),
+          radial-gradient(1px 1px at 58% 43%, var(--s3) 0%, transparent 100%),
+          radial-gradient(1px 1px at 33% 8%, var(--s1) 0%, transparent 100%),
+          radial-gradient(1px 1px at 83% 8%, var(--s2) 0%, transparent 100%),
+          radial-gradient(1px 1px at 4% 43%, var(--s3) 0%, transparent 100%),
+          radial-gradient(1.5px 1.5px at 45% 63%, var(--s2) 0%, transparent 100%),
+          radial-gradient(1px 1px at 71% 86%, var(--s1) 0%, transparent 100%),
+          radial-gradient(1px 1px at 94% 33%, var(--s3) 0%, transparent 100%);
+      }
+
+      /* ══ THEME SWITCHER ════════════════════════════════════════ */
+      .theme-switcher {
+        position: fixed; top: 18px; right: 22px; z-index: 1000;
+        display: flex; align-items: center; gap: 9px;
+        background: var(--mantle); border: 1px solid var(--surface1);
+        border-radius: 6px; padding: 8px 14px;
+        box-shadow: 0 4px 28px rgba(0,0,0,0.3);
+        transition: background 0.35s, border-color 0.35s;
+      }
+      .flavor-dot {
+        width: 9px; height: 9px; border-radius: 50%;
+        background: var(--mauve); flex-shrink: 0; transition: background 0.35s;
+      }
+      .theme-switcher label {
+        font-family: "Space Mono", monospace; font-size: 9px;
+        letter-spacing: 2px; text-transform: uppercase;
+        color: var(--overlay1); white-space: nowrap;
+      }
+      #themeSelect {
+        font-family: "Space Mono", monospace; font-size: 11px;
+        background: var(--surface0); color: var(--text);
+        border: 1px solid var(--surface2); border-radius: 3px;
+        padding: 4px 26px 4px 9px; cursor: pointer; outline: none;
+        appearance: none; -webkit-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238087a2' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat; background-position: right 7px center;
+        transition: background-color 0.35s, color 0.35s, border-color 0.35s;
+      }
+      #themeSelect:hover { border-color: var(--mauve); }
+
+      /* ══ HERO ══════════════════════════════════════════════════ */
+      .hero {
+        position: relative; background: var(--hero-grad);
+        border-bottom: 1px solid var(--surface0);
+        padding: 88px 60px 60px; overflow: hidden; z-index: 1;
+        transition: background 0.35s, border-color 0.35s;
+      }
+      .hero::after {
+        content: ""; position: absolute; top: -100px; right: -100px;
+        width: 500px; height: 500px; border-radius: 50%; pointer-events: none;
+        background: radial-gradient(circle, var(--hero-glow) 0%, var(--hero-glow2) 40%, transparent 70%);
+        transition: background 0.35s;
+      }
+      .hero-label {
+        font-family: "Space Mono", monospace; font-size: 11px;
+        letter-spacing: 4px; color: var(--mauve); text-transform: uppercase;
+        margin-bottom: 16px; opacity: 0.9;
+      }
+      .hero h1 {
+        font-family: "Crimson Pro", serif; font-weight: 300;
+        font-size: clamp(3rem, 6vw, 5.5rem); color: var(--text);
+        line-height: 1.05; letter-spacing: -1px;
+      }
+      .hero h1 em { font-style: italic; color: var(--lavender); }
+      .hero-sub {
+        font-family: "Space Mono", monospace; font-size: 12px;
+        color: var(--overlay1); letter-spacing: 2px; margin-top: 14px;
+      }
+      .hero-badges { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
+      .badge {
+        font-family: "Space Mono", monospace; font-size: 10px;
+        letter-spacing: 1.5px; padding: 5px 14px; border-radius: 2px; text-transform: uppercase;
+      }
+      .badge-mauve  { background: rgba(198,160,246,0.12); border: 1px solid rgba(198,160,246,0.3); color: var(--mauve); }
+      .badge-blue   { background: rgba(138,173,244,0.12); border: 1px solid rgba(138,173,244,0.3); color: var(--blue); }
+      .badge-teal   { background: rgba(139,213,202,0.12); border: 1px solid rgba(139,213,202,0.3); color: var(--teal); }
+      .badge-peach  { background: rgba(245,169,127,0.12); border: 1px solid rgba(245,169,127,0.3); color: var(--peach); }
+      .badge-green  { background: rgba(166,218,149,0.12); border: 1px solid rgba(166,218,149,0.3); color: var(--green); }
+      .badge-yellow { background: rgba(238,212,159,0.12); border: 1px solid rgba(238,212,159,0.3); color: var(--yellow); }
+      .badge-sapphire { background: rgba(125,196,228,0.12); border: 1px solid rgba(125,196,228,0.3); color: var(--sapphire); }
+
+      /* ══ LAYOUT ════════════════════════════════════════════════ */
+      .container { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 60px 40px; }
+      .section { margin-bottom: 56px; }
+      .section-header { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
+      .section-number { font-family: "Space Mono", monospace; font-size: 10px; color: var(--mauve); opacity: 0.6; letter-spacing: 2px; min-width: 28px; }
+      .section-title { font-family: "Space Mono", monospace; font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--subtext0); }
+      .section-line { flex: 1; height: 1px; background: linear-gradient(to right, var(--surface1), transparent); }
+      .section-sub {
+        font-family: "Space Mono", monospace; font-size: 10px;
+        letter-spacing: 2px; color: var(--overlay0); white-space: nowrap;
+      }
+      .divider { height: 1px; background: linear-gradient(to right, transparent, var(--surface1), transparent); margin: 48px 0; }
+
+      /* ══ EXPOSURE SUMMARY ══════════════════════════════════════ */
+      .data-grid {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2px; background: var(--surface0);
+        border: 1px solid var(--surface0); border-radius: 4px; overflow: hidden;
+      }
+      .data-cell {
+        background: var(--mantle); padding: 18px 22px; transition: background 0.15s;
+      }
+      .data-cell:hover { background: var(--surface0); }
+      .data-label {
+        font-family: "Space Mono", monospace; font-size: 10px;
+        letter-spacing: 2px; text-transform: uppercase; color: var(--overlay0); margin-bottom: 5px;
+      }
+      .data-value { font-family: "Crimson Pro", serif; font-size: 20px; font-weight: 600; color: var(--text); }
+      .data-value.accent-mauve   { color: var(--mauve); }
+      .data-value.accent-blue    { color: var(--blue); }
+      .data-value.accent-teal    { color: var(--teal); }
+      .data-value.accent-yellow  { color: var(--yellow); }
+      .data-value.accent-peach   { color: var(--peach); }
+      .data-value.accent-green   { color: var(--green); }
+      .data-value.accent-sapphire{ color: var(--sapphire); }
+      .data-note { font-family: "Crimson Pro", serif; font-size: 13px; font-style: italic; color: var(--overlay1); margin-top: 3px; }
+
+      /* ══ PROGRESS BAR ══════════════════════════════════════════ */
+      .progress-bar-wrap {
+        position: sticky; top: 16px; z-index: 100; margin-bottom: 40px;
+      }
+      .progress-bar-inner {
+        display: flex; align-items: center; gap: 16px;
+        background: var(--mantle); border: 1px solid var(--surface1);
+        border-radius: 4px; padding: 14px 20px;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+        backdrop-filter: blur(8px);
+        transition: background 0.35s, border-color 0.35s;
+      }
+      .progress-label {
+        font-family: "Space Mono", monospace; font-size: 10px;
+        letter-spacing: 2px; text-transform: uppercase; color: var(--overlay0); white-space: nowrap;
+      }
+      .progress-track { flex: 1; height: 4px; background: var(--surface0); border-radius: 999px; overflow: hidden; }
+      .progress-fill {
+        height: 100%; width: 0%;
+        background: linear-gradient(90deg, var(--mauve), var(--teal));
+        border-radius: 999px; transition: width 0.4s ease;
+      }
+      .progress-count {
+        font-family: "Space Mono", monospace; font-size: 12px; color: var(--subtext0); white-space: nowrap;
+      }
+      .btn-reset {
+        font-family: "Space Mono", monospace; font-size: 10px; letter-spacing: 1px;
+        color: var(--overlay0); background: transparent;
+        border: 1px solid var(--surface1); border-radius: 3px;
+        padding: 5px 12px; cursor: pointer; transition: all 0.2s; white-space: nowrap;
+      }
+      .btn-reset:hover { color: var(--text); border-color: var(--overlay1); }
+
+      /* ══ LEGEND ════════════════════════════════════════════════ */
+      .legend {
+        display: flex; flex-wrap: wrap; gap: 20px;
+        padding: 18px 22px; background: var(--mantle);
+        border: 1px solid var(--surface0); border-radius: 4px;
+        margin-bottom: 40px;
+      }
+      .legend-item { display: flex; align-items: center; gap: 8px; }
+      .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+      .legend-text { font-family: "Space Mono", monospace; font-size: 10px; letter-spacing: 1px; color: var(--subtext0); }
+
+      /* ══ PHASE ══════════════════════════════════════════════════ */
+      .phase { margin-bottom: 48px; }
+      .phase-header {
+        display: flex; align-items: center; gap: 16px;
+        margin-bottom: 16px; padding-bottom: 12px;
+        border-bottom: 1px solid var(--surface0);
+      }
+      .phase-number {
+        font-family: "Space Mono", monospace; font-size: 10px;
+        color: var(--mauve); opacity: 0.7; letter-spacing: 2px; white-space: nowrap;
+      }
+      .phase-title {
+        font-family: "Space Mono", monospace; font-size: 12px;
+        letter-spacing: 3px; text-transform: uppercase; color: var(--subtext1);
+      }
+      .phase-sub {
+        font-family: "Space Mono", monospace; font-size: 10px;
+        color: var(--overlay0); margin-left: auto; white-space: nowrap;
+      }
+
+      /* ══ STEPS ══════════════════════════════════════════════════ */
+      .steps { display: flex; flex-direction: column; gap: 6px; }
+
+      .step {
+        display: grid; grid-template-columns: 26px 1fr;
+        align-items: start; gap: 14px;
+        padding: 14px 18px; background: var(--mantle);
+        border: 1px solid var(--surface0); border-radius: 4px;
+        cursor: pointer; transition: all 0.2s ease; user-select: none;
+      }
+      .step:hover {
+        background: var(--step-hover-bg);
+        border-color: var(--step-hover-border);
+      }
+      .step.checked {
+        background: var(--step-checked-bg);
+        border-color: var(--step-checked-border);
+        opacity: 0.8;
+      }
+      .step.checked .step-name {
+        text-decoration: line-through; color: var(--overlay0);
+      }
+      .step.checked .step-detail { color: var(--overlay0); }
+
+      .checkbox {
+        width: 18px; height: 18px; border-radius: 3px;
+        border: 1.5px solid var(--surface2); flex-shrink: 0;
+        display: flex; align-items: center; justify-content: center;
+        transition: all 0.2s; margin-top: 2px;
+      }
+      .step.checked .checkbox {
+        background: var(--green); border-color: var(--green);
+      }
+      .step.checked .checkbox::after {
+        content: "✓"; font-size: 11px; color: var(--crust); font-weight: 700; line-height: 1;
+      }
+
+      .step-name {
+        font-family: "Space Mono", monospace; font-size: 12px;
+        font-weight: 700; letter-spacing: 0.5px; color: var(--text);
+        margin-bottom: 4px; line-height: 1.4; transition: color 0.2s;
+      }
+      .step-detail {
+        font-family: "Crimson Pro", serif; font-size: 15px;
+        color: var(--subtext1); line-height: 1.6; transition: color 0.2s;
+      }
+      .step-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+      .tag {
+        font-family: "Space Mono", monospace; font-size: 9px;
+        padding: 2px 8px; border-radius: 2px; letter-spacing: 1px;
+        font-weight: 700; text-transform: uppercase;
+      }
+      .tag-lum     { background: rgba(198,160,246,0.12); color: var(--mauve);    border: 1px solid rgba(198,160,246,0.3); }
+      .tag-rgb     { background: rgba(138,173,244,0.12); color: var(--blue);     border: 1px solid rgba(138,173,244,0.3); }
+      .tag-ha      { background: rgba(237,135,150,0.12); color: var(--red);      border: 1px solid rgba(237,135,150,0.3); }
+      .tag-oiii    { background: rgba(125,196,228,0.12); color: var(--sapphire); border: 1px solid rgba(125,196,228,0.3); }
+      .tag-nb      { background: rgba(238,212,159,0.12); color: var(--yellow);   border: 1px solid rgba(238,212,159,0.3); }
+      .tag-lrgb    { background: rgba(245,189,230,0.12); color: var(--pink);     border: 1px solid rgba(245,189,230,0.3); }
+      .tag-warn    { background: rgba(245,169,127,0.12); color: var(--peach);    border: 1px solid rgba(245,169,127,0.3); }
+      .tag-tip     { background: rgba(139,213,202,0.12); color: var(--teal);     border: 1px solid rgba(139,213,202,0.3); }
+
+      /* ══ PHASE NOTE ════════════════════════════════════════════ */
+      .phase-note {
+        display: flex; align-items: flex-start; gap: 10px;
+        padding: 12px 16px; margin-bottom: 12px;
+        background: rgba(139,213,202,0.06);
+        border: 1px solid rgba(139,213,202,0.2); border-radius: 4px;
+        font-family: "Crimson Pro", serif; font-size: 15px;
+        color: var(--teal); line-height: 1.6;
+      }
+      .phase-note::before { content: "→"; flex-shrink: 0; font-family: "Space Mono", monospace; font-size: 11px; margin-top: 2px; }
+
+      /* ══ DSO NOTES [OPTIONAL] ══════════════════════════════════ */
+      .notes-block {
+        background: var(--mantle); border: 1px solid var(--surface0);
+        border-left: 3px solid var(--sapphire); border-radius: 4px;
+        padding: 22px 26px;
+        font-family: "Crimson Pro", serif; font-size: 16px;
+        color: var(--subtext1); line-height: 1.7;
+      }
+
+      /* ══ FOOTER ════════════════════════════════════════════════ */
+      footer {
+        position: relative; z-index: 1;
+        border-top: 1px solid var(--surface0); padding: 32px 40px;
+        display: flex; justify-content: space-between; align-items: center;
+      }
+      footer .foot-left {
+        font-family: "Space Mono", monospace; font-size: 10px;
+        letter-spacing: 2px; color: var(--overlay0);
+      }
+      footer .foot-right {
+        font-family: "Crimson Pro", serif; font-style: italic;
+        font-size: 14px; color: var(--surface2);
+      }
+
+      @media (max-width: 640px) {
+        .hero { padding: 72px 24px 40px; }
+        .container { padding: 40px 20px; }
+        .hero h1 { font-size: 2.8rem; }
+        .theme-switcher { top: 12px; right: 12px; padding: 6px 10px; }
+        footer { flex-direction: column; gap: 8px; text-align: center; }
+        .phase-sub { display: none; }
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- THEME SWITCHER — do not modify -->
+    <div class="theme-switcher">
+      <div class="flavor-dot"></div>
+      <label for="themeSelect">Flavor</label>
+      <select id="themeSelect" onchange="setTheme(this.value)">
+        <option value="latte">Latte ☀️</option>
+        <option value="frappe">Frappé 🌤</option>
+        <option value="macchiato" selected>Macchiato 🌙</option>
+        <option value="mocha">Mocha 🌑</option>
+      </select>
+    </div>
+
+    <!-- ══ HERO ══════════════════════════════════════════════════
+    {{DSO_ID}}          → e.g. "NGC 4594"
+    {{COMMON_NAME}}     → e.g. "Sombrero Galaxy"
+    {{CONSTELLATION}}   → e.g. "Virgo"
+    {{OBJECT_TYPE}}     → e.g. "SPIRAL GALAXY"
+    Badge classes: badge-mauve / badge-blue / badge-teal /
+                   badge-peach / badge-green / badge-yellow / badge-sapphire
+    Suggested badges: filter type · total exposure · camera · site
+    ════════════════════════════════════════════════════════════ -->
+    <header class="hero">
+      <div class="hero-label">Deep Sky Object · Processing Checklist</div>
+      <h1>{{DSO_ID}}<br /><em>{{COMMON_NAME}}</em></h1>
+      <div class="hero-sub">
+        CONSTELLATION {{CONSTELLATION}} &nbsp;·&nbsp; {{OBJECT_TYPE}}
+        &nbsp;·&nbsp; {{CAMERA}} &nbsp;·&nbsp; {{INSTRUMENT}}
+      </div>
+      <div class="hero-badges">
+        <span class="badge badge-mauve">{{FILTER}}</span>
+        <span class="badge badge-blue">{{TOTAL_EXPOSURE}}</span>
+        <span class="badge badge-teal">{{TOTAL_SUBS}} subs</span>
+        <span class="badge badge-peach">{{SITE}}</span>
+      </div>
+    </header>
+
+    <main class="container">
+
+      <!-- ══ 01 — ACQUISITION SUMMARY ════════════════════════════
+      Fill all exposure rows. Remove channels not used.
+      ═════════════════════════════════════════════════════════ -->
+      <section class="section">
+        <div class="section-header">
+          <span class="section-number">01</span>
+          <span class="section-title">Acquisition Summary</span>
+          <div class="section-line"></div>
+        </div>
+        <div class="data-grid">
+          <div class="data-cell">
+            <div class="data-label">Instrument</div>
+            <div class="data-value" style="font-size:16px">{{INSTRUMENT}}</div>
+            <div class="data-note">{{SITE}}</div>
+          </div>
+          <div class="data-cell">
+            <div class="data-label">Camera</div>
+            <div class="data-value accent-sapphire" style="font-size:16px">{{CAMERA}}</div>
+            <div class="data-note">{{FILTER}}</div>
+          </div>
+          <div class="data-cell">
+            <div class="data-label">Total Integration</div>
+            <div class="data-value accent-mauve">{{TOTAL_EXPOSURE}}</div>
+            <div class="data-note">{{TOTAL_SUBS}} subframes</div>
+          </div>
+          <!-- [OPTIONAL] Remove rows for channels not used -->
+          <div class="data-cell">
+            <div class="data-label">Luminance</div>
+            <div class="data-value accent-blue" style="font-size:16px">{{LUM_TIME}}</div>
+          </div>
+          <div class="data-cell">
+            <div class="data-label">Red</div>
+            <div class="data-value accent-peach" style="font-size:16px">{{RED_TIME}}</div>
+          </div>
+          <div class="data-cell">
+            <div class="data-label">Green</div>
+            <div class="data-value accent-green" style="font-size:16px">{{GREEN_TIME}}</div>
+          </div>
+          <div class="data-cell">
+            <div class="data-label">Blue</div>
+            <div class="data-value accent-teal" style="font-size:16px">{{BLUE_TIME}}</div>
+          </div>
+          <!-- [OPTIONAL] Narrowband channels — remove if LRGB only -->
+          <!--
+          <div class="data-cell">
+            <div class="data-label">Hα</div>
+            <div class="data-value accent-maroon" style="font-size:16px">{{HA_TIME}}</div>
+          </div>
+          <div class="data-cell">
+            <div class="data-label">OIII</div>
+            <div class="data-value accent-sapphire" style="font-size:16px">{{OIII_TIME}}</div>
+          </div>
+          <div class="data-cell">
+            <div class="data-label">SII</div>
+            <div class="data-value accent-yellow" style="font-size:16px">{{SII_TIME}}</div>
+          </div>
+          -->
+        </div>
+      </section>
+
+      <!-- ══ LEGEND ═══════════════════════════════════════════════
+      Adjust legend items to match channels actually used.
+      ════════════════════════════════════════════════════════════ -->
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-dot" style="background:var(--mauve)"></div>
+          <span class="legend-text">Luminance only</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:var(--blue)"></div>
+          <span class="legend-text">RGB only</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:var(--pink)"></div>
+          <span class="legend-text">LRGB combined step</span>
+        </div>
+        <!-- [OPTIONAL] Narrowband legend items -->
+        <!--
+        <div class="legend-item">
+          <div class="legend-dot" style="background:var(--red)"></div>
+          <span class="legend-text">Hα channel</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:var(--sapphire)"></div>
+          <span class="legend-text">OIII channel</span>
+        </div>
+        -->
+        <div class="legend-item">
+          <div class="legend-dot" style="background:var(--peach)"></div>
+          <span class="legend-text">Target-specific attention</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:var(--teal)"></div>
+          <span class="legend-text">Tip / optional</span>
+        </div>
+      </div>
+
+      <!-- ══ 02 — PROGRESS BAR ════════════════════════════════════ -->
+      <section class="section" style="margin-bottom:0">
+        <div class="section-header">
+          <span class="section-number">02</span>
+          <span class="section-title">Progress</span>
+          <div class="section-line"></div>
+        </div>
+      </section>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-inner">
+          <span class="progress-label">Workflow</span>
+          <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+          <span class="progress-count" id="progressCount">0 / 0</span>
+          <button class="btn-reset" onclick="resetAll()">Reset</button>
+        </div>
+      </div>
+
+      <!-- ══ 03 — PRE-PROCESSING ══════════════════════════════════
+      Adjust sub counts and drizzle settings per project.
+      ════════════════════════════════════════════════════════════ -->
+      <section class="section">
+        <div class="section-header">
+          <span class="section-number">03</span>
+          <span class="section-title">Phase 01 — Pre-Processing</span>
+          <div class="section-line"></div>
+          <span class="section-sub">WBPP · Drizzle 2×</span>
+        </div>
+        <div class="steps">
+
+          <div class="step" id="step-blink-lum" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">Blink Comparator — Luminance</div>
+              <div class="step-detail">Identify and remove bad subs (satellite trails, poor seeing, aberrant gradients). With {{LUM_TIME}}, be selective.</div>
+              <div class="step-tags"><span class="tag tag-lum">LUM</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-blink-rgb" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">Blink Comparator — R, G, B</div>
+              <div class="step-detail">Inspect each filter separately. Flag and exclude defective frames before stacking.</div>
+              <div class="step-tags"><span class="tag tag-rgb">RGB</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-wbpp" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">WBPP — Drizzle 2× Standard (all filters)</div>
+              <div class="step-detail">Disable calibration (pre-calibrated sources). Drizzle: 2× Standard. Astrometric solution enabled. Output directory defined. Purge cache before run.</div>
+              <div class="step-tags"><span class="tag tag-lum">LUM</span><span class="tag tag-rgb">RGB</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-masters-check" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">Verify drizzled masters</div>
+              <div class="step-detail">Open the 4 *_drizzle_2x_autocrop.xisf masters. Apply auto STF. Check for round stars, uniform background, and target well-centered.</div>
+              <div class="step-tags"><span class="tag tag-lum">LUM</span><span class="tag tag-rgb">RGB</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-save-linear" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">Save linear masters</div>
+              <div class="step-detail">Save all 4 drizzled masters before any processing. Name: {{DSO_ID}}_L_linear.xisf, {{DSO_ID}}_R_linear.xisf, etc.</div>
+              <div class="step-tags"><span class="tag tag-tip">BACKUP</span></div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ══ 04 — LUMINANCE (LINEAR) ══════════════════════════════
+      [OPTIONAL] Remove this entire phase for pure RGB workflows.
+      ════════════════════════════════════════════════════════════ -->
+      <section class="section">
+        <div class="section-header">
+          <span class="section-number">04</span>
+          <span class="section-title">Phase 02 — Luminance Processing (Linear)</span>
+          <div class="section-line"></div>
+          <span class="section-sub">Master L only</span>
+        </div>
+        <div class="phase-note">Process Luminance independently from RGB. It will provide the final sharpness and structural detail in the LRGB combination.</div>
+        <div class="steps">
+
+          <div class="step" id="step-lum-stf" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">STF Auto — Luminance visual check</div>
+              <div class="step-detail">Apply auto STF for visual inspection. Do not apply permanently. Verify no calibration artefacts are present.</div>
+              <div class="step-tags"><span class="tag tag-lum">LUM</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-lum-spfc" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">SPFC — Spectrophotometric Flux Calibration</div>
+              <div class="step-detail">Script › Calibration › SpectrophotometricFluxCalibration. Select filter: Luminance.</div>
+              <div class="step-tags"><span class="tag tag-lum">LUM</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-lum-bxt1" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">BlurXterminator — "Correct Only" mode</div>
+              <div class="step-detail">PSF correction without aggressive deconvolution. Applied in linear space on the Luminance master.</div>
+              <div class="step-tags"><span class="tag tag-lum">LUM</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-lum-bxt2" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">BlurXterminator — default settings (2nd pass)</div>
+              <div class="step-detail">Full second pass after SPFC on the Luminance master.</div>
+              <div class="step-tags"><span class="tag tag-lum">LUM</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-lum-nxt" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">NoiseXterminator — Luminance linear</div>
+              <div class="step-detail">Denoise: 0.70 · Color separation: OFF (mono channel) · Iterations: 2. Conservative settings — preserve fine structural detail.</div>
+              <div class="step-tags"><span class="tag tag-lum">LUM</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-lum-stretch" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">Stretch — Statistical Stretch or MSAS</div>
+              <div class="step-detail">Seti-Astro Statistical Stretch or MultiscaleAdaptiveStretch. Target Median ~0.09. Adjust HDR Compress and Protect Highlights for the target's dynamic range. Save preview before applying.</div>
+              <div class="step-tags"><span class="tag tag-lum">LUM</span><span class="tag tag-warn">CHECK DYNAMIC RANGE</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-lum-save" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">Save stretched Luminance</div>
+              <div class="step-detail">Save as: {{DSO_ID}}_L_stretched.xisf before continuing.</div>
+              <div class="step-tags"><span class="tag tag-tip">BACKUP</span></div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ══ 05 — RGB (LINEAR) ════════════════════════════════════ -->
+      <section class="section">
+        <div class="section-header">
+          <span class="section-number">05</span>
+          <span class="section-title">Phase 03 — RGB Processing (Linear)</span>
+          <div class="section-line"></div>
+          <span class="section-sub">Masters R + G + B</span>
+        </div>
+        <div class="steps">
+
+          <div class="step" id="step-spfc-rgb" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">SPFC — each R, G, B master</div>
+              <div class="step-detail">SpectrophotometricFluxCalibration on each channel individually. Select the correct filter (R / G / B) for each run.</div>
+              <div class="step-tags"><span class="tag tag-rgb">RGB</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-channel-comb" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">ChannelCombination — assemble RGB</div>
+              <div class="step-detail">Process › ChannelCombination · Mode RGB · R→Red · G→Green · B→Blue. Image will appear very dark or green-dominant — this is normal.</div>
+              <div class="step-tags"><span class="tag tag-rgb">RGB</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-find-bg" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">Find Background — Seti-Astro script</div>
+              <div class="step-detail">Script › Seti-Astro › Find Background. Place the marker on a clean sky background area, away from the target and bright stars.</div>
+              <div class="step-tags"><span class="tag tag-rgb">RGB</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-spcc" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">SPCC — Spectrophotometric Color Correction</div>
+              <div class="step-detail">Corrects the green channel dominance. Use the Background preview generated by Find Background as the background reference.</div>
+              <div class="step-tags"><span class="tag tag-rgb">RGB</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-bxt1-rgb" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">BlurXterminator — "Correct Only" mode</div>
+              <div class="step-detail">First pass in linear space on the combined RGB image.</div>
+              <div class="step-tags"><span class="tag tag-rgb">RGB</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-bxt2-rgb" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">BlurXterminator — default settings (2nd pass)</div>
+              <div class="step-detail">Full second pass on the RGB combined image.</div>
+              <div class="step-tags"><span class="tag tag-rgb">RGB</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-nxt-rgb" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">NoiseXterminator — RGB linear</div>
+              <div class="step-detail">Denoise: 0.70 · Color separation: ON · Denoise color: 0.90 · Iterations: 2.</div>
+              <div class="step-tags"><span class="tag tag-rgb">RGB</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-stretch-rgb" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">Stretch RGB — Statistical Stretch or MSAS</div>
+              <div class="step-detail">Seti-Astro Statistical Stretch or MSAS. Target Median ~0.09. Linked Stretch enabled. Adjust HDR Compress if target has high dynamic range. Save preview before applying.</div>
+              <div class="step-tags"><span class="tag tag-rgb">RGB</span><span class="tag tag-warn">CHECK DYNAMIC RANGE</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-scnr" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">SCNR — remove residual green cast</div>
+              <div class="step-detail">Apply SCNR on the stretched RGB image to eliminate the green dominant typical of CMOS sensors.</div>
+              <div class="step-tags"><span class="tag tag-rgb">RGB</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-save-rgb" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">Save RGB linear + stretched</div>
+              <div class="step-detail">Save: {{DSO_ID}}_RGB_linear.xisf and {{DSO_ID}}_RGB_stretched.xisf.</div>
+              <div class="step-tags"><span class="tag tag-tip">BACKUP</span></div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ══ 06 — STAR SEPARATION ══════════════════════════════════ -->
+      <section class="section">
+        <div class="section-header">
+          <span class="section-number">06</span>
+          <span class="section-title">Phase 04 — Star Separation</span>
+          <div class="section-line"></div>
+          <span class="section-sub">StarXterminator · on stretched RGB</span>
+        </div>
+        <div class="steps">
+
+          <div class="step" id="step-sxt" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">StarXterminator — RGB separation</div>
+              <div class="step-detail">Generates {{DSO_ID}}_RGB_stars + {{DSO_ID}}_RGB_starless. Keep both layers open throughout the workflow.</div>
+              <div class="step-tags"><span class="tag tag-rgb">RGB</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-curves-stars" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">Curves Transformation — Stars only image</div>
+              <div class="step-detail">Channel S (saturation): point X=0.50 → Y=0.58. Enhance stellar color diversity (blues, oranges) without oversaturation.</div>
+              <div class="step-tags"><span class="tag tag-rgb">RGB STARS</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-star-reduction" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">Star Reduction — Cosmic Photons (optional)</div>
+              <div class="step-detail">Slightly reduce star sizes on the Stars image before rescreening. Useful if the field is crowded.</div>
+              <div class="step-tags"><span class="tag tag-tip">OPTIONAL</span></div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ══ 07 — STARLESS PROCESSING ════════════════════════════ -->
+      <section class="section">
+        <div class="section-header">
+          <span class="section-number">07</span>
+          <span class="section-title">Phase 05 — Starless RGB Processing</span>
+          <div class="section-line"></div>
+          <span class="section-sub">Detail · contrast · color</span>
+        </div>
+        <div class="steps">
+
+          <div class="step" id="step-blemish" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">Blemish Blaster (if needed)</div>
+              <div class="step-detail">Remove any residual halos around bright sources. Inspect the starless image carefully at 1:1 before proceeding.</div>
+              <div class="step-tags"><span class="tag tag-rgb">RGB STARLESS</span><span class="tag tag-tip">OPTIONAL</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-ghs" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">GHS — Generalized Hyperbolic Stretch</div>
+              <div class="step-detail">Pull out faint outer structures gently. Set Symmetry Point (SP) from a faint region of the target. Protect Highlights (HP): 0.50–0.70 depending on target dynamics. Stretch factor: 0.2–0.3 for first pass.</div>
+              <div class="step-tags"><span class="tag tag-rgb">RGB STARLESS</span><span class="tag tag-warn">ADJUST HP PER TARGET</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-lhe" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">Local Histogram Equalization</div>
+              <div class="step-detail">Kernel: 64 · Amount: 0.40–0.60. Brings out structural detail and increases local contrast. Adjust amount to avoid artefacts around bright cores.</div>
+              <div class="step-tags"><span class="tag tag-rgb">RGB STARLESS</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-usm" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">Unsharp Mask</div>
+              <div class="step-detail">StdDev: 2.0 · Amount: 0.50 · Target: Lightness (CIE L*). Sharpens fine structural detail. Moderate application — Luminance will handle final sharpness in LRGB.</div>
+              <div class="step-tags"><span class="tag tag-rgb">RGB STARLESS</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-scc" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">Selective Color Correction — Seti-Astro Toolbox</div>
+              <div class="step-detail">Adjust hue, saturation, luminance per color mask. Create targeted masks for core vs outer regions. Warm up brighter zones; preserve cooler tones in faint areas.</div>
+              <div class="step-tags"><span class="tag tag-rgb">RGB STARLESS</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-nxt2" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">NoiseXterminator — 2nd pass on starless</div>
+              <div class="step-detail">~70% strength on the final starless. Preserve fine structural details while smoothing residual noise.</div>
+              <div class="step-tags"><span class="tag tag-rgb">RGB STARLESS</span></div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ══ 08 — RGB RECOMBINATION ════════════════════════════════ -->
+      <section class="section">
+        <div class="section-header">
+          <span class="section-number">08</span>
+          <span class="section-title">Phase 06 — RGB Recombination</span>
+          <div class="section-line"></div>
+          <span class="section-sub">Rescreen Stars · Cosmic Photons</span>
+        </div>
+        <div class="steps">
+
+          <div class="step" id="step-rescreen" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">Rescreen Stars — Cosmic Photons script</div>
+              <div class="step-detail">Cleanly recombines {{DSO_ID}}_RGB_starless (processed) + {{DSO_ID}}_RGB_stars (reduced / corrected).</div>
+              <div class="step-tags"><span class="tag tag-rgb">RGB FINAL</span></div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ══ 09 — LRGB INTEGRATION ════════════════════════════════
+      [OPTIONAL] Remove this entire section for pure RGB workflows.
+      ════════════════════════════════════════════════════════════ -->
+      <section class="section">
+        <div class="section-header">
+          <span class="section-number">09</span>
+          <span class="section-title">Phase 07 — LRGB Integration</span>
+          <div class="section-line"></div>
+          <span class="section-sub">LRGBCombination · key step</span>
+        </div>
+        <div class="phase-note">The Luminance channel provides all final sharpness and structural detail. The RGB contributes color only. The balance between L weight and saturation controls the final aesthetic.</div>
+        <div class="steps">
+
+          <div class="step" id="step-lum-stx" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">Luminance final processing — StarXterminator (optional)</div>
+              <div class="step-detail">Separate stars from the stretched Luminance. Process the Lum starless (GHS, LHE, USM) then rescreen stars before combining. Recommended for best results.</div>
+              <div class="step-tags"><span class="tag tag-lum">LUM</span><span class="tag tag-tip">OPTIONAL</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-lrgb-comb" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">LRGBCombination</div>
+              <div class="step-detail">Process › ColorSpaces › LRGBCombination. L → {{DSO_ID}}_L_stretched.xisf · RGB → {{DSO_ID}}_RGB_final. Luminance channel weight: 0.5–0.7. Saturation: 0.7–1.0 — adjust to taste.</div>
+              <div class="step-tags"><span class="tag tag-lrgb">LRGB</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-lrgb-check" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">Post-combination check</div>
+              <div class="step-detail">Verify that structural detail is sharper than in RGB alone. Check color balance (no color cast introduced). Compare against the RGB final at 1:1.</div>
+              <div class="step-tags"><span class="tag tag-lrgb">LRGB</span><span class="tag tag-warn">COMPARE VS RGB</span></div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ══ 10 — FINALIZATION ═════════════════════════════════════ -->
+      <section class="section">
+        <div class="section-header">
+          <span class="section-number">10</span>
+          <span class="section-title">Phase 08 — Finalization</span>
+          <div class="section-line"></div>
+          <span class="section-sub">Curves · ICC · Export</span>
+        </div>
+        <div class="steps">
+
+          <div class="step" id="step-curves-final" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">Curves Transformation — final image</div>
+              <div class="step-detail">Channel RGB/K: gentle S-curve (X=0.25→Y=0.22, X=0.75→Y=0.78). Channel L: midtones lift +0.03. Channel S: saturation boost X=0.50→Y=0.55. Preview before applying.</div>
+              <div class="step-tags"><span class="tag tag-lrgb">LRGB FINAL</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-signature" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">AstroMark Signature — Seti-Astro (optional)</div>
+              <div class="step-detail">Add signature and metadata overlay if desired.</div>
+              <div class="step-tags"><span class="tag tag-tip">OPTIONAL</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-icc" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">ICC Profile — sRGB IEC61966-2.1</div>
+              <div class="step-detail">Process › ColorManagement › ICCProfileTransformation. Target: sRGB IEC61966-2.1. Rendering Intent: Relative Colorimetric.</div>
+              <div class="step-tags"><span class="tag tag-lrgb">LRGB FINAL</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-export-tiff" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">Export TIFF 16-bit</div>
+              <div class="step-detail">File › Save As → TIFF 16-bit. Maximum quality archive. Name: {{DSO_ID}}_LRGB_final.tif</div>
+              <div class="step-tags"><span class="tag tag-lrgb">EXPORT</span></div>
+            </div>
+          </div>
+
+          <div class="step" id="step-export-jpg" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">Export JPEG quality 100</div>
+              <div class="step-detail">File › Save As → JPEG quality 100. For web publication. Name: {{DSO_ID}}_LRGB_final.jpg</div>
+              <div class="step-tags"><span class="tag tag-lrgb">EXPORT</span></div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ══ DSO NOTES [OPTIONAL] ══════════════════════════════════
+      Remove this section if {{DSO_NOTES}} is empty.
+      ════════════════════════════════════════════════════════════ -->
+      <section class="section">
+        <div class="section-header">
+          <span class="section-number">11</span>
+          <span class="section-title">Target Notes</span>
+          <div class="section-line"></div>
+        </div>
+        <div class="notes-block">{{DSO_NOTES}}</div>
+      </section>
+
+    </main>
+
+    <!-- ══ FOOTER ════════════════════════════════════════════════ -->
+    <footer>
+      <div class="foot-left">
+        {{DSO_ID}} · Processing Checklist · Generated {{GENERATED_DATE}}
+      </div>
+      <div class="foot-right">PixInsight LRGB Workflow · {{AUTHOR}}</div>
+    </footer>
+
+    <script>
+      /* ── Theme ─────────────────────────────────────────────── */
+      function setTheme(flavor) {
+        document.documentElement.setAttribute("data-theme", flavor);
+        try { localStorage.setItem("ctp-dso-flavor", flavor); } catch(e) {}
+      }
+      (function() {
+        try {
+          const saved = localStorage.getItem("ctp-dso-flavor");
+          if (saved && ["latte","frappe","macchiato","mocha"].includes(saved)) {
+            document.documentElement.setAttribute("data-theme", saved);
+            const sel = document.getElementById("themeSelect");
+            if (sel) sel.value = saved;
+          }
+        } catch(e) {}
+      })();
+
+      /* ── Checklist ─────────────────────────────────────────── */
+      const STORAGE_KEY = "checklist-{{DSO_ID}}";
+
+      function toggle(step) {
+        step.classList.toggle("checked");
+        saveState();
+        updateProgress();
+      }
+
+      function updateProgress() {
+        const steps = document.querySelectorAll(".step");
+        const checked = document.querySelectorAll(".step.checked");
+        const total = steps.length;
+        const done = checked.length;
+        const pct = total > 0 ? (done / total) * 100 : 0;
+        document.getElementById("progressFill").style.width = pct + "%";
+        document.getElementById("progressCount").textContent = done + " / " + total;
+      }
+
+      function saveState() {
+        try {
+          const state = {};
+          document.querySelectorAll(".step[id]").forEach(s => {
+            state[s.id] = s.classList.contains("checked");
+          });
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        } catch(e) {}
+      }
+
+      function loadState() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return;
+          const state = JSON.parse(raw);
+          Object.keys(state).forEach(id => {
+            if (state[id]) {
+              const el = document.getElementById(id);
+              if (el) el.classList.add("checked");
+            }
+          });
+        } catch(e) {}
+      }
+
+      function resetAll() {
+        document.querySelectorAll(".step.checked").forEach(s => s.classList.remove("checked"));
+        try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+        updateProgress();
+      }
+
+      /* ── Init ──────────────────────────────────────────────── */
+      loadState();
+      updateProgress();
+    </script>
+
+  </body>
+</html>

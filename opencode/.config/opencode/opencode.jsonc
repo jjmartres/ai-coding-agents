@@ -19,6 +19,9 @@
       "options": {
         "project": "{env:VERTEXAI_PROJECT_ID}",
         "location": "{env:VERTEXAI_REGION}",
+        "websearch_cited": {
+          "model": "gemini-2.5-flash",
+        },
       },
     },
     "anthropic": {
@@ -35,6 +38,9 @@
       },
       "options": {
         "apiKey": "{env:ANTHROPIC_API_KEY}",
+        "websearch_cited": {
+          "model": "claude-haiku-4-5",
+        },
       },
     },
     "calculon": {
