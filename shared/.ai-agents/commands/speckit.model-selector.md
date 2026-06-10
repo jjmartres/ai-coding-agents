@@ -116,7 +116,7 @@ For each step that maps to a real command file under `.opencode/command/`:
 4. Insert a `model:` field immediately after the `description:` line, on its own line, using this exact format:
 
    ```yaml
-   model: provider/model-id
+   model: openrouter/provider/model-id
    ```
 
    Example result:
@@ -124,7 +124,7 @@ For each step that maps to a real command file under `.opencode/command/`:
    ```yaml
    ---
    description: Create or update project governing principles and development guidelines
-   model: anthropic/claude-opus-4.8
+   model: openrouter/anthropic/claude-opus-4.8
    ---
    ```
 
