@@ -6,6 +6,21 @@ Commands are slash-invokable workflows stored in `shared/.ai-agents/commands/`. 
 
 ---
 
+## `/astro-dso-doc`
+
+Generate a complete PixInsight project documentation page for a deep-sky object (DSO) astrophotography session.
+
+- Delegates entirely to the `astro-dso-doc` skill, which produces an HTML documentation page, a processing checklist, an AstroBin post JSON, a PixInsight process icon set (XPSM), and a ready-to-paste PixInsight project description.
+- Uses `google-vertex/gemini-3.1-pro-preview` by default (set via `model:` frontmatter).
+
+**Example:**
+
+```
+/astro-dso-doc NGC 1499
+```
+
+---
+
 ## `/commit`
 
 Create well-formatted commits with conventional commit messages and emoji.
@@ -172,7 +187,26 @@ Review the ten most recent git commits and suggest improvements.
 
 ---
 
-## `/specify.polish`
+## `/speckit.model-selector`
+
+Interactively configure the optimal OpenRouter model for each of the 7 SpecKit workflow steps.
+
+- Verifies that SpecKit command files are present under `.opencode/commands/`; aborts with a setup message if they are not found.
+- Fetches the official SpecKit README from GitHub to confirm the canonical 7-step workflow (`constitution` → `specify` → `clarify` → `plan` → validate → `tasks` → `implement`).
+- Queries the live OpenRouter model catalog using `OPENROUTER_API_KEY`, filters out free/extended variants, and builds a shortlist of frontier and mid-tier models with context window ≥ 32 K tokens.
+- For each step, presents a ranked **Best / Balanced / Budget / Other** menu with model ID, context size, and price per million tokens (input / output), and waits for the user's choice.
+- Writes the chosen `model:` field into the YAML frontmatter of each `.opencode/commands/speckit.*.md` file; replaces any existing value. Step 5 (plan validation) has no dedicated command file and is skipped.
+- Displays a final summary table confirming the model assigned to every step.
+
+**Example:**
+
+```
+/speckit.model-selector
+```
+
+---
+
+## `/speckit.polish`
 
 Full quality-gate workflow: tests, code documentation, project documentation, changelog, AGENTS.md, knowledge graph, memory bank, and merge request.
 
@@ -185,11 +219,12 @@ Full quality-gate workflow: tests, code documentation, project documentation, ch
 - Updates the Graphify knowledge graph if `graphify-out/` exists.
 - Syncs the memory bank via `/memory-bank`.
 - Commits with a conventional commit message and opens a GitLab merge request.
+- Uses `openrouter/claude-opus-4.6` by default (set via `model:` frontmatter).
 
 **Example:**
 
 ```
-/specify.polish
+/speckit.polish
 ```
 
 ---

@@ -1,8 +1,8 @@
 {
-  "lastChangelogVersion": "0.70.6",
+  "lastChangelogVersion": "0.73.0",
   "defaultThinkingLevel": "medium",
-  "defaultProvider": "calculon",
-  "defaultModel": "Qwen3.5-9B-MLX-4bit",
+  "defaultProvider": "anthropic",
+  "defaultModel": "claude-sonnet-4-6",
   "agents": [
     "~/.ai-agents/agents"
   ],

@@ -44,7 +44,7 @@ Three [GNU Stow](https://www.gnu.org/software/stow/) packages, all targeting
 
 - **80+ agent persona files** shared between opencode and pi-mono
 - **19 reusable skill packs** covering diagrams, code docs, Jira, Datadog, robotics, and more
-- **12 slash commands** for common workflows (commit, review, test, …)
+- **14 slash commands** for common workflows (commit, review, test, speckit, …)
 - **opencode-specific** configuration: `opencode.jsonc`, MCP servers, themes, plugins
 - **pi-mono-specific** configuration: settings, models, TypeScript extensions
 
@@ -85,6 +85,7 @@ ai-coding-agents/
 │       │   ├── 09-meta-orchestration/
 │       │   └── 10-curiosity/
 │       ├── commands/                # Shared slash commands
+│       │   ├── astro-dso-doc.md
 │       │   ├── commit.md
 │       │   ├── commit-and-create-mr.md
 │       │   ├── compose-email.md
@@ -95,7 +96,8 @@ ai-coding-agents/
 │       │   ├── next-sprint-design.md
 │       │   ├── prepare-dataset.md
 │       │   ├── review.md
-│       │   ├── specify.polish.md
+│       │   ├── speckit.model-selector.md
+│       │   ├── speckit.polish.md
 │       │   └── test.md
 │       ├── rules/
 │       │   └── memory-bank.md

@@ -1,0 +1,1193 @@
+<!doctype html>
+<!--
+  ASTRO DSO DOCUMENTATION TEMPLATE
+  =================================
+  Replace all {{PLACEHOLDER}} tokens before saving.
+  Sections marked [OPTIONAL] can be removed if data is unavailable.
+  Do NOT change CSS variable names or JS function names.
+-->
+<html lang="en" data-theme="macchiato">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{DSO_ID}} — {{COMMON_NAME}}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ══ CATPPUCCIN — ALL FLAVORS ══════════════════════════════ */
+
+      [data-theme="latte"] {
+        --base: #eff1f5;
+        --mantle: #e6e9ef;
+        --crust: #dce0e8;
+        --surface0: #ccd0da;
+        --surface1: #bcc0cc;
+        --surface2: #acb0be;
+        --overlay0: #9ca0b0;
+        --overlay1: #8c8fa1;
+        --overlay2: #7c7f93;
+        --subtext0: #6c6f85;
+        --subtext1: #5c5f77;
+        --text: #4c4f69;
+        --lavender: #7287fd;
+        --blue: #1e66f5;
+        --sapphire: #209fb5;
+        --sky: #04a5e5;
+        --teal: #179299;
+        --green: #40a02b;
+        --yellow: #df8e1d;
+        --peach: #fe640b;
+        --maroon: #e64553;
+        --red: #d20f39;
+        --mauve: #8839ef;
+        --pink: #ea76cb;
+        --flamingo: #dd7878;
+        --rosewater: #dc8a78;
+        --hero-grad: linear-gradient(
+          160deg,
+          #dce0e8 0%,
+          #e2e5f0 40%,
+          #ece0f4 70%,
+          #eff1f5 100%
+        );
+        --hero-glow: rgba(136, 57, 239, 0.05);
+        --hero-glow2: rgba(30, 102, 245, 0.03);
+        --s1: rgba(76, 79, 105, 0.25);
+        --s2: rgba(114, 135, 253, 0.25);
+        --s3: rgba(32, 159, 181, 0.25);
+        --table-hover: rgba(188, 192, 204, 0.5);
+      }
+
+      [data-theme="frappe"] {
+        --base: #303446;
+        --mantle: #292c3c;
+        --crust: #232634;
+        --surface0: #414559;
+        --surface1: #51576d;
+        --surface2: #626880;
+        --overlay0: #737994;
+        --overlay1: #838ba7;
+        --overlay2: #949cbb;
+        --subtext0: #a5adce;
+        --subtext1: #b5bfe2;
+        --text: #c6d0f5;
+        --lavender: #babbf1;
+        --blue: #8caaee;
+        --sapphire: #85c1dc;
+        --sky: #99d1db;
+        --teal: #81c8be;
+        --green: #a6d189;
+        --yellow: #e5c890;
+        --peach: #ef9f76;
+        --maroon: #ea999c;
+        --red: #e78284;
+        --mauve: #ca9ee6;
+        --pink: #f4b8e4;
+        --flamingo: #eebebe;
+        --rosewater: #f2d5cf;
+        --hero-grad: linear-gradient(
+          160deg,
+          #232634 0%,
+          #262938 40%,
+          #2e2340 70%,
+          #303446 100%
+        );
+        --hero-glow: rgba(202, 158, 230, 0.08);
+        --hero-glow2: rgba(140, 170, 238, 0.04);
+        --s1: rgba(198, 208, 245, 0.45);
+        --s2: rgba(186, 187, 241, 0.35);
+        --s3: rgba(153, 209, 219, 0.35);
+        --table-hover: rgba(65, 69, 89, 0.7);
+      }
+
+      [data-theme="macchiato"] {
+        --base: #24273a;
+        --mantle: #1e2030;
+        --crust: #181926;
+        --surface0: #363a4f;
+        --surface1: #494d64;
+        --surface2: #5b5f77;
+        --overlay0: #6e738d;
+        --overlay1: #8087a2;
+        --overlay2: #939ab7;
+        --subtext0: #a5adcb;
+        --subtext1: #b8c0e0;
+        --text: #cad3f5;
+        --lavender: #b7bdf8;
+        --blue: #8aadf4;
+        --sapphire: #7dc4e4;
+        --sky: #91d7e3;
+        --teal: #8bd5ca;
+        --green: #a6da95;
+        --yellow: #eed49f;
+        --peach: #f5a97f;
+        --maroon: #ee99a0;
+        --red: #ed8796;
+        --mauve: #c6a0f6;
+        --pink: #f5bde6;
+        --flamingo: #f0c6c6;
+        --rosewater: #f4dbd6;
+        --hero-grad: linear-gradient(
+          160deg,
+          #181926 0%,
+          #1a1d2e 40%,
+          #2a1f3d 70%,
+          #24273a 100%
+        );
+        --hero-glow: rgba(198, 160, 246, 0.08);
+        --hero-glow2: rgba(138, 173, 244, 0.04);
+        --s1: rgba(202, 211, 245, 0.5);
+        --s2: rgba(183, 189, 248, 0.4);
+        --s3: rgba(145, 215, 227, 0.4);
+        --table-hover: rgba(54, 58, 79, 0.7);
+      }
+
+      [data-theme="mocha"] {
+        --base: #1e1e2e;
+        --mantle: #181825;
+        --crust: #11111b;
+        --surface0: #313244;
+        --surface1: #45475a;
+        --surface2: #585b70;
+        --overlay0: #6c7086;
+        --overlay1: #7f849c;
+        --overlay2: #9399b2;
+        --subtext0: #a6adc8;
+        --subtext1: #bac2de;
+        --text: #cdd6f4;
+        --lavender: #b4befe;
+        --blue: #89b4fa;
+        --sapphire: #74c7ec;
+        --sky: #89dceb;
+        --teal: #94e2d5;
+        --green: #a6e3a1;
+        --yellow: #f9e2af;
+        --peach: #fab387;
+        --maroon: #eba0ac;
+        --red: #f38ba8;
+        --mauve: #cba6f7;
+        --pink: #f5c2e7;
+        --flamingo: #f2cdcd;
+        --rosewater: #f5e0dc;
+        --hero-grad: linear-gradient(
+          160deg,
+          #11111b 0%,
+          #141420 40%,
+          #221836 70%,
+          #1e1e2e 100%
+        );
+        --hero-glow: rgba(203, 166, 247, 0.08);
+        --hero-glow2: rgba(137, 180, 250, 0.04);
+        --s1: rgba(205, 214, 244, 0.5);
+        --s2: rgba(180, 190, 254, 0.4);
+        --s3: rgba(137, 220, 235, 0.4);
+        --table-hover: rgba(49, 50, 68, 0.7);
+      }
+
+      /* ══ BASE ══════════════════════════════════════════════════ */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        transition:
+          background 0.35s ease,
+          color 0.35s ease;
+      }
+      body {
+        background: var(--base);
+        color: var(--text);
+        font-family: "Crimson Pro", Georgia, serif;
+        font-size: 18px;
+        line-height: 1.7;
+        min-height: 100vh;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        background-image:
+          radial-gradient(1px 1px at 8% 12%, var(--s1) 0%, transparent 100%),
+          radial-gradient(1px 1px at 23% 58%, var(--s2) 0%, transparent 100%),
+          radial-gradient(
+            1.5px 1.5px at 38% 28%,
+            var(--s3) 0%,
+            transparent 100%
+          ),
+          radial-gradient(1px 1px at 52% 77%, var(--s1) 0%, transparent 100%),
+          radial-gradient(1px 1px at 67% 19%, var(--s2) 0%, transparent 100%),
+          radial-gradient(2px 2px at 78% 48%, var(--s3) 0%, transparent 100%),
+          radial-gradient(1px 1px at 88% 73%, var(--s1) 0%, transparent 100%),
+          radial-gradient(1px 1px at 14% 88%, var(--s2) 0%, transparent 100%),
+          radial-gradient(
+            1.5px 1.5px at 58% 43%,
+            var(--s3) 0%,
+            transparent 100%
+          ),
+          radial-gradient(1px 1px at 33% 8%, var(--s1) 0%, transparent 100%),
+          radial-gradient(1px 1px at 83% 8%, var(--s2) 0%, transparent 100%),
+          radial-gradient(1px 1px at 4% 43%, var(--s3) 0%, transparent 100%),
+          radial-gradient(
+            1.5px 1.5px at 45% 63%,
+            var(--s2) 0%,
+            transparent 100%
+          ),
+          radial-gradient(1px 1px at 71% 86%, var(--s1) 0%, transparent 100%),
+          radial-gradient(1px 1px at 94% 33%, var(--s3) 0%, transparent 100%);
+      }
+
+      /* ══ THEME SWITCHER ════════════════════════════════════════ */
+      .theme-switcher {
+        position: fixed;
+        top: 18px;
+        right: 22px;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        background: var(--mantle);
+        border: 1px solid var(--surface1);
+        border-radius: 6px;
+        padding: 8px 14px;
+        box-shadow: 0 4px 28px rgba(0, 0, 0, 0.3);
+        transition:
+          background 0.35s,
+          border-color 0.35s;
+      }
+      .flavor-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--mauve);
+        flex-shrink: 0;
+        transition: background 0.35s;
+      }
+      .theme-switcher label {
+        font-family: "Space Mono", monospace;
+        font-size: 9px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--overlay1);
+        white-space: nowrap;
+      }
+      #themeSelect {
+        font-family: "Space Mono", monospace;
+        font-size: 11px;
+        background: var(--surface0);
+        color: var(--text);
+        border: 1px solid var(--surface2);
+        border-radius: 3px;
+        padding: 4px 26px 4px 9px;
+        cursor: pointer;
+        outline: none;
+        appearance: none;
+        -webkit-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238087a2' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 7px center;
+        transition:
+          background-color 0.35s,
+          color 0.35s,
+          border-color 0.35s;
+      }
+      #themeSelect:hover {
+        border-color: var(--mauve);
+      }
+
+      /* ══ HERO ══════════════════════════════════════════════════ */
+      .hero {
+        position: relative;
+        background: var(--hero-grad);
+        border-bottom: 1px solid var(--surface0);
+        padding: 88px 60px 60px;
+        overflow: hidden;
+        z-index: 1;
+        transition:
+          background 0.35s,
+          border-color 0.35s;
+      }
+      .hero::after {
+        content: "";
+        position: absolute;
+        top: -100px;
+        right: -100px;
+        width: 500px;
+        height: 500px;
+        border-radius: 50%;
+        pointer-events: none;
+        background: radial-gradient(
+          circle,
+          var(--hero-glow) 0%,
+          var(--hero-glow2) 40%,
+          transparent 70%
+        );
+        transition: background 0.35s;
+      }
+      .hero-label {
+        font-family: "Space Mono", monospace;
+        font-size: 11px;
+        letter-spacing: 4px;
+        color: var(--mauve);
+        text-transform: uppercase;
+        margin-bottom: 16px;
+        opacity: 0.9;
+      }
+      .hero h1 {
+        font-family: "Crimson Pro", serif;
+        font-weight: 300;
+        font-size: clamp(3rem, 6vw, 5.5rem);
+        color: var(--text);
+        line-height: 1.05;
+        letter-spacing: -1px;
+      }
+      .hero h1 em {
+        font-style: italic;
+        color: var(--lavender);
+      }
+      .hero-sub {
+        font-family: "Space Mono", monospace;
+        font-size: 12px;
+        color: var(--overlay1);
+        letter-spacing: 2px;
+        margin-top: 14px;
+      }
+      .hero-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 32px;
+        align-items: center;
+      }
+      .badge {
+        font-family: "Space Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 1.5px;
+        padding: 5px 14px;
+        border-radius: 2px;
+        text-transform: uppercase;
+        text-decoration: none;
+        transition: opacity 0.2s;
+      }
+      .badge:hover {
+        opacity: 0.8;
+      }
+      .badge-mauve {
+        background: rgba(198, 160, 246, 0.12);
+        border: 1px solid rgba(198, 160, 246, 0.3);
+        color: var(--mauve);
+      }
+      .badge-blue {
+        background: rgba(138, 173, 244, 0.12);
+        border: 1px solid rgba(138, 173, 244, 0.3);
+        color: var(--blue);
+      }
+      .badge-teal {
+        background: rgba(139, 213, 202, 0.12);
+        border: 1px solid rgba(139, 213, 202, 0.3);
+        color: var(--teal);
+      }
+      .badge-peach {
+        background: rgba(245, 169, 127, 0.12);
+        border: 1px solid rgba(245, 169, 127, 0.3);
+        color: var(--peach);
+      }
+      .badge-green {
+        background: rgba(166, 218, 149, 0.12);
+        border: 1px solid rgba(166, 218, 149, 0.3);
+        color: var(--green);
+      }
+      .badge-sapphire {
+        background: rgba(125, 196, 228, 0.12);
+        border: 1px solid rgba(125, 196, 228, 0.3);
+        color: var(--sapphire);
+      }
+
+      /* ══ LAYOUT ════════════════════════════════════════════════ */
+      .container {
+        position: relative;
+        z-index: 1;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 60px 40px;
+      }
+      .section {
+        margin-bottom: 64px;
+      }
+      .section-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 28px;
+      }
+      .section-number {
+        font-family: "Space Mono", monospace;
+        font-size: 10px;
+        color: var(--mauve);
+        opacity: 0.6;
+        letter-spacing: 2px;
+        min-width: 28px;
+      }
+      .section-title {
+        font-family: "Space Mono", monospace;
+        font-size: 11px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: var(--subtext0);
+      }
+      .section-line {
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(to right, var(--surface1), transparent);
+      }
+      .divider {
+        height: 1px;
+        background: linear-gradient(
+          to right,
+          transparent,
+          var(--surface1),
+          transparent
+        );
+        margin: 48px 0;
+      }
+
+      /* ══ DATA GRID ══════════════════════════════════════════════ */
+      .data-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 2px;
+        background: var(--surface0);
+        border: 1px solid var(--surface0);
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      .data-cell {
+        background: var(--mantle);
+        padding: 20px 24px;
+        transition: background 0.15s;
+      }
+      .data-cell:hover {
+        background: var(--surface0);
+      }
+      .data-label {
+        font-family: "Space Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--overlay0);
+        margin-bottom: 6px;
+      }
+      .data-value {
+        font-family: "Crimson Pro", serif;
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--text);
+      }
+      .data-value.accent-mauve {
+        color: var(--mauve);
+      }
+      .data-value.accent-blue {
+        color: var(--blue);
+      }
+      .data-value.accent-teal {
+        color: var(--teal);
+      }
+      .data-value.accent-yellow {
+        color: var(--yellow);
+      }
+      .data-value.accent-peach {
+        color: var(--peach);
+      }
+      .data-value.accent-green {
+        color: var(--green);
+      }
+      .data-value.accent-sapphire {
+        color: var(--sapphire);
+      }
+      .data-note {
+        font-family: "Crimson Pro", serif;
+        font-size: 13px;
+        font-style: italic;
+        color: var(--overlay1);
+        margin-top: 3px;
+      }
+
+      /* ══ PROSE ══════════════════════════════════════════════════ */
+      .prose {
+        color: var(--subtext1);
+        font-size: 18px;
+        line-height: 1.8;
+      }
+      .prose p {
+        margin-bottom: 18px;
+      }
+      .prose p:last-child {
+        margin-bottom: 0;
+      }
+      .prose strong {
+        color: var(--text);
+        font-weight: 600;
+      }
+      .prose em {
+        color: var(--lavender);
+        font-style: italic;
+      }
+
+      /* ══ TIMELINE ══════════════════════════════════════════════ */
+      .timeline {
+        position: relative;
+        padding-left: 32px;
+      }
+      .timeline::before {
+        content: "";
+        position: absolute;
+        left: 8px;
+        top: 8px;
+        bottom: 8px;
+        width: 1px;
+        background: linear-gradient(
+          to bottom,
+          var(--mauve),
+          var(--blue),
+          var(--teal)
+        );
+        opacity: 0.4;
+      }
+      .timeline-item {
+        position: relative;
+        margin-bottom: 32px;
+      }
+      .timeline-item::before {
+        content: "";
+        position: absolute;
+        left: -28px;
+        top: 8px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--mauve);
+        border: 2px solid var(--base);
+      }
+      .timeline-item:nth-child(2)::before {
+        background: var(--blue);
+      }
+      .timeline-item:nth-child(3)::before {
+        background: var(--sapphire);
+      }
+      .timeline-item:nth-child(4)::before {
+        background: var(--teal);
+      }
+      .timeline-item:nth-child(5)::before {
+        background: var(--green);
+      }
+      .timeline-item:nth-child(6)::before {
+        background: var(--peach);
+      }
+      .timeline-year {
+        font-family: "Space Mono", monospace;
+        font-size: 11px;
+        color: var(--mauve);
+        letter-spacing: 2px;
+        margin-bottom: 4px;
+      }
+      .timeline-item:nth-child(2) .timeline-year {
+        color: var(--blue);
+      }
+      .timeline-item:nth-child(3) .timeline-year {
+        color: var(--sapphire);
+      }
+      .timeline-item:nth-child(4) .timeline-year {
+        color: var(--teal);
+      }
+      .timeline-item:nth-child(5) .timeline-year {
+        color: var(--green);
+      }
+      .timeline-item:nth-child(6) .timeline-year {
+        color: var(--peach);
+      }
+      .timeline-text {
+        color: var(--subtext1);
+        font-size: 17px;
+        line-height: 1.65;
+      }
+
+      /* ══ STAR CARD [OPTIONAL] ══════════════════════════════════ */
+      .star-card {
+        background: var(--mantle);
+        border: 1px solid var(--surface1);
+        border-radius: 4px;
+        padding: 32px 36px;
+        position: relative;
+        overflow: hidden;
+      }
+      .star-card::before {
+        content: "";
+        position: absolute;
+        top: -40px;
+        right: -40px;
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(245, 169, 127, 0.08) 0%,
+          transparent 70%
+        );
+      }
+      .star-name {
+        font-family: "Space Mono", monospace;
+        font-size: 13px;
+        color: var(--peach);
+        letter-spacing: 2px;
+        margin-bottom: 4px;
+      }
+      .star-class {
+        font-family: "Crimson Pro", serif;
+        font-size: 15px;
+        font-style: italic;
+        color: var(--overlay1);
+        margin-bottom: 20px;
+      }
+      .star-props {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 16px;
+      }
+      .star-prop-label {
+        font-family: "Space Mono", monospace;
+        font-size: 9px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--overlay0);
+        margin-bottom: 3px;
+      }
+      .star-prop-value {
+        font-family: "Crimson Pro", serif;
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--yellow);
+      }
+      .star-desc {
+        margin-top: 20px;
+        color: var(--subtext0);
+        font-size: 16px;
+        line-height: 1.65;
+      }
+
+      /* ══ TABLE ══════════════════════════════════════════════════ */
+      .catalog-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: "Space Mono", monospace;
+        font-size: 12px;
+      }
+      .catalog-table th {
+        text-align: left;
+        padding: 12px 18px;
+        background: var(--surface0);
+        color: var(--overlay1);
+        letter-spacing: 2px;
+        font-size: 10px;
+        text-transform: uppercase;
+        border-bottom: 1px solid var(--surface1);
+      }
+      .catalog-table td {
+        padding: 14px 18px;
+        border-bottom: 1px solid var(--surface0);
+        color: var(--subtext1);
+        line-height: 1.5;
+      }
+      .catalog-table tr:last-child td {
+        border-bottom: none;
+      }
+      .catalog-table tr:hover td {
+        background: var(--table-hover);
+      }
+      .catalog-table td:first-child {
+        color: var(--blue);
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      /* ══ TIP CARDS ══════════════════════════════════════════════ */
+      .tip-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 16px;
+      }
+      .tip-card {
+        background: var(--mantle);
+        border: 1px solid var(--surface0);
+        border-radius: 4px;
+        padding: 22px 24px;
+        border-left: 3px solid var(--teal);
+      }
+      .tip-card.warn {
+        border-left-color: var(--yellow);
+      }
+      .tip-card.info {
+        border-left-color: var(--blue);
+      }
+      .tip-card.great {
+        border-left-color: var(--green);
+      }
+      .tip-card.alert {
+        border-left-color: var(--peach);
+      }
+      .tip-card-title {
+        font-family: "Space Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--teal);
+        margin-bottom: 10px;
+      }
+      .tip-card.warn .tip-card-title {
+        color: var(--yellow);
+      }
+      .tip-card.info .tip-card-title {
+        color: var(--blue);
+      }
+      .tip-card.great .tip-card-title {
+        color: var(--green);
+      }
+      .tip-card.alert .tip-card-title {
+        color: var(--peach);
+      }
+      .tip-card-text {
+        font-size: 16px;
+        color: var(--subtext1);
+        line-height: 1.65;
+      }
+
+      /* ══ SESSION BLOCK ══════════════════════════════════════════ */
+      .session-block {
+        background: var(--mantle);
+        border: 1px solid var(--surface0);
+        border-radius: 4px;
+        border-top: 3px solid var(--mauve);
+        padding: 32px 36px;
+      }
+      .session-files {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 20px;
+      }
+      .session-file {
+        font-family: "Space Mono", monospace;
+        font-size: 11px;
+        background: var(--surface0);
+        border: 1px solid var(--surface1);
+        border-radius: 2px;
+        padding: 6px 12px;
+        color: var(--lavender);
+        letter-spacing: 0.5px;
+      }
+      .session-files-label {
+        font-family: "Space Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--overlay0);
+        margin-bottom: 12px;
+      }
+
+      /* ══ NOTES BLOCK [OPTIONAL] ════════════════════════════════ */
+      .notes-block {
+        background: var(--mantle);
+        border: 1px solid var(--surface0);
+        border-left: 3px solid var(--sapphire);
+        border-radius: 4px;
+        padding: 24px 28px;
+        font-size: 16px;
+        color: var(--subtext1);
+        line-height: 1.7;
+        white-space: pre-wrap;
+        font-family: "Crimson Pro", serif;
+      }
+
+      /* ══ FOOTER ════════════════════════════════════════════════ */
+      footer {
+        position: relative;
+        z-index: 1;
+        border-top: 1px solid var(--surface0);
+        padding: 32px 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      footer .foot-left {
+        font-family: "Space Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 2px;
+        color: var(--overlay0);
+      }
+      footer .foot-center {
+        font-family: "Space Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 2px;
+      }
+      footer .foot-center a {
+        color: var(--teal);
+        text-decoration: none;
+        border: 1px solid rgba(139, 213, 202, 0.3);
+        border-radius: 2px;
+        padding: 5px 12px;
+        background: rgba(139, 213, 202, 0.06);
+        transition:
+          background 0.2s,
+          border-color 0.2s;
+      }
+      footer .foot-center a:hover {
+        background: rgba(139, 213, 202, 0.12);
+        border-color: rgba(139, 213, 202, 0.5);
+      }
+      footer .foot-right {
+        font-family: "Crimson Pro", serif;
+        font-style: italic;
+        font-size: 14px;
+        color: var(--surface2);
+      }
+
+      @media (max-width: 640px) {
+        .hero {
+          padding: 72px 24px 40px;
+        }
+        .container {
+          padding: 40px 24px;
+        }
+        .hero h1 {
+          font-size: 2.8rem;
+        }
+        .theme-switcher {
+          top: 12px;
+          right: 12px;
+          padding: 6px 10px;
+        }
+        footer {
+          flex-direction: column;
+          gap: 8px;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- THEME SWITCHER — do not modify -->
+    <div class="theme-switcher">
+      <div class="flavor-dot"></div>
+      <label for="themeSelect">Flavor</label>
+      <select id="themeSelect" onchange="setTheme(this.value)">
+        <option value="latte">Latte ☀️</option>
+        <option value="frappe">Frappé 🌤</option>
+        <option value="macchiato" selected>Macchiato 🌙</option>
+        <option value="mocha">Mocha 🌑</option>
+      </select>
+    </div>
+
+    <!-- ══ HERO ══════════════════════════════════════════════════
+  {{DSO_ID}}        → e.g. "NGC 2174"
+  {{COMMON_NAME}}   → e.g. "Monkey Head Nebula"
+  {{CONSTELLATION}} → e.g. "Orion"
+  {{OBJECT_TYPE}}   → e.g. "HII EMISSION NEBULA"
+  {{ALT_CATALOG}}   → e.g. "SH2-252"  (secondary catalog ID, or omit span)
+  {{BADGE_1..4}}    → badge text (type, subtype, feature, event — pick relevant)
+  ════════════════════════════════════════════════════════════ -->
+    <header class="hero">
+      <div class="hero-label">Deep Sky Object · Documentation</div>
+      <h1>{{DSO_ID}}<br /><em>{{COMMON_NAME}}</em></h1>
+      <div class="hero-sub">
+        CONSTELLATION {{CONSTELLATION}} &nbsp;·&nbsp; {{OBJECT_TYPE}}
+        &nbsp;·&nbsp; {{ALT_CATALOG}}
+      </div>
+      <div class="hero-badges">
+        <!-- Choose badge classes: badge-mauve / badge-blue / badge-teal / badge-peach / badge-green / badge-sapphire -->
+        <span class="badge badge-mauve">{{BADGE_1}}</span>
+        <span class="badge badge-blue">{{BADGE_2}}</span>
+        <span class="badge badge-teal">{{BADGE_3}}</span>
+        <span class="badge badge-peach">{{BADGE_4}}</span>
+        <!-- ══ LINK TO PROCESSING CHECKLIST (hero badge) ═════════
+             Always present — links to the companion checklist file.
+             Do NOT remove or modify this anchor.
+        ════════════════════════════════════════════════════════ -->
+        <a href="processing-checklist.html" class="badge badge-sapphire">
+          Processing Checklist →
+        </a>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- ══ 01 — QUICK REFERENCE ══════════════════════════════
+    Fill all 8 cells. Use accent classes to vary colors.
+    Accent options: accent-sapphire / accent-blue / accent-teal /
+                    accent-yellow / accent-peach / accent-green / accent-mauve
+    ═════════════════════════════════════════════════════════ -->
+      <section class="section">
+        <div class="section-header">
+          <span class="section-number">01</span>
+          <span class="section-title">Quick Reference</span>
+          <div class="section-line"></div>
+        </div>
+        <div class="data-grid">
+          <div class="data-cell">
+            <div class="data-label">Right Ascension</div>
+            <div class="data-value accent-sapphire">{{RA}}</div>
+            <div class="data-note">J2000.0</div>
+          </div>
+          <div class="data-cell">
+            <div class="data-label">Declination</div>
+            <div class="data-value accent-sapphire">{{DEC}}</div>
+            <div class="data-note">J2000.0</div>
+          </div>
+          <div class="data-cell">
+            <div class="data-label">Distance</div>
+            <div class="data-value accent-blue">{{DISTANCE_LY}}</div>
+            <div class="data-note">{{DISTANCE_PC}}</div>
+          </div>
+          <div class="data-cell">
+            <div class="data-label">Apparent Size</div>
+            <div class="data-value accent-teal">{{APPARENT_SIZE}}</div>
+            <div class="data-note">{{SIZE_NOTE}}</div>
+          </div>
+          <div class="data-cell">
+            <div class="data-label">Visual Magnitude</div>
+            <div class="data-value accent-yellow">{{MAGNITUDE}}</div>
+            <div class="data-note">{{MAGNITUDE_NOTE}}</div>
+          </div>
+          <div class="data-cell">
+            <div class="data-label">Physical Diameter</div>
+            <div class="data-value accent-peach">{{PHYSICAL_DIAMETER}}</div>
+            <div class="data-note">{{PHYSICAL_DIAMETER_PC}}</div>
+          </div>
+          <div class="data-cell">
+            <div class="data-label">Object Type</div>
+            <div class="data-value accent-mauve">{{OBJECT_TYPE_SHORT}}</div>
+            <div class="data-note">{{OBJECT_TYPE_DETAIL}}</div>
+          </div>
+          <div class="data-cell">
+            <div class="data-label">Constellation</div>
+            <div class="data-value accent-green">{{CONSTELLATION}}</div>
+            <div class="data-note">{{CONSTELLATION_NOTE}}</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ 02 — CATALOG DESIGNATIONS ══════════════════════════ -->
+      <section class="section">
+        <div class="section-header">
+          <span class="section-number">02</span>
+          <span class="section-title">Catalog Designations</span>
+          <div class="section-line"></div>
+        </div>
+        <table class="catalog-table">
+          <thead>
+            <tr>
+              <th>Designation</th>
+              <th>Catalog</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{CATALOG_ROWS}}
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ══ 03 — SCIENTIFIC DESCRIPTION ══════════════════════════ -->
+      <section class="section">
+        <div class="section-header">
+          <span class="section-number">03</span>
+          <span class="section-title">Scientific Description</span>
+          <div class="section-line"></div>
+        </div>
+        <div class="prose">{{SCIENTIFIC_DESCRIPTION}}</div>
+      </section>
+
+      <!-- ══ 04 — KEY STAR / NOTABLE SOURCE [OPTIONAL] ═══════════ -->
+      <section class="section">
+        <div class="section-header">
+          <span class="section-number">04</span>
+          <span class="section-title">{{STAR_SECTION_TITLE}}</span>
+          <div class="section-line"></div>
+        </div>
+        <div class="star-card">
+          <div class="star-name">{{STAR_NAME}}</div>
+          <div class="star-class">{{STAR_CLASS_DESC}}</div>
+          <div class="star-props">{{STAR_PROPS}}</div>
+          <div class="star-desc">{{STAR_DESCRIPTION}}</div>
+        </div>
+      </section>
+
+      <!-- ══ 05 — DISCOVERY & HISTORY ════════════════════════════ -->
+      <section class="section">
+        <div class="section-header">
+          <span class="section-number">05</span>
+          <span class="section-title"
+            >Discovery &amp; Observational History</span
+          >
+          <div class="section-line"></div>
+        </div>
+        <div class="timeline">{{TIMELINE_ITEMS}}</div>
+      </section>
+
+      <div class="divider"></div>
+
+      <!-- ══ 06 — PHYSICAL STRUCTURE ══════════════════════════════ -->
+      <section class="section">
+        <div class="section-header">
+          <span class="section-number">06</span>
+          <span class="section-title">Physical Structure &amp; Processes</span>
+          <div class="section-line"></div>
+        </div>
+        <div class="prose">{{PHYSICAL_STRUCTURE}}</div>
+      </section>
+
+      <!-- ══ 07 — OBSERVATION TIPS ════════════════════════════════ -->
+      <section class="section">
+        <div class="section-header">
+          <span class="section-number">07</span>
+          <span class="section-title">Observation &amp; Imaging Notes</span>
+          <div class="section-line"></div>
+        </div>
+        <div class="tip-grid">{{OBSERVATION_TIPS}}</div>
+      </section>
+
+      <div class="divider"></div>
+
+      <!-- ══ 08 — ACQUISITION DATA ════════════════════════════════ -->
+      <section class="section">
+        <div class="section-header">
+          <span class="section-number">08</span>
+          <span class="section-title">This Project — Acquisition Data</span>
+          <div class="section-line"></div>
+        </div>
+        <div class="session-block">
+          <div
+            class="data-grid"
+            style="
+              border: none;
+              background: transparent;
+              gap: 2px;
+              margin-bottom: 28px;
+            "
+          >
+            <div
+              class="data-cell"
+              style="border: 1px solid var(--surface0); border-radius: 3px"
+            >
+              <div class="data-label">Instrument</div>
+              <div class="data-value" style="font-size: 17px">
+                {{INSTRUMENT}}
+              </div>
+              <div class="data-note">{{CAMERA}}</div>
+            </div>
+            <div
+              class="data-cell"
+              style="border: 1px solid var(--surface0); border-radius: 3px"
+            >
+              <div class="data-label">Filter</div>
+              <div class="data-value" style="font-size: 17px">{{FILTER}}</div>
+            </div>
+            <div
+              class="data-cell"
+              style="border: 1px solid var(--surface0); border-radius: 3px"
+            >
+              <div class="data-label">Site</div>
+              <div class="data-value" style="font-size: 17px">{{SITE}}</div>
+              <div class="data-note">{{SITE_COORDS}}</div>
+            </div>
+            <div
+              class="data-cell"
+              style="border: 1px solid var(--surface0); border-radius: 3px"
+            >
+              <div class="data-label">Sessions</div>
+              <div class="data-value accent-mauve">{{SESSION_COUNT}}</div>
+              <div class="data-note">{{STACKING_NOTE}}</div>
+            </div>
+          </div>
+          <div class="session-files-label">Session Files</div>
+          <div class="session-files">{{SESSION_FILES}}</div>
+        </div>
+      </section>
+
+      <!-- ══ 09 — AUTHOR NOTES [OPTIONAL] ══════════════════════════ -->
+      <section class="section">
+        <div class="section-header">
+          <span class="section-number">09</span>
+          <span class="section-title">Observer Notes</span>
+          <div class="section-line"></div>
+        </div>
+        <div class="notes-block">{{AUTHOR_NOTES}}</div>
+      </section>
+
+      <!-- ══ 10 — REFERENCES ════════════════════════════════════════ -->
+      <section class="section">
+        <div class="section-header">
+          <span class="section-number">10</span>
+          <span class="section-title">Key References</span>
+          <div class="section-line"></div>
+        </div>
+        <table class="catalog-table">
+          <thead>
+            <tr>
+              <th>Source</th>
+              <th>Reference</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{REFERENCES_ROWS}}
+          </tbody>
+        </table>
+      </section>
+    </main>
+
+    <!-- ══ FOOTER ════════════════════════════════════════════════
+  {{GENERATED_DATE}} → YYYY-MM-DD
+  {{AUTHOR}}         → e.g. "Observer Name · Location" or omit
+  ════════════════════════════════════════════════════════════ -->
+    <footer>
+      <div class="foot-left">
+        {{DSO_ID}} · Documentation · Generated {{GENERATED_DATE}}
+      </div>
+      <!-- ══ LINK TO PROCESSING CHECKLIST (footer) ════════════════
+           Always present — do NOT remove or modify this block.
+      ════════════════════════════════════════════════════════════ -->
+      <div class="foot-center">
+        <a href="processing-checklist.html">⚙ Processing Checklist →</a>
+      </div>
+      <div class="foot-right">PixInsight Project · {{AUTHOR}}</div>
+    </footer>
+
+    <script>
+      function setTheme(flavor) {
+        document.documentElement.setAttribute("data-theme", flavor);
+        try {
+          localStorage.setItem("ctp-dso-flavor", flavor);
+        } catch (e) {}
+      }
+      (function () {
+        try {
+          const saved = localStorage.getItem("ctp-dso-flavor");
+          if (
+            saved &&
+            ["latte", "frappe", "macchiato", "mocha"].includes(saved)
+          ) {
+            document.documentElement.setAttribute("data-theme", saved);
+            const sel = document.getElementById("themeSelect");
+            if (sel) sel.value = saved;
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </body>
+</html>

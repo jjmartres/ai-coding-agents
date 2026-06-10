@@ -81,7 +81,7 @@ flowchart LR
         direction TB
         agents["agents/\n(80+ .md files\nin 11 categories)"]
         skills["skills/\n(19 skill packs\neach with SKILL.md)"]
-        commands["commands/\n(12 slash commands\n.md files)"]
+        commands["commands/\n(14 slash commands\n.md files)"]
         rules["rules/\n(always-on\nbehavioural rules)"]
     end
 
