@@ -1,6 +1,6 @@
 ---
 description: Polish and complete speckit workflow — quality gate, docs, changelog, MR
-model: anthropic/claude-opus-4.6
+model: openrouter/claude-opus-4.6
 ---
 
 Strictly follow the project constitution.
