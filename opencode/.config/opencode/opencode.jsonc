@@ -56,7 +56,6 @@
   "plugin": [
     "@franlol/opencode-md-table-formatter@latest",
     "opencode-websearch",
-    "opencode-cost-guard",
     "file:///Users/jjmartres/.config/opencode/plugins/codeisland.js",
   ],
   "mcp": {
