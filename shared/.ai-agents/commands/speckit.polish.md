@@ -1,6 +1,6 @@
 ---
 description: Polish and complete speckit workflow — quality gate, docs, changelog, MR
-model: openrouter/gpt-5.3-codex
+model: openrouter/openai/gpt-5.3-codex
 ---
 
 Strictly follow the project constitution.
