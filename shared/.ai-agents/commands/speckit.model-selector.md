@@ -109,7 +109,7 @@ Repeat for all 7 steps, then display a summary confirmation table before proceed
 
 For each step that maps to a real command file under `.opencode/commands/`:
 
-1. Locate the file: `.opencode/commands/<speckit-command>.md`  
+1. Locate the file: `.opencode/commands/<speckit-command>.md`
    (e.g. `.opencode/commands/speckit.constitution.md`)
 2. Read the file.
 3. Find the frontmatter block that begins with `---` and ends with `---`.
