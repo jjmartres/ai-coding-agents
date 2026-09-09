@@ -253,12 +253,13 @@ the module's purpose is not obvious from its name.
 #### TypeScript-specific rules (Google Style)
 
 **File structure** — sections separated by exactly one blank line, in this order:
+
 1. Copyright/license JSDoc (if required)
 2. `@fileoverview` JSDoc (if needed)
 3. Imports
 4. Implementation
 
-**JSDoc placement** — always *before* decorators, with no blank line between
+**JSDoc placement** — always _before_ decorators, with no blank line between
 the JSDoc and the decorator:
 
 ```ts
@@ -268,7 +269,7 @@ export class AppModule {}
 ```
 
 **What to skip** — do not re-state types in `@param`/`@returns`; the compiler
-enforces them. Document *semantics*, constraints, and edge cases instead.
+enforces them. Document _semantics_, constraints, and edge cases instead.
 
 **Interfaces vs type aliases** — use `interface` for object shapes; use `type`
 for unions, intersections, and mapped types.
