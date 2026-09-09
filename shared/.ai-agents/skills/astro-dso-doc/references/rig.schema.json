@@ -1,0 +1,110 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Astro Rig Campaign File (rig.json)",
+  "type": "object",
+  "required": ["target", "capture_location", "camera", "telescope", "filters", "tec_setpoint_c", "binning", "sequences"],
+  "properties": {
+    "target": {
+      "type": "object",
+      "required": ["name", "coordinates_j2000"],
+      "properties": {
+        "name": { "type": "string" },
+        "common_name": { "type": "string" },
+        "coordinates_j2000": {
+          "type": "object",
+          "required": ["ra", "dec"],
+          "properties": {
+            "ra": { "type": "string" },
+            "dec": { "type": "string" }
+          }
+        }
+      }
+    },
+    "capture_location": {
+      "type": "object",
+      "required": ["site", "latitude", "longitude", "elevation_m", "bortle"],
+      "properties": {
+        "site": { "type": "string" },
+        "latitude": { "type": "number", "minimum": -90, "maximum": 90 },
+        "longitude": { "type": "number", "minimum": -180, "maximum": 180 },
+        "elevation_m": { "type": "number" },
+        "bortle": { "type": "integer", "minimum": 1, "maximum": 9 }
+      }
+    },
+    "camera": {
+      "type": "object",
+      "required": ["model", "sensor", "pixel_size_um"],
+      "properties": {
+        "model": { "type": "string" },
+        "sensor": { "type": "string" },
+        "resolution_px": { "type": "string", "pattern": "^[0-9]+x[0-9]+$" },
+        "pixel_size_um": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    },
+    "telescope": {
+      "type": "object",
+      "required": ["model", "focal_length_mm", "focal_ratio"],
+      "properties": {
+        "model": { "type": "string" },
+        "aperture_mm": { "type": "number", "exclusiveMinimum": 0 },
+        "focal_length_mm": { "type": "number", "exclusiveMinimum": 0 },
+        "focal_ratio": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    },
+    "filters": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "tec_setpoint_c": { "type": "number" },
+    "binning": { "type": "integer", "minimum": 1 },
+    "sequences": {
+      "type": "object",
+      "required": ["lights", "darks", "flats"],
+      "properties": {
+        "lights": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["filter", "exposure_s", "bin", "subs"],
+            "properties": {
+              "filter": { "type": "string" },
+              "exposure_s": { "type": "number", "exclusiveMinimum": 0 },
+              "gain": { "type": ["integer", "null"], "minimum": 0 },
+              "bin": { "type": "integer", "minimum": 1 },
+              "subs": { "type": "integer", "minimum": 0 },
+              "dates": { "type": "array", "items": { "type": "string", "format": "date" } }
+            }
+          }
+        },
+        "darks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["exposure_s", "bin", "subs"],
+            "properties": {
+              "exposure_s": { "type": "number", "exclusiveMinimum": 0 },
+              "gain": { "type": ["integer", "null"], "minimum": 0 },
+              "bin": { "type": "integer", "minimum": 1 },
+              "subs": { "type": "integer", "minimum": 0 },
+              "dates": { "type": "array", "items": { "type": "string", "format": "date" } }
+            }
+          }
+        },
+        "flats": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["filter", "exposure_ms", "bin", "subs"],
+            "properties": {
+              "filter": { "type": "string" },
+              "exposure_ms": { "type": "number", "exclusiveMinimum": 0 },
+              "bin": { "type": "integer", "minimum": 1 },
+              "subs": { "type": "integer", "minimum": 0 },
+              "dates": { "type": "array", "items": { "type": "string", "format": "date" } }
+            }
+          }
+        }
+      }
+    }
+  }
+}

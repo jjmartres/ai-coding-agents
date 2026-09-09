@@ -1,23 +1,256 @@
 ---
 name: astro-dso-doc
-description: Generates a complete, polished HTML documentation page, a processing checklist, an AstroBin post JSON, a PixInsight process icon set (XPSM), AND a ready-to-paste PixInsight project Description field for a deep-sky object (DSO) astrophotography project. Use this skill whenever the user mentions astrophotography, a DSO name (NGC, IC, Messier, Sharpless, etc.), wants to document an imaging session, mentions PixInsight project documentation, wants to create an observation report, or asks to generate a page/document for a nebula, galaxy, cluster, or other deep-sky target. Triggers on phrases like "create doc for NGC XXXX", "generate DSO page", "document my session on", "make a PixInsight doc for", "astro documentation page", "pixinsight project description", "description field pixinsight", "processing checklist", "workflow checklist", "astrobin", "astrobin post", "astrobin upload", "process icons", "xpsm", "pixinsight icons". Always use this skill — not a generic HTML generator — when the subject is a deep-sky object.
+description: Bootstraps a deep-sky object (DSO) astrophotography project from raw acquisition frames (own rig, not a smart telescope), AND generates a complete, polished HTML documentation page, a processing checklist, an AstroBin post JSON, a PixInsight process icon set (XPSM), and a ready-to-paste PixInsight project Description field. Use this skill whenever the user mentions astrophotography, asks to bootstrap/initialize/setup a project folder, a DSO name (NGC, IC, Messier, Sharpless, etc.), wants to document an imaging session, mentions PixInsight project documentation, wants to create an observation report, or asks to generate a page/document for a nebula, galaxy, cluster, or other deep-sky target. Triggers on phrases like "bootstrap project", "initialize astro project", "setup my project folder", "create doc for NGC XXXX", "generate DSO page", "document my session on", "make a PixInsight doc for", "astro documentation page", "pixinsight project description", "description field pixinsight", "processing checklist", "workflow checklist", "astrobin", "astrobin post", "astrobin upload", "process icons", "xpsm", "pixinsight icons", or when the working directory contains only a `raw/` folder with no `rig.json` yet. Always use this skill — not a generic HTML generator or generic file-scaffolding — when the subject is a deep-sky object.
 ---
 
 # Astro DSO Documentation Generator
 
-Generates five deliverables for a deep-sky object (DSO) astrophotography project:
+Generates up to six deliverables for a deep-sky object (DSO) astrophotography project:
 
-1. **`project.json`** — a flat JSON file containing the PixInsight project description data (copy the `description` field value into the Description box of `.xosm`)
+0. **Project structure + `rig.json`** — the on-disk directory skeleton (`raw/`, `processing/`, `finals/`) and a schema-validated JSON file describing the rig, site, and per-filter acquisition sequences, built primarily by reading FITS headers directly out of `raw/light`, `raw/dark`, `raw/flat` rather than by manual entry.
+1. **`project.json`** — a flat JSON file containing the PixInsight project description data (copy the `description` field value into the Description box of `.xosm`). Derived automatically from `rig.json` when the project was bootstrapped (Step 0b).
 2. **`doc/index.html`** — a rich, self-contained HTML documentation page (path goes into the Documentation field of `.xosm`), using the Catppuccin flavor palette with a theme switcher.
 3. **`doc/processing-checklist.html`** — an interactive step-by-step PixInsight processing checklist adapted to the target's filter set (LRGB, HOO, SHO, RGB-only, etc.), using the same Catppuccin design system.
 4. **`astrobin.json`** — a structured JSON file containing all AstroBin image post fields, ready to copy-paste into the AstroBin upload form.
 5. **`Process Icons - <common_name> - <workflow_type> workflow.xpsm`** — a PixInsight process icon set tailored to the detected workflow (LRGB, RGB, HOO, SHO), generated from the processing checklist phases.
 
+A project can be a **smart telescope** (single pre-stacked file per session — see Edge Cases) or, more commonly now, an **own rig** shooting raw calibrated-later frames (light/dark/flat) — the default assumption throughout this skill.
+
 ---
 
 ## Workflow
 
+### Step 0 — Bootstrap Project (Directory Structure + rig.json)
+
+Run this step first whenever the user asks to bootstrap/initialize/setup a project, or whenever the working directory contains only a `raw/` folder and no `rig.json` yet. It replaces manual data entry (Step 2) whenever real acquisition data is available in FITS headers. It produces the on-disk skeleton and a validated `rig.json` — the source of truth for every other step in this skill.
+
+#### 0.1 — Verify starting state
+
+Only `raw/` is expected to exist when bootstrapping. Confirm with Bash:
+
+```bash
+ls -la ./
+ls -la ./raw/
+```
+
+If `raw/light`, `raw/dark`, or `raw/flat` do not exist, create them (empty subfolders are fine — some campaigns have no separate darks, e.g. bias-only calibration):
+
+```bash
+mkdir -p ./raw/light ./raw/dark ./raw/flat
+```
+
+If a `rig.json` already exists in the working directory, ask the user whether to overwrite it or reuse it as-is before proceeding — never overwrite silently.
+
+#### 0.2 — Create the rest of the project structure
+
+```bash
+mkdir -p ./processing/calibrated ./processing/masters ./finals
+```
+
+Directory roles:
+
+| Directory | Role |
+|---|---|
+| `raw/light` `raw/dark` `raw/flat` | Untouched acquisition frames — never write into these |
+| `processing/calibrated` | Calibrated/registered subs (optional to keep — can grow large) |
+| `processing/masters` | Integrated master frames, one per filter (`MasterLight_<filter>.xisf`) |
+| `finals` | Exported final images (`.xisf`, `.tif`, `.jpg`) |
+
+#### 0.3 — Extract metadata from FITS headers
+
+Scan every FITS file under `raw/light`, `raw/dark`, `raw/flat` and aggregate per-filter sequences. Install `astropy` if missing:
+
+```bash
+pip install astropy --break-system-packages -q 2>/dev/null
+```
+
+```bash
+python3 << 'PYEOF'
+import glob, json, os
+from astropy.io import fits
+from collections import defaultdict
+
+def scan_folder(folder):
+    """Group FITS headers by filter, aggregating exposure/gain/bin/temp/subs."""
+    groups = defaultdict(lambda: {"subs": 0, "exposures": set(), "gains": set(),
+                                   "bins": set(), "temps": set(), "dates": set()})
+    meta = {}
+    for path in sorted(glob.glob(os.path.join(folder, "*.fit*"))):
+        try:
+            hdr = fits.getheader(path)
+        except Exception:
+            continue
+        filt = hdr.get("FILTER", "NONE") or "NONE"
+        g = groups[filt]
+        g["subs"] += 1
+        exptime = hdr.get("EXPTIME", hdr.get("EXPOSURE"))
+        if exptime is not None:
+            g["exposures"].add(round(float(exptime), 3))
+        if hdr.get("GAIN") is not None:
+            g["gains"].add(hdr.get("GAIN"))
+        g["bins"].add(hdr.get("XBINNING", 1))
+        temp = hdr.get("CCD-TEMP", hdr.get("SET-TEMP"))
+        if temp is not None:
+            g["temps"].add(round(float(temp), 1))
+        date_obs = hdr.get("DATE-OBS")
+        if date_obs:
+            g["dates"].add(str(date_obs)[:10])
+        if not meta:
+            meta = {
+                "object": hdr.get("OBJECT"),
+                "telescope": hdr.get("TELESCOP"),
+                "camera": hdr.get("INSTRUME"),
+                "focal_length": hdr.get("FOCALLEN"),
+                "pixel_size": hdr.get("XPIXSZ"),
+                "ra": hdr.get("RA", hdr.get("OBJCTRA")),
+                "dec": hdr.get("DEC", hdr.get("OBJCTDEC")),
+                "site_lat": hdr.get("SITELAT"),
+                "site_long": hdr.get("SITELONG"),
+                "bayer": hdr.get("BAYERPAT"),
+            }
+    return groups, meta
+
+result = {}
+global_meta = {}
+for kind in ("light", "dark", "flat"):
+    groups, meta = scan_folder(f"./raw/{kind}")
+    if meta and not global_meta:
+        global_meta = meta
+    result[kind] = {
+        filt: {
+            "subs": g["subs"],
+            "exposures": sorted(g["exposures"]),
+            "gains": sorted(x for x in g["gains"] if x is not None),
+            "bins": sorted(g["bins"]),
+            "temps": sorted(g["temps"]),
+            "dates": sorted(g["dates"]),
+        }
+        for filt, g in groups.items()
+    }
+
+print(json.dumps({"meta": global_meta, "sequences": result}, indent=2, default=str))
+PYEOF
+```
+
+Present the extracted summary to the user in a compact table (per kind × filter: subs, exposure(s), gain(s), bin, temp) before writing `rig.json`.
+
+If **multiple distinct exposures, gains, or bins** are found within the same filter (e.g. an incomplete or mixed session), list them as **separate sequence entries** rather than collapsing them — never silently average or discard data.
+
+If `astropy` cannot be installed or no FITS files are found in `raw/light`, fall back to Block C of Step 2 (session file list) and proceed manually — do not fail the whole bootstrap.
+
+#### 0.4 — Ask only for what FITS headers cannot provide
+
+FITS headers rarely contain: aperture (mm), focal ratio, exact pixel count, filter bandwidth/model, site name, elevation, Bortle class. Ask in **one block**, pre-filling anything already extracted so the user only fills gaps:
+
+```
+I've read the raw frames. Here's what I found:
+  Target      : {object or "not found — please provide"}
+  Telescope   : {telescope or "not found"}
+  Camera      : {camera or "not found"}
+  Focal length: {focal_length or "not found"} mm
+  Filters     : {list of distinct FILTER values found}
+
+A few things aren't in the FITS headers — can you fill these in?
+  - Aperture (mm) and f-ratio, if not inferable from focal length + known telescope model
+  - Pixel size (µm), if not in header
+  - Filter bandwidth (nm) and vendor/model, per filter
+  - Site name, elevation (m), and Bortle class
+  - GPS coordinates, if SITELAT/SITELONG were not present in the headers
+```
+
+Do not re-ask for anything already successfully extracted from the headers.
+
+#### 0.5 — Generate rig.json
+
+Build the file following the schema in `references/rig.schema.json`. Field sourcing:
+
+| rig.json field | Source |
+|---|---|
+| `target.name` | `OBJECT` header, or user-provided |
+| `target.common_name` | Resolved during Step 3 research (headers never carry a common name) |
+| `target.coordinates_j2000` | `RA`/`DEC` (or `OBJCTRA`/`OBJCTDEC`) headers if present, else user-provided |
+| `capture_location.site` | User-provided |
+| `capture_location.latitude` / `longitude` | `SITELAT`/`SITELONG` headers if present, else user-provided |
+| `capture_location.elevation_m` | User-provided |
+| `capture_location.bortle` | User-provided |
+| `camera.model` | `INSTRUME` header |
+| `camera.sensor`, `camera.pixel_size_um` | User-provided if not derivable from `XPIXSZ` |
+| `telescope.focal_length_mm` | `FOCALLEN` header, or computed from aperture × f-ratio |
+| `telescope.aperture_mm`, `telescope.focal_ratio` | User-provided if not inferable |
+| `filters` | Distinct `FILTER` header values, described with user-provided bandwidth/vendor |
+| `tec_setpoint_c` | Most common `SET-TEMP` (fallback `CCD-TEMP`) across light frames |
+| `binning` | Most common `XBINNING` across light frames |
+| `sequences.lights[]` | One entry per filter (or per distinct exposure/gain/bin within a filter), from Step 0.3 aggregation, including `dates` (all distinct `DATE-OBS` days for that entry) |
+| `sequences.darks[]` | One entry per distinct exposure/bin found in `raw/dark` (filter-independent), including `dates` |
+| `sequences.flats[]` | One entry per filter found in `raw/flat`, including `dates` |
+
+Save with Bash:
+
+```bash
+cat > ./rig.json << 'EOF'
+[generated JSON, single object, pretty-printed 2-space indent]
+EOF
+```
+
+Validate against the schema before confirming success:
+
+```bash
+pip install jsonschema --break-system-packages -q 2>/dev/null
+python3 -c "
+import json, jsonschema
+schema = json.load(open('references/rig.schema.json'))
+data = json.load(open('./rig.json'))
+jsonschema.validate(instance=data, schema=schema)
+print('rig.json OK')
+"
+```
+
+If validation fails, fix the offending field and re-validate — **never present an invalid `rig.json` to the user as final.**
+
+#### 0.6 — Confirm and hand off
+
+Tell the user:
+
+- **Project structure** → `raw/{light,dark,flat}`, `processing/{calibrated,masters}`, `finals/` created
+- **rig.json** → path, and a one-line summary (target, filters, total subs, total integration time)
+
+Then proceed automatically to **Step 0b** (internal field mapping) and **Step 3** (DSO research) to generate the object documentation. Do not re-ask acquisition questions already answered by `rig.json` — Step 2 becomes a no-op for any field it already covers.
+
+---
+
+### Step 0b — Map rig.json to Internal Project Fields
+
+The rest of this skill (Steps 3 through 6) is built around a flat `project.json` structure. Bridge `rig.json` into that structure in memory (and still write `project.json` to disk — other tools may expect it) so every downstream step works unchanged.
+
+| project.json field | Derived from rig.json |
+|---|---|
+| `target` | `target.name` |
+| `common_name` | Resolved during Step 3 research (`rig.json` has no common name field) |
+| `ra` / `dec` | `target.coordinates_j2000.ra` / `.dec` |
+| `telescope` | `"{telescope.model} ({telescope.aperture_mm}mm f/{telescope.focal_ratio})"` |
+| `camera` | `"{camera.model} ({camera.sensor})"` |
+| `filter` | Join `filters` values, e.g. `"Askar D1 (H\u03b1/OIII, 6nm) + Askar D2 (SII/OIII, 6nm)"` — feeds workflow detection in Step 5b.1 as **SHO** or **HOO** depending on which bands are present |
+| `site` | `capture_location.site` |
+| `site_coords` | `"{latitude}N / {longitude}E \u00b7 ~{elevation_m}m \u00b7 Bortle {bortle}"` |
+| `session_count` | Number of distinct dates found across `sequences.lights[].dates` (ask if not tracked) |
+| `sessions` | One summary string per filter: `"{filter}: {subs} \u00d7 {exposure_s}s @ gain {gain}, bin {bin}"` |
+| `stacking` | `"WBPP (PixInsight)"` — own rig, not a smart telescope |
+| `calibration` | `"Darks / Flats / Bias"` (or `"Darks / Flats"` if no bias frames found in `raw/dark`) |
+| `subs_integrated` | `"{total lights} / {total lights}"` unless the user flags rejected subs |
+| `notes` | From Step 0.4 free-text answers |
+
+Also carry forward for **Step 5c (astrobin.json)** and **Step 5d (XPSM)**, which can now be populated more precisely than with a smart telescope:
+
+- `acquisition_details[].gain` — from `rig.json` `sequences.lights[].gain`, not `null`
+- `acquisition_details[].temperature` — from `tec_setpoint_c`
+- `acquisition_details[].bortle` — from `capture_location.bortle`
+- `acquisition_details[].binning` — from `rig.json` `binning`
+
+---
+
 ### Step 1 — Identify the Target
+
+Skip this step if the target was already extracted from FITS headers in Step 0.3 (or confirmed in Step 0.4).
 
 Extract the DSO name/catalog number from the user's message. If ambiguous or missing, ask for it before proceeding.
 
@@ -25,9 +258,11 @@ Common catalog prefixes: NGC, IC, M (Messier), Sh2 (Sharpless), B (Barnard), vdB
 
 ---
 
-### Step 2 — Collect Acquisition Data (interactive)
+### Step 2 — Collect Acquisition Data (interactive fallback)
 
-Ask the user the following questions **one block at a time** (don't dump all at once). Wait for answers before proceeding.
+Skip any block already fully answered by `rig.json` (Step 0). This step exists for: projects not bootstrapped via Step 0, smart telescope sessions (no raw FITS to scan), or fields Step 0.4 didn't cover.
+
+Ask the remaining questions **one block at a time** (don't dump all at once). Wait for answers before proceeding.
 
 **Block A — Instrument:**
 
@@ -110,7 +345,7 @@ JSON field rules:
 - **No indentation** — the entire JSON must be a single line (minified)
 - All string values use `\n` for newlines within the `description` field
 - `ref_alignment` and `ref_integration` are always **empty strings** `""` — the user fills them in PixInsight
-- `calibration`: `"Handled internally by the instrument"` for smart telescopes; `"Darks / Flats / Bias"` otherwise
+- `calibration`: `"Darks / Flats / Bias"` (or `"Darks / Flats"`) for own-rig projects bootstrapped via Step 0 — the default case; `"Handled internally by the instrument"` only for smart telescopes (see Edge Cases)
 - `sessions` array: filenames sorted chronologically, no path prefix
 - `description` field: the full plain-text block (same format as before, using `\n` escapes) ready to paste into PixInsight's Description box
 - `notes`: empty string `""` if user skipped Block D; otherwise the user's text
@@ -245,7 +480,7 @@ Apply the following structural modifications based on the detected workflow mode
 - Uncomment Hα legend item and data cell
 - Tag the new step with `tag-ha` and `tag-rgb`
 
-**Smart telescope / pre-stacked** (single session file per filter, `stacking` = "Internal stacking by instrument"):
+**Smart telescope / pre-stacked** (alternate path — single session file per filter, `stacking` = "Internal stacking by instrument"; not produced by Step 0 bootstrap, only when the user explicitly describes a smart-telescope session in Step 2):
 
 - Replace the entire Phase 01 (section 03) with a single step:
 
@@ -707,6 +942,7 @@ If it fails (e.g. `jq` or `pbcopy` not found), show the fallback message:
 
 ## Template Placeholders Reference
 
+See `references/rig.schema.json` for the full JSON Schema used to validate `rig.json` (Step 0.5).
 See `references/documentation-template.html` for the full annotated documentation template.
 See `references/processing-checklist-template.html` for the full annotated checklist template.
 
@@ -800,6 +1036,16 @@ Key fields and their sources:
 ---
 
 ## Quality Standards
+
+**`rig.json` (Step 0):**
+
+- Only `raw/` (and its `light`/`dark`/`flat` subfolders) is assumed to exist before bootstrapping — every other directory is created by Step 0.2, never assumed present
+- Always validated against `references/rig.schema.json` before being presented as final — a failed validation is fixed and re-checked, never shipped
+- Pretty-printed with 2-space indent (human-readable, hand-editable)
+- Values actually read from FITS headers are never overwritten by guesses — if a header field is missing, the corresponding rig.json field is left for the user to fill (Step 0.4), never fabricated
+- Distinct exposures/gains/bins within the same filter are kept as separate `sequences` entries — never merged or averaged
+- `sequences.lights[]`, `.darks[]`, `.flats[]` subs counts always match the actual file count found on disk at bootstrap time
+- No CAA/rotator field unless the user's rig actually has one — omit entirely rather than null it out
 
 **`project.json`:**
 
@@ -896,3 +1142,13 @@ Key fields and their sources:
 | OWN backyard imaging | Set `data_source: "OWN"`, `remote_source: ""` |
 | Gain parseable from filenames | Include numeric gain value in `acquisition_details[].gain` |
 | Bortle class mentioned in notes | Include in all `acquisition_details[].bortle` entries |
+| Working directory has only `raw/` | Bootstrap trigger (Step 0) — create the rest of the structure and generate `rig.json` |
+| `raw/light`, `raw/dark`, or `raw/flat` missing | Create the missing subfolder(s) empty — a campaign may legitimately have no darks (bias-only) or no flats yet |
+| No FITS files found in `raw/light` | Fall back to Step 2 manual entry — do not fail the bootstrap |
+| `rig.json` already exists | Ask the user: reuse as-is, or overwrite — never overwrite silently |
+| `rig.json` fails schema validation | Fix the offending field and re-validate before presenting it as final |
+| `astropy` install fails | Ask the user to paste a representative FITS header manually, or fall back to Step 2 |
+| `SITELAT`/`SITELONG` missing from headers | Ask the user for GPS coordinates in Step 0.4 |
+| Mixed exposures/gains/bins within one filter | List as separate `sequences` entries — never average or discard |
+| Multiple distinct `OBJECT` values across `raw/light` | Flag to the user — a target folder should contain exactly one DSO's data; ask which is correct or whether files need sorting first |
+| CAA/rotator not present on the rig | Omit any rotation/CAA field from `rig.json` entirely — do not include it as `null` |

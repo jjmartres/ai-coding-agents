@@ -250,6 +250,41 @@ export async function fetchUserProfile(userId: string): Promise<UserProfile> {
 Named exports only – never `export default`. File-level `@fileoverview` when
 the module's purpose is not obvious from its name.
 
+#### TypeScript-specific rules (Google Style)
+
+**File structure** — sections separated by exactly one blank line, in this order:
+1. Copyright/license JSDoc (if required)
+2. `@fileoverview` JSDoc (if needed)
+3. Imports
+4. Implementation
+
+**JSDoc placement** — always *before* decorators, with no blank line between
+the JSDoc and the decorator:
+
+```ts
+/** Root application module. */
+@NgModule({declarations: [AppComponent]})
+export class AppModule {}
+```
+
+**What to skip** — do not re-state types in `@param`/`@returns`; the compiler
+enforces them. Document *semantics*, constraints, and edge cases instead.
+
+**Interfaces vs type aliases** — use `interface` for object shapes; use `type`
+for unions, intersections, and mapped types.
+
+**Naming quick-reference**:
+
+| Category | Convention | Example |
+|---|---|---|
+| Class / Interface / Enum | `UpperCamelCase` | `UserService` |
+| Function / method / variable | `lowerCamelCase` | `fetchUser()` |
+| Module-level constant | `CONSTANT_CASE` | `MAX_RETRIES` |
+| Observable (convention) | `lowerCamelCase$` | `user$` |
+
+> For the complete reference — generator functions, getters/setters, decorators,
+> import styles, enum documentation — read `references/typescript_google_style.md`.
+
 ### Complex Algorithms
 
 For complex logic, add inline comments AND comprehensive function documentation:
