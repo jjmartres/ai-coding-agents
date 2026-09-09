@@ -1,12 +1,18 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "model": "google-vertex/gemini-3.1-pro-preview",
-  "small_model": "google-vertex/gemini-3.5-flash",
-  "enabled_providers": ["google-vertex", "openrouter", "anthropic", "calculon"],
+  "small_model": "google-vertex/gemini-3.8-flash",
+  "enabled_providers": [
+    "google-vertex",
+    "openrouter",
+    "anthropic",
+    "calculon",
+    "openai",
+  ],
   "provider": {
     "google-vertex": {
       "models": {
-        "gemini-3.5-flash": {},
+        "gemini-3.8-flash": {},
         "gemini-3.1-pro-preview": {},
       },
       "options": {
@@ -16,7 +22,10 @@
     },
     "anthropic": {
       "models": {
+        "claude-fable-5-1": {},
+        "claude-opus-5-0": {},
         "claude-opus-4-6": {},
+        "claude-sonnet-5": {},
         "claude-sonnet-4-6": {},
         "claude-haiku-4-5": {},
       },
@@ -62,7 +71,15 @@
     "smartplaylist": {
       "type": "remote",
       "url": "http://personal.local:8000/mcp",
-      "enabled": true,
+      "enabled": false,
+    },
+    "nibbler": {
+      "type": "remote",
+      "url": "http://localhost:8080/mcp/sse",
+      "headers": {
+        "Authorization": "Bearer nmcp-1-096869cd4dbe455a92d5168065f6a3d48c05933a867d4e83",
+      },
+      "enabled": false,
     },
   },
 }
