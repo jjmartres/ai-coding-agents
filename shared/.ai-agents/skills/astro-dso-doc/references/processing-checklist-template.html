@@ -1032,9 +1032,18 @@
           <span class="section-number">11</span>
           <span class="section-title">Phase 09 — Finalization</span>
           <div class="section-line"></div>
-          <span class="section-sub">Curves · ICC · Export</span>
+          <span class="section-sub">Astro Color Mixer · Curves · ICC · Export</span>
         </div>
         <div class="steps">
+
+          <div class="step" id="step-astro-color-mixer" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">Astro Color Mixer — Late stage color refinement</div>
+              <div class="step-detail">Script › Utilities › AstroColorMixer. Refine hue, saturation, and luminance to fix color casts or enhance target structures without affecting stars. See <a href="https://cosgrovescosmos.com/astro-color-mixer-web" target="_blank" style="color: inherit; text-decoration: underline;">cosgrovescosmos.com</a>.</div>
+              <div class="step-tags"><span class="tag tag-lrgb">LRGB FINAL</span></div>
+            </div>
+          </div>
 
           <div class="step" id="step-curves-final" onclick="toggle(this)">
             <div class="checkbox"></div>
@@ -1084,12 +1093,34 @@
         </div>
       </section>
 
+      <!-- ══ 12 — CLEANUP ══════════════════════════════════════════ -->
+      <section class="section">
+        <div class="section-header">
+          <span class="section-number">12</span>
+          <span class="section-title">Phase 10 — Project Cleanup</span>
+          <div class="section-line"></div>
+          <span class="section-sub">Free storage space</span>
+        </div>
+        <div class="steps">
+
+          <div class="step" id="step-cleanup-calibrated" onclick="toggle(this)">
+            <div class="checkbox"></div>
+            <div>
+              <div class="step-name">Delete Intermediate Calibrated Files</div>
+              <div class="step-detail">Once master lights and finals are saved, safely delete the `processing/calibrated` files and WBPP intermediate folders to reduce storage footprint.</div>
+              <div class="step-tags"><span class="tag tag-tip">CLEANUP</span></div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
       <!-- ══ DSO NOTES [OPTIONAL] ══════════════════════════════════
       Remove this section if {{DSO_NOTES}} is empty.
       ════════════════════════════════════════════════════════════ -->
       <section class="section">
         <div class="section-header">
-          <span class="section-number">11</span>
+          <span class="section-number">13</span>
           <span class="section-title">Target Notes</span>
           <div class="section-line"></div>
         </div>

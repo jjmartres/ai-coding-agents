@@ -100,5 +100,6 @@ $RECYCLE.BIN/
 pi-mono/.pi/agent/git/
 pi-mono/.pi/agent/extensions/codeisland.ts
 shared/.ai-agents/skills/corp-branding
+shared/.ai-agents/skills/corp-operations-infrastructure
 
 # End of https://www.toptal.com/developers/gitignore/api/vim,osx,visualstudiocode,windows

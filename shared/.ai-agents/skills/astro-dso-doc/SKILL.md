@@ -432,7 +432,7 @@ If per-channel data cannot be parsed, use `—` as the placeholder value.
 | `{{SII_TIME}}` | parsed SII total (omit row if channel absent) |
 | `{{GENERATED_DATE}}` | today's date `YYYY-MM-DD` |
 | `{{AUTHOR}}` | user name / location from Block B, or `—` |
-| `{{DSO_NOTES}}` | user notes from Block D — remove entire section 11 if empty |
+| `{{DSO_NOTES}}` | user notes from Block D — remove entire section 13 if empty |
 
 Also replace all occurrences of `{{DSO_ID}}` inside `id="step-*"` attributes and the `STORAGE_KEY` constant with a slug version: spaces replaced by hyphens, lowercased (e.g. `ngc-4594`).
 
@@ -449,20 +449,21 @@ Apply the following structural modifications based on the detected workflow mode
 - Phase 06: StarXterminator on stretched LRGB
 - Phase 07: Starless LRGB processing (GHS, LHE, USM, SCC, NXT)
 - Phase 08: Rescreen stars
-- Phase 09: Finalization (Curves, ICC, Export)
+- Phase 09: Finalization (Astro Color Mixer, Curves, ICC, Export)
+- Phase 10: Project Cleanup (Delete intermediate calibrated files to reduce storage)
 
 **RGB workflow** (no Luminance):
 
 - Remove section 04 entirely (Phase 02 — Luminance Processing)
-- Remove section 09 entirely (Phase 07 — LRGB Integration)
-- Update section numbers accordingly (03→03, 05→04, 06→05, 07→06, 08→07, 10→08, 11→09)
+- Remove section 06 entirely (Phase 04 — LRGB Combination)
+- Update section numbers sequentially to reflect removed sections (e.g. 03→03, 05→04, etc.)
 - Change all `tag-lrgb` tags to `tag-rgb` in finalization steps
 - Update export filenames from `{{DSO_ID}}_LRGB_final.*` to `{{DSO_ID}}_RGB_final.*`
 - Remove Luminance legend item
 
 **HOO / SHO narrowband workflow**:
 
-- Remove section 04 (Luminance linear) — keep section 09 if Luminance is present
+- Remove section 04 (Luminance linear) — keep section 04 if Luminance is present
 - In section 05 (RGB linear): rename to "Narrowband Processing (Linear)"
   - Replace `ChannelCombination` step with: "PixelMath — HOO / SHO palette assembly"
   - Remove SPCC step; replace with: "BackgroundNeutralization + ColorCalibration"
@@ -864,8 +865,15 @@ Generate the following instances and icons **in this exact order**:
 
 | Icon ID | Class | Key parameters | Description |
 |---|---|---|---|
+| `AstroColorMixer` | (Script) | Script > Utilities > AstroColorMixer | Late stage color refinement (hue/saturation/luminance) of stretched RGB — no XPSM instance |
 | `Curves_Final` | `CurvesTransformation` | K channel: 4 rows (0→0, 0.25→0.22, 0.75→0.78, 1→1); L channel: 3 rows (0→0, 0.5→0.53, 1→1); S channel: 3 rows (0→0, 0.5→0.55, 1→1); all others identity | S-curve + midtone lift + saturation boost |
 | `ICCProfileTransformation` | `ICCProfileTransformation` | targetProfile=`sRGB IEC61966-2.1`, toDefaultProfile=false, renderingIntent=RelativeColorimetric, useBlackPointCompensation=true | Last step before export |
+
+**PHASE 10 — Project Cleanup**
+
+| Icon ID | Class | Key parameters | Description |
+|---|---|---|---|
+| `Cleanup_Notes` | (Manual) | N/A | Delete intermediate files in `processing/calibrated` to reduce storage once masters are saved |
 
 #### 5d.4 — RGB workflow icon set
 
@@ -991,7 +999,7 @@ Key placeholders:
 - `{{HA_TIME}}`, `{{OIII_TIME}}`, `{{SII_TIME}}` — narrowband channels (omit if absent)
 - `{{GENERATED_DATE}}` — `YYYY-MM-DD`
 - `{{AUTHOR}}` — observer name / location
-- `{{DSO_NOTES}}` — free-text processing notes (omit section 11 if empty)
+- `{{DSO_NOTES}}` — free-text processing notes (omit section 13 if empty)
 
 ### AstroBin JSON (`astrobin.json`)
 
