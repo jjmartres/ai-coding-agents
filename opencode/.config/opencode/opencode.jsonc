@@ -49,6 +49,17 @@
       },
     },
   },
+  "compaction": {
+    "auto": true,
+    "prune": true,
+    "reserved": 64000,
+    "preserve_recent_tokens": 120000,
+    "tail_turns": 6,
+  },
+  "tool_output": {
+    "max_lines": 800,
+    "max_bytes": 32768,
+  },
   "default_agent": "plan",
   "autoupdate": true,
   "instructions": ["~/.ai-agents/rules/*.md"],
@@ -56,6 +67,7 @@
   "plugin": [
     "@franlol/opencode-md-table-formatter@latest",
     "opencode-websearch",
+    "openslimedit@latest",
     "file:///Users/jjmartres/.config/opencode/plugins/codeisland.js",
   ],
   "mcp": {
