@@ -4,7 +4,7 @@
   "default_agent": "devops-engineer",
   "agents": {
     "title": {
-      "model": "google-vertex/gemini-3.8-flash"
+      "model": "google-vertex/gemini-3.8-flash",
     },
   },
   "experimental": {
@@ -72,10 +72,7 @@
   "update": "auto",
   "instructions": ["~/.ai-agents/rules/*.md"],
   "share": "disabled",
-  "plugins": [
-    "@tarquinen/opencode-dcp@latest",
-    "./plugins/session-namer"
-  ],
+  "plugins": ["@tarquinen/opencode-dcp@latest", "./plugins/session-namer"],
   "mcp": {
     "servers": {
       "nibbler": {
@@ -84,7 +81,7 @@
         "headers": {
           "Authorization": "Bearer {env:NIBBLER__MCP_TOKEN}",
         },
-        "disabled": true,
+        "disabled": false,
       },
       "oskar": {
         "type": "remote",
