@@ -4,8 +4,7 @@
   "default_agent": "devops-engineer",
   "agents": {
     "title": {
-      "model": "google-vertex/gemini-3.8-flash",
-      "system": "Generate a concise session title formatted strictly as '<Action description> · <workspace_dir_name>'. Keep the action description active, clear, and under 30 characters (e.g. 'Migrate to V2 compaction · ai-coding-agents'). Return only the raw title string with no quotes or punctuation.",
+      "model": "google-vertex/gemini-3.8-flash"
     },
   },
   "experimental": {

@@ -1,24 +1,15 @@
 # opencode-session-namer
 
-OpenCode V2 plugin for customized session naming conventions.
+OpenCode V2 plugin for LLM-driven session naming with dynamic workspace basename prefixing.
 
-## Behavior
+## Convention Format
 
-Hooks into the OpenCode `title` lifecycle event (`ctx.session.hook("title", ...)`):
-- Retrieves the active Git branch via `ctx.vcs.get()`.
-- Extracts the initial prompt intent / topic.
-- Identifies the workspace / repository name.
-- Generates a structured title: `<branch> · <action/topic> · <workspace>`.
-- Gracefully falls back to default title generation if VCS or messages are unavailable.
+`[<basename>] - <Action/Topic>`
 
-## Configuration
+Example:
+`[ai-coding-agents] - Session name plugin`
 
-To activate in `~/.config/opencode/opencode.jsonc`:
+## How It Works
 
-```jsonc
-{
-  "plugins": [
-    "./plugins/session-namer"
-  ]
-}
-```
+Instead of static string slicing, it hooks into OpenCode's `title` hook (`ctx.session.hook("title", ...)`).
+It extracts the real workspace basename dynamically (`ctx.location.project.canonical` / `ctx.location.directory`) and configures the LLM prompt instructions so the title agent synthesizes the conversation topic while strictly enforcing `[<basename>] - <Action/Topic>`.
