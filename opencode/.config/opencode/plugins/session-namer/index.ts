@@ -4,35 +4,27 @@ export default Plugin.define({
   id: "session-namer",
   async setup(ctx) {
     // Intercept LLM title generation system prompt before the model call
-    await ctx.session.hook("title", async (event) => {
-      let basename = "workspace"
-
-      try {
-        const sessionInfo = await ctx.session.get({ sessionID: event.sessionID })
-        const sessionDir =
-          sessionInfo.location?.project?.canonical ||
-          sessionInfo.location?.directory ||
-          ctx.location?.project?.canonical ||
-          ctx.location?.directory ||
-          ""
-        basename = sessionDir.split("/").filter(Boolean).pop() || "workspace"
-      } catch {
-        const projectPath = ctx.location?.project?.canonical || ctx.location?.directory || ""
-        basename = projectPath.split("/").filter(Boolean).pop() || "workspace"
-      }
-
-      // Inject strict instructions so the LLM outputs: [<basename>] - <Action/Topic>
+    await ctx.session.hook("title", (event) => {
+      // Inject strict instructions so the LLM outputs: <emoji> <Action verb> <Key target>
       event.system = [
         {
           type: "text",
           text:
-            `Generate a concise, high-signal session title for the conversation.\n` +
-            `The workspace/directory basename is: "${basename}".\n` +
-            `Format strictly as: [${basename}] - <Action/Topic>\n` +
-            `Guidelines:\n` +
-            `- Describe the user's primary action, goal, or feature in 2 to 5 words (e.g. "[${basename}] - Session name plugin").\n` +
-            `- Keep the total length under 50 characters.\n` +
-            `- Return ONLY the raw title string with no quotes, formatting, or trailing punctuation.`,
+            `Generate a concise, high-signal session title for the conversation following this exact format:\n` +
+            `<emoji> <Action verb> <Key target>\n\n` +
+            `Emoji badge guidelines:\n` +
+            `- ✨ for new features, additions, or creation (e.g. ✨ Implement OAuth2 token refresh)\n` +
+            `- 🐛 for bug fixes, errors, or troubleshooting (e.g. 🐛 Fix TUI resize flicker)\n` +
+            `- ♻️ for refactoring, cleaning, or restructuring (e.g. ♻️ Refactor session namer hook)\n` +
+            `- 🔍 for auditing, investigating, reviewing, or exploring (e.g. 🔍 Audit permission escalation policies)\n` +
+            `- 📝 for documentation or notes\n` +
+            `- 🚀 for deployment, releases, or performance\n\n` +
+            `Rules:\n` +
+            `- Start with the single most appropriate emoji badge followed by a space.\n` +
+            `- Use imperative action verbs (e.g., Implement, Fix, Refactor, Add, Audit, Configure, Migrate).\n` +
+            `- Keep the summary concise (3 to 6 words after the emoji).\n` +
+            `- Total length MUST be under 50 characters.\n` +
+            `- Return ONLY the raw title string with no quotes, markdown formatting, or trailing period.`,
         },
       ]
     })
