@@ -27,13 +27,17 @@ Three Stow packages are managed:
 | Package | Stow target | Contents |
 |---------|-------------|----------|
 | `shared/` | `$HOME` | Agents, skills, commands, rules (tool-agnostic) |
-| `opencode/` | `$HOME` | opencode-specific config (`opencode.jsonc`, MCP, themes) |
+| `opencode/` | `$HOME` | OpenCode V2 config (`opencode.jsonc`, `cli.json`, `dcp.jsonc`, MCP) |
 | `pi-mono/` | `$HOME` | pi-mono config and TypeScript extensions |
 
-`make install` stows all three packages and creates a convenience symlink:
+`make install` stows all three packages and creates the shared symlinks:
 
 ```
-~/.config/opencode/agents  →  ~/.ai-agents/agents
+~/.config/opencode/agents/   →  flattened symlinks for all 103 agents (via make link-agents)
+~/.config/opencode/skills    →  ~/.ai-agents/skills
+~/.config/opencode/commands  →  ~/.ai-agents/commands
+~/.config/opencode/rules     →  ~/.ai-agents/rules
+~/.config/opencode/scripts   →  ~/.ai-agents/scripts
 ```
 
 ## Project structure
@@ -46,8 +50,8 @@ ai-coding-agents/
 │       ├── skills/                # Skill packs (each: SKILL.md + optional refs)
 │       ├── commands/              # Slash command .md files
 │       └── rules/                 # Rule files (e.g. memory-bank.md)
-├── opencode/                      # Stow package → $HOME
-│   └── .config/opencode/          # opencode-specific config
+├── opencode/                      # Stow package → $HOME (OpenCode V2 native)
+│   └── .config/opencode/          # opencode.jsonc, cli.json, dcp.jsonc, themes/
 ├── pi-mono/                       # Stow package → $HOME
 │   └── .pi/
 │       └── agent/extensions/      # TypeScript extensions (*.ts)
@@ -129,7 +133,8 @@ Only `description` is required. All other frontmatter keys are optional.
 - File name in kebab-case: `payment-integration.md`
 - Place in the most appropriate existing category directory
 - The system prompt is the entire body after the frontmatter — no heading structure required
-- Agents are invoked with `@agent-name` inline or via `/agents` in the tool
+- After adding an agent, run `make link-agents` to create the flattened symlink under `~/.config/opencode/agents/<agent-name>.md`
+- Agents are invoked in OpenCode V2 via `/call-agent <agent> <query>`, the `subagent` tool (for subagents), or `/agents` (`<leader>a`), and in pi-mono via `@agent-name` inline or `/agents`
 
 **Existing categories:**
 

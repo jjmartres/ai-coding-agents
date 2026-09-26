@@ -9,12 +9,16 @@ Skills are reusable instruction packs that inject domain-specific guidance into 
 | Skill | Description | Compatibility |
 |-------|-------------|---------------|
 | [asdf](#asdf) | Universal version manager — installs, configures, and troubleshoots asdf and `.tool-versions` files across all shells and runtimes. | opencode, pi-mono |
+| [astro-dso-doc](#astro-dso-doc) | Bootstrap DSO astrophotography projects and generate PixInsight docs, checklists, AstroBin exports, and process icons. | opencode, pi-mono |
 | [content-research-writer](#content-research-writer) | Collaborative writing assistant that conducts research, adds citations, refines outlines, and gives section-by-section feedback. | opencode, pi-mono |
+| [corp-branding](#corp-branding) | Apply discrete Fintecture corporate branding (logo, navy/mint palette, confidentiality tagline, footer mark) to HTML documents. | opencode, pi-mono |
+| [corp-operations-infrastructure](#corp-operations-infrastructure) | Reference for Fintecture's internal Operations & Infrastructure policies (change management, vulnerability/patch SLAs, logs, asset lifecycle). | opencode, pi-mono |
 | [datadog](#datadog) | Search Datadog logs, query metrics, tail logs in real-time, trace distributed requests, and investigate errors. | opencode, pi-mono |
 | [document-code](#document-code) | Apply Google Style documentation standards to Python, Go, TypeScript, and Terraform code. | opencode, pi-mono |
 | [document-project](#document-project) | Generate comprehensive project documentation structures: README, ARCHITECTURE, USER_GUIDE, DEVELOPER_GUIDE, and CONTRIBUTING. | opencode, pi-mono |
 | [file-organizer](#file-organizer) | Intelligently organizes files and folders by understanding context, finding duplicates, and suggesting better structures. | opencode, pi-mono |
 | [glab](#glab) | Expert guidance for using the GitLab CLI (`glab`) to manage issues, MRs, pipelines, and repositories. | opencode, pi-mono |
+| [graphify](#graphify) | Turn any corpus (code, docs, papers) into a clustered knowledge graph with interactive HTML, GraphRAG JSON, and audit reports. | opencode, pi-mono |
 | [httpie](#httpie) | Make HTTP requests, test APIs, call REST endpoints, and debug web services using the HTTPie CLI (`http` command). | opencode, pi-mono |
 | [humanizer](#humanizer) | Remove signs of AI-generated writing from text to make it sound natural and human-written. | opencode, pi-mono |
 | [jira](#jira) | Create, view, update, and manage Jira issues, sprints, and backlogs. | opencode, pi-mono |
@@ -23,6 +27,7 @@ Skills are reusable instruction packs that inject domain-specific guidance into 
 | [mcp-builder](#mcp-builder) | Guide for creating high-quality MCP (Model Context Protocol) servers in Python or Node/TypeScript. | opencode, pi-mono |
 | [meeting-insights-analyzer](#meeting-insights-analyzer) | Analyze meeting transcripts to uncover behavioral patterns, communication insights, and actionable feedback. | opencode, pi-mono |
 | [mermaid-diagrams](#mermaid-diagrams) | Comprehensive guide for creating software diagrams using Mermaid syntax. | opencode, pi-mono |
+| [nibbler](#nibbler) | Interact with Fintecture's GCP companion on Cloud Run for alert investigation, JIT PAM access, runbooks, and IaC validation. | opencode, pi-mono |
 | [reachy-mini-sdk](#reachy-mini-sdk) | Programming guide for the Reachy Mini robot using the Python SDK and REST API. | opencode, pi-mono |
 | [work-on-ticket](#work-on-ticket) | Fetch Jira ticket details, create a named branch, and initiate task planning. | opencode, pi-mono |
 | [worktrunk](#worktrunk) | Use the `wt` CLI for git worktree management, parallel AI agent sessions, and lifecycle automation. | opencode, pi-mono |
@@ -35,6 +40,30 @@ Skills are reusable instruction packs that inject domain-specific guidance into 
 **Trigger:** Any mention of asdf, `.tool-versions` files, managing runtime versions, or migrating from nvm/pyenv/rbenv/goenv/tfenv.
 
 Provides a complete reference for installing and configuring the asdf universal version manager. Covers plugin management (`asdf plugin add`), version installation, the `.tool-versions` file format, shell configuration for Bash/Zsh/Fish, shim troubleshooting, and the `.asdfrc` options. Also explains the modern `asdf set` API introduced in v0.15+ and how to onboard an existing project with `asdf install`.
+
+---
+
+## astro-dso-doc
+
+**Trigger:** Astrophotography, bootstrapping DSO project folders, DSO targets (NGC, IC, Messier, Sharpless), PixInsight project documentation, observation reports, AstroBin post exports.
+
+Bootstraps deep-sky object (DSO) astrophotography projects from raw acquisition frames and generates complete deliverables: an interactive HTML documentation page with theme switching, a filter-adapted PixInsight processing checklist, AstroBin upload JSON, PixInsight process icons (XPSM), and project description text.
+
+---
+
+## corp-branding
+
+**Trigger:** "brand this", "add our branding", "make it on-brand", "add Fintecture logo", "apply corporate styling", "make it look official", or when Fintecture brand identity is requested on an HTML deliverable.
+
+Applies discrete Fintecture corporate branding (official SVG logo, navy/mint palette, confidentiality taglines, and footer mark) to HTML documents without disrupting the underlying document design. Bundles an automated Python applicator script and embedded assets.
+
+---
+
+## corp-operations-infrastructure
+
+**Trigger:** Fintecture change management, vulnerability/patch SLAs, CVSS remediation timelines, log retention/immutability rules, IT/ICT asset registers, device lifecycle, or compliance inquiries (DORA, ISO 27001, NIST, GDPR, NIS2).
+
+Bundles Fintecture's complete Operations & Infrastructure policy set sourced from Outline. Serves as the authoritative source for change management workflows, vulnerability procedures, patch SLAs, and IT asset lifecycles during audits or ops tasks.
 
 ---
 

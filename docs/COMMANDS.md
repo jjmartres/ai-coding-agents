@@ -21,6 +21,24 @@ Generate a complete PixInsight project documentation page for a deep-sky object 
 
 ---
 
+## `/call-agent`
+
+Call a specialized agent by name or alias with fuzzy matching and typo tolerance.
+
+- Invoked with `/call-agent <agent> <query>`.
+- Powered by `shared/.ai-agents/scripts/match-agent.js`, which searches across `~/.ai-agents/agents/` (and fallback directories).
+- Handles common aliases (e.g. `k8s` → `kubernetes-specialist`, `devops` → `devops-engineer`, `py` → `python-pro`, `sec` → `security-engineer`, `docs` → `documentation-engineer`, `review` → `code-reviewer`, `diagram` → `mermaid-diagram-specialist`).
+- Uses Levenshtein distance for typo tolerance (e.g. `/call-agent depovs-enginer review the pipeline` correctly targets `devops-engineer`).
+- Injects the resolved agent's system prompt instructions directly into the current conversation turn.
+
+**Example:**
+
+```
+/call-agent kubernetes review our ingress configuration and cert-manager setup
+```
+
+---
+
 ## `/commit`
 
 Create well-formatted commits with conventional commit messages and emoji.

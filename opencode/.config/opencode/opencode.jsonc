@@ -1,37 +1,57 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "model": "google-vertex/gemini-3.8-flash",
-  "small_model": "google-vertex/gemini-3.5-flash",
-  "enabled_providers": ["google-vertex", "openrouter", "calculon"],
-  "provider": {
-    "google-vertex": {
-      "models": {
-        "gemini-3.5-flash": {},
-        "gemini-3.1-pro-preview": {},
+  "default_agent": "devops-engineer",
+  "agents": {
+    "title": {
+      "model": "google-vertex/gemini-3.8-flash",
+      "system": "Generate a concise session title formatted strictly as '<Action description> · <workspace_dir_name>'. Keep the action description active, clear, and under 30 characters (e.g. 'Migrate to V2 compaction · ai-coding-agents'). Return only the raw title string with no quotes or punctuation.",
+    },
+  },
+  "experimental": {
+    "policies": [
+      { "action": "provider.use", "resource": "*", "effect": "deny" },
+      {
+        "action": "provider.use",
+        "resource": "google-vertex",
+        "effect": "allow",
       },
-      "options": {
+      { "action": "provider.use", "resource": "openrouter", "effect": "allow" },
+      { "action": "provider.use", "resource": "calculon", "effect": "allow" },
+    ],
+  },
+  "providers": {
+    "google-vertex": {
+      "settings": {
         "project": "{env:VERTEXAI_PROJECT_ID}",
         "location": "{env:VERTEXAI_REGION}",
       },
+      "models": {
+        "gemini-3.8-flash": {},
+        "gemini-3.5-flash": {},
+        "gemini-3.1-pro-preview": {},
+      },
     },
     "calculon": {
-      "npm": "@ai-sdk/openai-compatible",
       "name": "calculon",
-      "options": {
+      "package": "@opencode/ai/providers/openai-compatible",
+      "settings": {
         "baseURL": "http://calculon.local:8000/v1",
         "apiKey": "{env:OMLX_API_KEY}",
       },
       "models": {
         "Qwen3.5-9B-MLX-4bit": {
           "name": "Qwen3.5-9B-MLX-4bit",
-          "modalities": {
+          "capabilities": {
+            "tools": true,
             "input": ["text", "image"],
             "output": ["text"],
           },
         },
         "gemma-4-e4b-it-8bit": {
           "name": "gemma-4-e4b-it-8bit",
-          "modalities": {
+          "capabilities": {
+            "tools": true,
             "input": ["text", "image"],
             "output": ["text"],
           },
@@ -41,41 +61,39 @@
   },
   "compaction": {
     "auto": true,
-    "prune": true,
-    "reserved": 64000,
-    "preserve_recent_tokens": 120000,
-    "tail_turns": 6,
+    "keep": {
+      "tokens": 20000,
+    },
+    "buffer": 32000,
   },
   "tool_output": {
     "max_lines": 800,
     "max_bytes": 32768,
   },
-  "default_agent": "plan",
-  "autoupdate": true,
+  "update": "auto",
   "instructions": ["~/.ai-agents/rules/*.md"],
   "share": "disabled",
-  "plugin": [
-    "@franlol/opencode-md-table-formatter@latest",
-    "opencode-websearch",
-    "openslimedit@latest",
-    "file:///Users/jjmartres/.config/opencode/plugins/codeisland.js",
+  "plugins": [
+    "@tarquinen/opencode-dcp@latest"
   ],
   "mcp": {
-    "nibbler": {
-      "type": "remote",
-      "url": "{env:NIBBLER__MCP_URL}",
-      "headers": {
-        "Authorization": "Bearer {env:NIBBLER__MCP_TOKEN}",
+    "servers": {
+      "nibbler": {
+        "type": "remote",
+        "url": "{env:NIBBLER__MCP_URL}",
+        "headers": {
+          "Authorization": "Bearer {env:NIBBLER__MCP_TOKEN}",
+        },
+        "disabled": true,
       },
-      "enabled": false,
-    },
-    "oskar": {
-      "type": "remote",
-      "url": "{env:OSKAR__MCP_URL}",
-      "oauth": {
-        "clientId": "{env:OSKAR__MCP_CLIENT_ID}",
+      "oskar": {
+        "type": "remote",
+        "url": "{env:OSKAR__MCP_URL}",
+        "oauth": {
+          "client_id": "{env:OSKAR__MCP_CLIENT_ID}",
+        },
+        "disabled": true,
       },
-      "enabled": false,
     },
   },
 }
