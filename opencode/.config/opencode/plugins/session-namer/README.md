@@ -1,15 +1,21 @@
 # opencode-session-namer
 
-OpenCode V2 plugin for LLM-driven session naming with dynamic workspace basename prefixing.
+OpenCode V2 plugin for LLM-driven session naming using Emoji Badges and Imperative Actions.
 
 ## Convention Format
 
-`[<basename>] - <Action/Topic>`
+`<emoji> <Action verb> <Key target>`
 
-Example:
-`[ai-coding-agents] - Session name plugin`
+### Examples:
+- ✨ Implement OAuth2 token refresh
+- 🐛 Fix TUI resize flicker
+- ♻️ Refactor session namer hook
+- 🔍 Audit permission escalation policies
+
+### Why it works:
+Visual anchors provide immediate clarity to distinguish features, fixes, refactoring, and audits across the session list at a glance.
 
 ## How It Works
 
-Instead of static string slicing, it hooks into OpenCode's `title` hook (`ctx.session.hook("title", ...)`).
-It extracts the real workspace basename dynamically (`ctx.location.project.canonical` / `ctx.location.directory`) and configures the LLM prompt instructions so the title agent synthesizes the conversation topic while strictly enforcing `[<basename>] - <Action/Topic>`.
+Hooks into OpenCode's `title` hook (`ctx.session.hook("title", ...)`).
+It shapes the title agent's `system` instructions to enforce emoji selection, imperative action verbs, concise length, and clean formatting.
