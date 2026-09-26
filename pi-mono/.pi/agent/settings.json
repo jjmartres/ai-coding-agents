@@ -1,8 +1,8 @@
 {
   "lastChangelogVersion": "0.73.0",
   "defaultThinkingLevel": "medium",
-  "defaultProvider": "anthropic",
-  "defaultModel": "claude-sonnet-4-6",
+  "defaultProvider": "google-vertex",
+  "defaultModel": "gemini-2.5-pro",
   "agents": [
     "~/.ai-agents/agents"
   ],

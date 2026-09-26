@@ -1,8 +1,8 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "model": "google-vertex/gemini-3.1-pro-preview",
+  "model": "google-vertex/gemini-3.8-flash",
   "small_model": "google-vertex/gemini-3.5-flash",
-  "enabled_providers": ["google-vertex", "openrouter", "anthropic", "calculon"],
+  "enabled_providers": ["google-vertex", "openrouter", "calculon"],
   "provider": {
     "google-vertex": {
       "models": {
@@ -12,16 +12,6 @@
       "options": {
         "project": "{env:VERTEXAI_PROJECT_ID}",
         "location": "{env:VERTEXAI_REGION}",
-      },
-    },
-    "anthropic": {
-      "models": {
-        "claude-opus-4-6": {},
-        "claude-sonnet-4-6": {},
-        "claude-haiku-4-5": {},
-      },
-      "options": {
-        "apiKey": "{env:ANTHROPIC_API_KEY}",
       },
     },
     "calculon": {
@@ -49,6 +39,17 @@
       },
     },
   },
+  "compaction": {
+    "auto": true,
+    "prune": true,
+    "reserved": 64000,
+    "preserve_recent_tokens": 120000,
+    "tail_turns": 6,
+  },
+  "tool_output": {
+    "max_lines": 800,
+    "max_bytes": 32768,
+  },
   "default_agent": "plan",
   "autoupdate": true,
   "instructions": ["~/.ai-agents/rules/*.md"],
@@ -56,13 +57,25 @@
   "plugin": [
     "@franlol/opencode-md-table-formatter@latest",
     "opencode-websearch",
+    "openslimedit@latest",
     "file:///Users/jjmartres/.config/opencode/plugins/codeisland.js",
   ],
   "mcp": {
-    "smartplaylist": {
+    "nibbler": {
       "type": "remote",
-      "url": "http://personal.local:8000/mcp",
-      "enabled": true,
+      "url": "{env:NIBBLER__MCP_URL}",
+      "headers": {
+        "Authorization": "Bearer {env:NIBBLER__MCP_TOKEN}",
+      },
+      "enabled": false,
+    },
+    "oskar": {
+      "type": "remote",
+      "url": "{env:OSKAR__MCP_URL}",
+      "oauth": {
+        "clientId": "{env:OSKAR__MCP_CLIENT_ID}",
+      },
+      "enabled": false,
     },
   },
 }
