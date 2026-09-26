@@ -1,0 +1,17 @@
+{
+  "name": "opencode-tui-clock",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./index.ts",
+    "./tui": "./tui.tsx"
+  },
+  "dependencies": {
+    "@opencode/plugin": "^2.0.18"
+  },
+  "peerDependencies": {
+    "@opentui/core": "^0.5.12",
+    "@opentui/solid": "^0.5.12",
+    "solid-js": "^1.9.12"
+  }
+}

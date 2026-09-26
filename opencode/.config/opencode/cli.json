@@ -13,6 +13,9 @@
     "grouping": "none"
   },
   "animations": true,
+  "plugins": [
+    "./plugins/tui-clock"
+  ],
   "keybinds": {
     "prompt.queue": "return"
   }
