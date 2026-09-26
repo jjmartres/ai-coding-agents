@@ -1,6 +1,5 @@
 ---
 description: Analyse a raw data file (CSV, JSON, JSONL, TSV, Parquet) and generate a complete Python script `scripts/dataset/<n>.py` that inherits from `BaseDatasetPreparer` and transforms the file into a JSONL dataset ready for fine-tuning with Unsloth.
-#agent: mlops-engineer
 ---
 
 ## Arguments

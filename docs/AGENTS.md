@@ -6,12 +6,156 @@ This reference covers every agent persona available in the repository, organized
 
 ## How agents work
 
-Each agent is defined by a Markdown file with YAML frontmatter. The frontmatter may override the default model (`model:`), reasoning depth (`thinkingLevel:`), and available tools (`tools:`). When no overrides are present the host application's defaults apply.
+Each agent is defined by a Markdown file with YAML frontmatter. The frontmatter may configure the model (`model:`), execution mode (`mode: primary | subagent | all`), description (`description:`), permissions (`permissions:`), and request options. When no overrides are present, the host application's defaults apply.
 
-**Invoking an agent:**
+```yaml
+---
+description: "Senior DevOps engineer bridging development and operations"
+mode: all # primary | subagent | all (defaults to primary if omitted)
+model: google-vertex/gemini-3.8-flash # optional model override
+---
+```
 
-- **Inline `@mention`** — type `@agent-name` anywhere in a prompt to route that turn to the specified agent.
-- **`/agents` command** — open the agents picker in the host UI, select an agent, and every subsequent message in that session is handled by it.
+### Agent mode requirements
+
+OpenCode V2 enforces strict execution boundaries based on an agent's configured `mode`:
+
+| Mode | Capability | Behavior |
+|------|------------|----------|
+| `primary` | Interactive session only | Runs as the main agent for a session. This is the **default** when `mode` is omitted on a custom agent. Selectable via `/agents`, `<leader>a`, or CLI `opencode --agent <id>`. **Cannot** be invoked as a subagent by the `subagent` tool. |
+| `subagent` | Child session only | Runs exclusively inside an isolated child session spawned by the `subagent` tool with fresh context. Hidden from the interactive agent picker and **cannot** be set as `default_agent`. |
+| `all` | Dual capability | Can run both as a primary session agent and as a delegated subagent in child sessions. |
+
+> **Important**: Any agent invoked via delegation directives, multi-agent workflows, or the `subagent` tool **must** declare `mode: subagent` or `mode: all`. Attempting to launch a `primary`-only agent via the `subagent` tool will fail at tool execution time.
+
+### Configuration files (OpenCode V2 native)
+
+Agent execution and runtime behaviors in OpenCode V2 are governed by three dedicated configuration files:
+
+#### 1. Global CLI config: `cli.json` (`~/.config/opencode/cli.json`)
+
+Controls global terminal and TUI preferences (`$schema: https://opencode.ai/v2/cli.json`). Configured with:
+
+- **V1-style Prompt Queuing (`"prompt.queue": "return"`)**: In `keybinds`, binding `"prompt.queue": "return"` restores the intuitive OpenCode V1 behavior where pressing `Return` / `Enter` while a turn, tool, or subagent is running automatically queues follow-up prompts into the execution inbox instead of blocking or discarding input.
+- **Transcript Grouping (`"session.grouping": "none"`)**: Disables collapsible bundling of tool calls and agent actions (`"grouping": "none"`), ensuring that every tool execution, shell command, and reasoning step is rendered cleanly and independently in the transcript for maximum visibility.
+- **Theme Selection (`"theme": { "name": "zenburn" }`)**: Sets the active syntax and UI theme (e.g. `zenburn`, or built-in alternatives like `tokyonight` or `catppuccin-macchiato`).
+- **Attention Alerts (`"attention": { ... }`)**: Configures desktop notifications (`"notifications": true`) when the terminal window is unfocused, and enables auditory alerts (`"sound": true`, `"volume": 0.4`) for critical events: user permission prompts, questions, command completions, and subagent completion (`subagent_done`).
+
+```json title="~/.config/opencode/cli.json"
+{
+  "$schema": "https://opencode.ai/v2/cli.json",
+  "theme": {
+    "name": "zenburn"
+  },
+  "mouse": true,
+  "scroll": {
+    "speed": 3,
+    "acceleration": true
+  },
+  "diffs": {
+    "view": "auto",
+    "wrap": "word"
+  },
+  "session": {
+    "sidebar": "auto",
+    "scrollbar": true,
+    "thinking": "show",
+    "grouping": "none"
+  },
+  "attention": {
+    "notifications": true,
+    "sound": true,
+    "volume": 0.4
+  },
+  "animations": true,
+  "keybinds": {
+    "prompt.queue": "return"
+  }
+}
+```
+
+#### 2. Server & Agent Runtime: `opencode.jsonc` (`~/.config/opencode/opencode.jsonc`)
+
+Core server, provider policies, agent registry, and context lifecycle settings (`$schema: https://opencode.ai/config.json`):
+
+- **Default Agent**: `"default_agent": "devops-engineer"`.
+- **Context Compaction Settings**:
+  ```jsonc
+  "compaction": {
+    "auto": true,
+    "keep": {
+      "tokens": 20000
+    },
+    "buffer": 32000
+  }
+  ```
+  - `"auto": true`: Automatically triggers context compaction when the cumulative session tokens approach context limits.
+  - `"keep": { "tokens": 20000 }`: Retains a rolling tail of the most recent 20,000 tokens during compaction summaries, ensuring active conversation turns and recent context remain crisp and detailed.
+  - `"buffer": 32000`: Reserves a 32,000-token safety buffer below the model's usable context window to initiate compaction well before token overflow or context truncation can occur.
+- **Provider Policies (`experimental.policies`)**: Declarative access control using `provider.use` (e.g. allowing `google-vertex`, `openrouter`, `calculon`, denying wildcard access).
+- **Inline Custom Agents (`agents.title`)**: Configures specialized system agents such as session titling using Gemini 3.8 Flash.
+- **Tool Output Limits (`tool_output`)**: Caps maximum retained output (`max_lines: 800`, `max_bytes: 32768`) to protect context budgets.
+- **Plugin Registrations**: Loads `@tarquinen/opencode-dcp@latest`.
+
+#### 3. Dynamic Context Pruning: `dcp.jsonc` (`~/.config/opencode/dcp.jsonc`)
+
+Configures autonomous context compression via the `@tarquinen/opencode-dcp` plugin:
+
+- **Autonomous Background Pruning**: `"manualMode": { "enabled": false, "automaticStrategies": true }` ensures context optimization occurs automatically in the background without prompting for manual strategy confirmation.
+- **Range Compression**: `"compress": { "mode": "range", "permission": "allow", "summaryBuffer": true }` applies range-based compression to stale multi-turn exchanges, automatically grants pruning permission, and caches compressed turn summaries in memory to maximize model performance across long workflows.
+
+```jsonc title="~/.config/opencode/dcp.jsonc"
+{
+  "$schema": "https://raw.githubusercontent.com/Opencode-DCP/opencode-dynamic-context-pruning/master/dcp.schema.json",
+  "manualMode": {
+    "enabled": false,
+    "automaticStrategies": true
+  },
+  "compress": {
+    "mode": "range",
+    "permission": "allow",
+    "showCompression": false,
+    "summaryBuffer": true
+  }
+}
+```
+
+### Invoking an agent
+
+The two host applications handle agent invocation as follows:
+
+#### OpenCode V2
+
+OpenCode V2 supports five coordinated mechanisms for agent selection and delegation:
+
+- **1. Primary agent selection**:
+  - Open the interactive agent picker with `/agents` or press `<leader>a` (`Ctrl+X` then `A`).
+  - Cycle through available primary-capable agents with `Shift+Tab` (`agent.cycle`).
+  - Launch OpenCode directly with an agent: `opencode --agent <agent-id>`.
+  - Set the persistent default in `opencode.jsonc` via `"default_agent": "<agent-id>"` (default is `"devops-engineer"`).
+- **2. Flattened agent IDs & symlink automation (`make link-agents`)**:
+  - In OpenCode V2, directory paths under `agents/` naturally become namespace prefixes (e.g. `03-infrastructure/devops-engineer.md` would resolve as `03-infrastructure/devops-engineer`).
+  - To eliminate cumbersome prefixes, `make link-agents` (run automatically by `make install` and `make link-shared`) crawls all 103 agents across the categorized subdirectories (`00-general/` through `10-curiosity/`) and symlinks them flat into `~/.config/opencode/agents/<name>.md`.
+  - Agent IDs in OpenCode V2 are clean, flat identifiers (e.g. `devops-engineer`, `documentation-engineer`, `kubernetes-specialist`, `sre-engineer`).
+- **3. Dynamic `/call-agent` slash command**:
+  - Execute `/call-agent <agent> <query>` anywhere in OpenCode.
+  - Template: `shared/.ai-agents/commands/call-agent.md`.
+  - Engine: `shared/.ai-agents/scripts/match-agent.js`.
+  - Matches agent names, aliases, and typos (e.g. `/call-agent depovs-enginer review the pipeline` resolves to `devops-engineer`) using recursive directory crawling and Levenshtein distance, dynamically injecting the agent persona instructions into the conversation turn.
+- **4. Subagent child sessions & TUI navigation shortcuts**:
+  - Subagents run in isolated child sessions with fresh context via OpenCode's built-in `subagent` tool (foreground or background).
+  - Target subagents must declare `mode: subagent` or `mode: all`.
+  - **Subagent Child Session Navigation**:
+    - **`Down` Arrow** (`session.child.first` / `composer.subagent.down`) or **`Enter`** (`composer.subagent.select`): Step into / drill down into the selected child session to inspect live tool calls, shell execution, output, and progress.
+    - **`Up` Arrow** (`session.parent` / `composer.subagent.up`): Return from the child session back to the parent session.
+    - **`Left` Arrow** (`session.child.previous`) / **`Right` Arrow** (`session.child.next`): Cycle horizontally between sibling child sessions.
+    - **`Ctrl+D`** (`composer.subagent.interrupt`): Interrupt a running child subagent.
+    - **`Ctrl+B`** (`session.background`): Background a blocking foreground subagent or tool call.
+
+#### Pi-mono
+
+- **Inline `@mention`**: Type `@agent-name` anywhere in a prompt to route that turn to the specified agent via pi-mono's `agents.ts` extension.
+- **`/agents` command**: Open the agents picker in the UI to select an agent for subsequent messages.
 
 ---
 
@@ -185,6 +329,7 @@ Each agent is defined by a Markdown file with YAML frontmatter. The frontmatter 
 
 | Agent | Description | Invoke with |
 |-------|-------------|-------------|
+| astro-pixinsight | Expert astrophotographer and PixInsight image processing specialist. Masters the complete imaging pipeline from acquisition planning to final export — calibration frames, stacking, gradient removal, noise reduction, stretching, narrowband palette mapping, and star processing. | `@astro-pixinsight` |
 | competitive-analyst | Expert competitive analyst specializing in competitor intelligence, strategic analysis, and market positioning. Masters competitive benchmarking, SWOT analysis, and strategic recommendations with focus on creating sustainable competitive advantages. | `@competitive-analyst` |
 | data-researcher | Expert data researcher specializing in discovering, collecting, and analyzing diverse data sources. Masters data mining, statistical analysis, and pattern recognition with focus on extracting meaningful insights from complex datasets to support evidence-based decisions. | `@data-researcher` |
 | market-researcher | Expert market researcher specializing in market analysis, consumer insights, and competitive intelligence. Masters market sizing, segmentation, and trend analysis with focus on identifying opportunities and informing strategic business decisions. | `@market-researcher` |

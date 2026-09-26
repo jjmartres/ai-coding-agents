@@ -45,7 +45,7 @@ Three [GNU Stow](https://www.gnu.org/software/stow/) packages, all targeting
 - **80+ agent persona files** shared between opencode and pi-mono
 - **19 reusable skill packs** covering diagrams, code docs, Jira, Datadog, robotics, and more
 - **14 slash commands** for common workflows (commit, review, test, speckit, …)
-- **opencode-specific** configuration: `opencode.jsonc`, MCP servers, themes, plugins
+- **opencode-specific** configuration (migrated natively to OpenCode V2): `opencode.jsonc`, `cli.json`, `dcp.jsonc`, MCP servers, plugins
 - **pi-mono-specific** configuration: settings, models, TypeScript extensions
 
 ## Prerequisites
@@ -53,7 +53,7 @@ Three [GNU Stow](https://www.gnu.org/software/stow/) packages, all targeting
 | Tool | Purpose | Required |
 |------|---------|----------|
 | [GNU Stow](https://www.gnu.org/software/stow/) | Symlink farm manager | Yes |
-| [opencode](https://opencode.ai) | AI coding agent | If using the `opencode` package |
+| [opencode](https://opencode.ai) | AI coding agent (V2 native) | If using the `opencode` package |
 | [pi-mono](https://github.com/mariozechner/pi) | AI coding agent | If using the `pi-mono` package |
 | [Node.js](https://nodejs.org/) v18+ | JSONC validation script | Yes |
 | [TypeScript](https://www.typescriptlang.org/) | pi-mono extension typechecking | Yes (`npm install -g typescript`) |
@@ -86,6 +86,7 @@ ai-coding-agents/
 │       │   └── 10-curiosity/
 │       ├── commands/                # Shared slash commands
 │       │   ├── astro-dso-doc.md
+│       │   ├── call-agent.md        # Dynamic agent caller with fuzzy matching & aliases
 │       │   ├── commit.md
 │       │   ├── commit-and-create-mr.md
 │       │   ├── compose-email.md
@@ -101,6 +102,8 @@ ai-coding-agents/
 │       │   └── test.md
 │       ├── rules/
 │       │   └── memory-bank.md
+│       ├── scripts/                 # Shared helper utilities
+│       │   └── match-agent.js       # Dynamic fuzzy agent matching with alias & typo tolerance
 │       └── skills/                  # Reusable skill packs
 │           ├── asdf/
 │           ├── content-research-writer/
@@ -122,13 +125,13 @@ ai-coding-agents/
 │           ├── worktrunk/
 │           └── writing-clearly-and-concisely/
 │
-├── opencode/                        # Stow package 2 — opencode-specific
+├── opencode/                        # Stow package 2 — opencode-specific (OpenCode V2 native)
 │   └── .config/opencode/
-│       ├── opencode.jsonc
+│       ├── opencode.jsonc           # Server & agent config (providers, compaction, default_agent)
 │       ├── cost-guard.config.jsonc
-│       ├── tui.jsonc
-│       ├── plugins/
-│       └── themes/                  # Catppuccin variants
+│       ├── cli.json                 # Terminal & TUI config (replaces legacy V1 tui.jsonc)
+│       ├── dcp.jsonc                # Dynamic Context Pruning config (autonomous pruning)
+│       └── themes/                  # Theme documentation (Catppuccin bundled natively in V2)
 │
 ├── pi-mono/                         # Stow package 3 — pi-mono-specific
 │   └── .pi/agent/
@@ -169,25 +172,27 @@ skill packs, slash commands, and rules. Stow maps the contents of
 
 ### `opencode/` → `~/.config/opencode/`
 
-opencode application config: main `opencode.jsonc`, cost-guard settings,
-TUI theme preferences, plugins, and Catppuccin UI themes.
+OpenCode V2 native application configuration: main `opencode.jsonc` (migrated to V2 declarative schema with
+`experimental.policies` and native autocompaction), cost-guard settings, terminal & TUI preferences
+(`cli.json`, which replaces legacy V1 `tui.jsonc`), dynamic context pruning (`dcp.jsonc`), plugins,
+and bundled Catppuccin theme integration.
 
 **Shared symlinks (not managed by Stow)**
 
-opencode expects agents, skills, commands, and rules under
+OpenCode expects agents, skills, commands, rules, and helper scripts under
 `~/.config/opencode/`. Stow cannot map the same source directory to two
-different destinations, so `make install` creates these four symlinks
+different destinations, so `make install` (or `make link-shared`) creates these symlinks
 separately:
 
 ```
-~/.config/opencode/agents    →  ~/.ai-agents/agents
+~/.config/opencode/agents/   →  flattened symlinks to all 103 ~/.ai-agents/agents/*/*.md
 ~/.config/opencode/skills    →  ~/.ai-agents/skills
 ~/.config/opencode/commands  →  ~/.ai-agents/commands
 ~/.config/opencode/rules     →  ~/.ai-agents/rules
+~/.config/opencode/scripts   →  ~/.ai-agents/scripts
 ```
 
-Run `make link-shared` to create them independently. See `make status` to
-verify.
+Run `make link-shared` to create them independently, or `make link-agents` to re-flatten agent symlinks. See `make status` to verify.
 
 ### `pi-mono/` → `~/.pi/`
 
@@ -202,7 +207,7 @@ search, session management, git checkpoints, usage tracking, and more).
 git clone --recurse-submodules https://github.com/jjmartres/ai-coding-agents.git
 cd ai-coding-agents
 
-# Stow all packages, init submodules, and create the agents symlink
+# Stow all packages, init submodules, and create the shared symlinks
 make install
 
 # (Optional) Install pre-commit hooks
@@ -219,7 +224,10 @@ Installation
   install              Stow all packages + init submodules + create shared symlinks
   submodules           Initialize and update git submodules
   stow-install         Stow all packages only
-  link-shared          Create ~/.config/opencode/{agents,skills,commands,rules} symlinks
+  link-shared          Create ~/.config/opencode/{skills,commands,rules,scripts} and flat agents symlinks
+  link-agents          Create flat symlinks in ~/.config/opencode/agents/ for all 103 agents
+  unlink-agents        Remove flat agent symlinks in ~/.config/opencode/agents/
+  unlink-shared        Remove ~/.config/opencode/{agents,skills,commands,rules,scripts} symlinks
   uninstall            Remove shared symlinks + unstow all packages
   restow               Re-run stow (use after adding/removing files)
 

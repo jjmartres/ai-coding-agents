@@ -6,7 +6,7 @@ STOW          := $(shell command -v stow 2>/dev/null)
 # Format: source (under ~/.ai-agents/) → destination (under ~/.config/opencode/)
 SHARED_SRC_BASE := $(HOME)/.ai-agents
 SHARED_DST_BASE := $(HOME)/.config/opencode
-SHARED_LINKS    := agents skills commands rules
+SHARED_LINKS    := skills commands rules scripts
 
 .PHONY: help
 help: ## Display this help
@@ -65,7 +65,7 @@ install-ln: ## Install using ln -s (fallback when stow is unavailable)
 	done
 
 .PHONY: link-shared
-link-shared: ## Create ~/.config/opencode/{agents,skills,commands,rules} -> ~/.ai-agents/... symlinks
+link-shared: link-agents ## Create ~/.config/opencode/{skills,commands,rules} and flat agents symlinks
 	@mkdir -p "$(SHARED_DST_BASE)"
 	@for name in $(SHARED_LINKS); do \
 		src="$(SHARED_SRC_BASE)/$$name"; \
@@ -82,6 +82,26 @@ link-shared: ## Create ~/.config/opencode/{agents,skills,commands,rules} -> ~/.a
 			echo "✓ $$name symlink created: $$dst -> $$src"; \
 		fi; \
 	done
+
+.PHONY: link-agents
+link-agents: ## Create flat symlinks in ~/.config/opencode/agents/ for all ~/.ai-agents/agents/*/*.md
+	@src_dir="$(SHARED_SRC_BASE)/agents"; \
+	dst_dir="$(SHARED_DST_BASE)/agents"; \
+	if [ ! -d "$$src_dir" ]; then \
+		echo "⚠ $$src_dir not found - skipping (run stow-install first)"; \
+		exit 0; \
+	fi; \
+	if [ -L "$$dst_dir" ]; then \
+		rm -f "$$dst_dir"; \
+	fi; \
+	mkdir -p "$$dst_dir"; \
+	find "$$dst_dir" -type l -delete; \
+	count=0; \
+	for f in $$(find -L "$$src_dir" -type f -name '*.md'); do \
+		ln -sfn "$$f" "$$dst_dir/$$(basename "$$f")"; \
+		count=$$((count + 1)); \
+	done; \
+	echo "✓ agents: $$count flattened agent symlinks in $$dst_dir"
 
 .PHONY: uninstall
 uninstall: unlink-shared stow-uninstall ## Uninstall all packages and remove extra symlinks
@@ -111,7 +131,7 @@ uninstall-ln: ## Remove ln -s links (fallback)
 	done
 
 .PHONY: unlink-shared
-unlink-shared: ## Remove ~/.config/opencode/{agents,skills,commands,rules} symlinks
+unlink-shared: unlink-agents ## Remove ~/.config/opencode/{skills,commands,rules} symlinks
 	@for name in $(SHARED_LINKS); do \
 		dst="$(SHARED_DST_BASE)/$$name"; \
 		if [ -L "$$dst" ]; then \
@@ -119,6 +139,17 @@ unlink-shared: ## Remove ~/.config/opencode/{agents,skills,commands,rules} symli
 			echo "✓ Removed $$name symlink: $$dst"; \
 		fi; \
 	done
+
+.PHONY: unlink-agents
+unlink-agents: ## Remove ~/.config/opencode/agents/ directory and symlinks
+	@dst_dir="$(SHARED_DST_BASE)/agents"; \
+	if [ -L "$$dst_dir" ]; then \
+		rm -f "$$dst_dir"; \
+		echo "✓ Removed legacy agents symlink: $$dst_dir"; \
+	elif [ -d "$$dst_dir" ]; then \
+		rm -rf "$$dst_dir"; \
+		echo "✓ Removed agents directory and symlinks: $$dst_dir"; \
+	fi
 
 .PHONY: restow
 restow: ## Restow all packages
@@ -144,6 +175,15 @@ status: ## Show installation status for all packages
 	done
 	@echo ""
 	@echo "Shared symlinks ($(SHARED_DST_BASE)/ -> $(SHARED_SRC_BASE)/):"
+	@agents_dst="$(SHARED_DST_BASE)/agents"; \
+	if [ -d "$$agents_dst" ] && [ ! -L "$$agents_dst" ]; then \
+		count=$$(find "$$agents_dst" -type l -name '*.md' | wc -l | tr -d ' '); \
+		echo "  ✓ agents -> ($$count flattened symlinks in $$agents_dst)"; \
+	elif [ -L "$$agents_dst" ]; then \
+		echo "  ⚠ agents -> $$(readlink $$agents_dst) (unflattened folder symlink)"; \
+	else \
+		echo "  ✗ agents not linked"; \
+	fi
 	@for name in $(SHARED_LINKS); do \
 		dst="$(SHARED_DST_BASE)/$$name"; \
 		if [ -L "$$dst" ]; then \

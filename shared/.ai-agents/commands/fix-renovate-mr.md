@@ -1,6 +1,5 @@
 ---
 description: Fix renovate issues
-#agent: javascript-pro
 ---
 
 1. Using `!git swicth` switch to the default branch that can be `master` or `main`
