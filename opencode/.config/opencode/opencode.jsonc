@@ -74,7 +74,8 @@
   "instructions": ["~/.ai-agents/rules/*.md"],
   "share": "disabled",
   "plugins": [
-    "@tarquinen/opencode-dcp@latest"
+    "@tarquinen/opencode-dcp@latest",
+    "./plugins/session-namer"
   ],
   "mcp": {
     "servers": {

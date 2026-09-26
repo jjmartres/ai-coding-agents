@@ -1,0 +1,11 @@
+{
+  "name": "opencode-session-namer",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "dependencies": {
+    "@opencode/plugin": "^2.0.18"
+  }
+}
