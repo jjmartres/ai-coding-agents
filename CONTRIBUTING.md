@@ -118,6 +118,7 @@ shared/.ai-agents/agents/XX-category/agent-name.md
 ```markdown
 ---
 description: One-line description of what this agent does
+mode: all                       # optional — primary | subagent | all (use 'all' for both interactive & subagent delegation)
 model: provider/model-id        # optional — omit to use tool default
 thinkingLevel: medium           # optional — none | low | medium | high
 tools: read,bash,edit,write     # optional — comma-separated tool list
@@ -126,7 +127,7 @@ tools: read,bash,edit,write     # optional — comma-separated tool list
 System prompt body goes here...
 ```
 
-Only `description` is required. All other frontmatter keys are optional.
+Only `description` is required. All other frontmatter keys are optional (`mode` defaults to `primary` if omitted, but all repository agents use `mode: all` to enable both interactive `@mention` and `subagent` delegation).
 
 **Rules:**
 

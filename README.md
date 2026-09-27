@@ -42,9 +42,9 @@
 Three [GNU Stow](https://www.gnu.org/software/stow/) packages, all targeting
 `$HOME`, that deploy:
 
-- **80+ agent persona files** shared between opencode and pi-mono
+- **103 agent persona files** shared between opencode and pi-mono
 - **26 reusable skill packs** covering diagrams, code docs, Jira, Datadog, robotics, Google Cloud, and more (plus 125+ on-demand official Google Cloud skills)
-- **14 slash commands** for common workflows (commit, review, test, speckit, …)
+- **18 slash commands** for common workflows (worktree isolation, commit, review, test, speckit, …)
 - **opencode-specific** configuration (migrated natively to OpenCode V2): `opencode.jsonc`, `cli.json`, MCP servers, plugins
 - **pi-mono-specific** configuration: settings, models, TypeScript extensions
 
@@ -74,7 +74,7 @@ npm install -g typescript
 ai-coding-agents/
 ├── shared/                          # Stow package 1 — shared across both agents
 │   └── .ai-agents/
-│       ├── agents/                  # 80+ agent persona .md files
+│       ├── agents/                  # 103 agent persona .md files across 11 categories
 │       │   ├── 00-general/
 │       │   ├── 01-core/
 │       │   ├── 02-languages/
@@ -86,7 +86,7 @@ ai-coding-agents/
 │       │   ├── 08-business-product/
 │       │   ├── 09-meta-orchestration/
 │       │   └── 10-curiosity/
-│       ├── commands/                # Shared slash commands
+│       ├── commands/                # Shared slash commands (18 workflows)
 │       │   ├── astro-dso-doc.md
 │       │   ├── call-agent.md        # Dynamic agent caller with fuzzy matching & aliases
 │       │   ├── commit.md
@@ -99,10 +99,14 @@ ai-coding-agents/
 │       │   ├── next-sprint-design.md
 │       │   ├── prepare-dataset.md
 │       │   ├── review.md
-│       │   ├── speckit.model-selector.md
 │       │   ├── speckit.polish.md
-│       │   └── test.md
+│       │   ├── test.md
+│       │   ├── worktree.create.md   # Isolated worktree creation & session move
+│       │   ├── worktree.delete.md   # Worktree & branch cleanup / prune
+│       │   ├── worktree.list.md     # Active worktree & PR/MR status monitor
+│       │   └── worktree.md          # Unified worktree command router
 │       ├── rules/
+│       │   ├── git-worktree.md      # Worktree isolation & session relocation
 │       │   ├── google-cloud.md      # Router rule for Google Cloud skills
 │       │   └── memory-bank.md
 │       ├── scripts/                 # Shared helper utilities
