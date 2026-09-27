@@ -24,7 +24,7 @@ The repository contains three independent [GNU Stow](https://www.gnu.org/softwar
 ```
 ai-coding-agents/
 ├── shared/          # → $HOME  (agents, skills, commands, rules)
-├── opencode/        # → $HOME  (opencode V2 config: opencode.jsonc, cli.json, dcp.jsonc)
+├── opencode/        # → $HOME  (opencode V2 config: opencode.jsonc, cli.json)
 ├── pi-mono/         # → $HOME  (pi settings and TypeScript extensions)
 ├── vendor/          # Vendored submodules outside Stow (e.g. google-skills catalog)
 ├── scripts/         # Utility scripts (JSONC validator, Google skills scripts)
@@ -49,7 +49,7 @@ flowchart TD
 
     subgraph home["$HOME (symlinks)"]
         ai_agents["~/.ai-agents/\nagents/ · skills/\ncommands/ · rules/"]
-        oc_config["~/.config/opencode/\nopencode.jsonc · cli.json\ndcp.jsonc · plugins/ · themes/"]
+        oc_config["~/.config/opencode/\nopencode.jsonc · cli.json\nplugins/ · themes/"]
         pi_config["~/.pi/agent/\nsettings.json · models.json\nextensions/*.ts"]
     end
 
@@ -132,7 +132,6 @@ flowchart LR
     subgraph config["opencode/.config/opencode/"]
         oc_json["opencode.jsonc\n(V2 Server & Agents)"]
         cli_json["cli.json\n(V2 Terminal & TUI)"]
-        dcp_json["dcp.jsonc\n(DCP Plugin Config)"]
         themes_dir["themes/\n(README & Documentation)"]
     end
 
@@ -153,7 +152,6 @@ flowchart LR
 
     oc_json --> core
     cli_json --> core
-    dcp_json --> core
     shared_links --> agents_reg
     core --> policies
     core --> compaction
@@ -162,7 +160,7 @@ flowchart LR
 
 ### OpenCode V2 native configuration files
 
-OpenCode V2 separates concerns across three dedicated configuration files:
+OpenCode V2 separates concerns across two dedicated configuration files:
 
 1. **`opencode.jsonc`** (`~/.config/opencode/opencode.jsonc`):
    - Schema: `https://opencode.ai/config.json`
@@ -190,13 +188,6 @@ OpenCode V2 separates concerns across three dedicated configuration files:
    - **Theme Configuration (`"theme": { "name": "zenburn" }`)**: Selects the active syntax and UI palette (`zenburn`, with alternatives like `tokyonight` or `catppuccin-macchiato`).
    - **Attention Alerts (`"attention": { ... }`)**: Configures desktop notifications (`"notifications": true`) when the terminal window is in the background, and plays attention sounds (`"sound": true`, `"volume": 0.4`) on events such as permission prompts, user questions, task completions, and subagent completion (`subagent_done`).
 
-3. **`dcp.jsonc`** (`~/.config/opencode/dcp.jsonc`):
-   - Schema: `https://raw.githubusercontent.com/Opencode-DCP/opencode-dynamic-context-pruning/master/dcp.schema.json`
-   - Dynamic Context Pruning (`@tarquinen/opencode-dcp` plugin) settings.
-   - **Autonomous Context Pruning**:
-     - `"manualMode": { "enabled": false, "automaticStrategies": true }`: Operates autonomously in the background without prompting for manual strategy confirmation.
-     - `"compress": { "mode": "range", "permission": "allow", "showCompression": false, "summaryBuffer": true }`: Applies range-based compression to stale multi-turn exchanges, auto-approves compression actions, and retains intermediate summaries in memory across extended multi-agent interactions.
-
 ### Key V1 to V2 migration changes
 
 | Area | OpenCode V1 (Legacy) | OpenCode V2 (Native) |
@@ -214,7 +205,6 @@ OpenCode V2 separates concerns across three dedicated configuration files:
 | **Agent Invocation** | Native V1 `@agent` prompts | Dynamic `/call-agent` slash command (fuzzy matching) + `subagent` tool delegation |
 | **Theme Bundling** | Custom JSON theme files in `themes/` | Native themes (`theme.name: "zenburn"`, `catppuccin-macchiato`, etc.), obsolete V1 theme files removed |
 | **Tool Execution Grouping** | Ungrouped or unstructured | `session.grouping: "none"` (individual item rendering) in `cli.json` |
-| **Context Pruning** | Manual or unconfigured | `@tarquinen/opencode-dcp` with autonomous compression (`manualMode.enabled: false`) |
 | **Configuration Reload** | Full restart required | Hot reload via `opencode reload` command without dropping sessions |
 
 ### Agent invocation in OpenCode V2

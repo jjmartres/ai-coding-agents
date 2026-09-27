@@ -45,7 +45,7 @@ Three [GNU Stow](https://www.gnu.org/software/stow/) packages, all targeting
 - **80+ agent persona files** shared between opencode and pi-mono
 - **26 reusable skill packs** covering diagrams, code docs, Jira, Datadog, robotics, Google Cloud, and more (plus 125+ on-demand official Google Cloud skills)
 - **14 slash commands** for common workflows (commit, review, test, speckit, …)
-- **opencode-specific** configuration (migrated natively to OpenCode V2): `opencode.jsonc`, `cli.json`, `dcp.jsonc`, MCP servers, plugins
+- **opencode-specific** configuration (migrated natively to OpenCode V2): `opencode.jsonc`, `cli.json`, MCP servers, plugins
 - **pi-mono-specific** configuration: settings, models, TypeScript extensions
 
 ## Prerequisites
@@ -140,7 +140,6 @@ ai-coding-agents/
 │       ├── opencode.jsonc           # Server & agent config (providers, compaction, default_agent)
 │       ├── cost-guard.config.jsonc
 │       ├── cli.json                 # Terminal & TUI config (replaces legacy V1 tui.jsonc)
-│       ├── dcp.jsonc                # Dynamic Context Pruning config (autonomous pruning)
 │       └── themes/                  # Theme documentation (Catppuccin bundled natively in V2)
 │
 ├── pi-mono/                         # Stow package 3 — pi-mono-specific
@@ -189,7 +188,7 @@ skill packs, slash commands, and rules. Stow maps the contents of
 
 OpenCode V2 native application configuration: main `opencode.jsonc` (migrated to V2 declarative schema with
 `experimental.policies` and native autocompaction), cost-guard settings, terminal & TUI preferences
-(`cli.json`, which replaces legacy V1 `tui.jsonc`), dynamic context pruning (`dcp.jsonc`), plugins,
+(`cli.json`, which replaces legacy V1 `tui.jsonc`), plugins,
 and bundled Catppuccin theme integration.
 
 **Shared symlinks (not managed by Stow)**

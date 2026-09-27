@@ -27,7 +27,7 @@ Three Stow packages are managed:
 | Package | Stow target | Contents |
 |---------|-------------|----------|
 | `shared/` | `$HOME` | Agents, skills, commands, rules (tool-agnostic) |
-| `opencode/` | `$HOME` | OpenCode V2 config (`opencode.jsonc`, `cli.json`, `dcp.jsonc`, MCP) |
+| `opencode/` | `$HOME` | OpenCode V2 config (`opencode.jsonc`, `cli.json`, MCP) |
 | `pi-mono/` | `$HOME` | pi-mono config and TypeScript extensions |
 
 `make install` stows all three packages and creates the shared symlinks:
@@ -51,7 +51,7 @@ ai-coding-agents/
 │       ├── commands/              # Slash command .md files
 │       └── rules/                 # Rule files (e.g. memory-bank.md)
 ├── opencode/                      # Stow package → $HOME (OpenCode V2 native)
-│   └── .config/opencode/          # opencode.jsonc, cli.json, dcp.jsonc, themes/
+│   └── .config/opencode/          # opencode.jsonc, cli.json, themes/
 ├── pi-mono/                       # Stow package → $HOME
 │   └── .pi/
 │       └── agent/extensions/      # TypeScript extensions (*.ts)
