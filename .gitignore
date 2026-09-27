@@ -103,4 +103,5 @@ pi-mono/.pi/agent/extensions/codeisland.ts
 shared/.ai-agents/skills/corp-branding
 shared/.ai-agents/skills/corp-operations-infrastructure
 shared/.ai-agents/skills/nibbler/SKILL.md
+generated/
 # End of https://www.toptal.com/developers/gitignore/api/vim,osx,visualstudiocode,windows

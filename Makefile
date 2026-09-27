@@ -34,7 +34,7 @@ submodules: ## Initialize and update git submodules
 	@echo "✓ Submodules ready"
 
 .PHONY: install
-install: check submodules stow-install link-shared ## Install all packages and extra symlinks
+install: check submodules gen-google-skills-index stow-install link-shared ## Install all packages and extra symlinks
 	@echo "✓ Installation complete"
 
 .PHONY: stow-install
@@ -161,6 +161,16 @@ else
 endif
 	@$(MAKE) -s link-shared
 	@echo "✓ Restow complete"
+
+##@ Google Cloud Skills
+
+.PHONY: gen-google-skills-index
+gen-google-skills-index: ## Generate local index for Google Cloud skills
+	@./scripts/google-skills-gen-index.fish
+
+.PHONY: update-google-skills
+update-google-skills: ## Check upstream diff and prompt to update Google Cloud skills submodule
+	@./scripts/update-google-skills.fish
 
 ##@ Utilities
 

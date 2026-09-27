@@ -12,6 +12,7 @@ This document describes the structure of `ai-coding-agents`, how the three Stow 
 - [OpenCode V2 architecture & migration](#opencode-v2-architecture--migration)
 - [Pi-mono extensions](#pi-mono-extensions)
 - [Extension interaction map](#extension-interaction-map)
+- [On-demand Google Cloud skills catalog](#on-demand-google-cloud-skills-catalog)
 - [Memory bank location](#memory-bank-location)
 
 ---
@@ -25,7 +26,8 @@ ai-coding-agents/
 ├── shared/          # → $HOME  (agents, skills, commands, rules)
 ├── opencode/        # → $HOME  (opencode V2 config: opencode.jsonc, cli.json, dcp.jsonc)
 ├── pi-mono/         # → $HOME  (pi settings and TypeScript extensions)
-├── scripts/         # Utility scripts (JSONC validator)
+├── vendor/          # Vendored submodules outside Stow (e.g. google-skills catalog)
+├── scripts/         # Utility scripts (JSONC validator, Google skills scripts)
 ├── docs/            # Project documentation
 ├── Makefile
 └── .pre-commit-config.yaml
@@ -81,7 +83,7 @@ flowchart LR
     subgraph shared["shared/.ai-agents/"]
         direction TB
         agents["agents/\n(103 .md files\nin 11 categories)"]
-        skills["skills/\n(24 skill packs\neach with SKILL.md)"]
+        skills["skills/\n(26 skill packs\neach with SKILL.md)"]
         commands["commands/\n(15 slash commands\n.md files)"]
         rules["rules/\n(always-on\nbehavioural rules)"]
     end
@@ -316,6 +318,45 @@ sequenceDiagram
 
 All other inter-extension communication happens through pi's built-in lifecycle
 events (`session_start`, `turn_start`, `before_agent_start`, `tool_call`, etc.).
+
+---
+
+## On-demand Google Cloud skills catalog
+
+Rather than checking ~129 official Google Cloud skills into `shared/.ai-agents/skills/` (which would flood the agent's context window and degrade prompt attention), the repository uses a decoupled on-demand architecture:
+
+```mermaid
+flowchart TD
+    upstream["github.com/google/skills (upstream)"]
+    submodule["vendor/google-skills/\n(git submodule, pinned commit)"]
+    gen_script["scripts/google-skills-gen-index.fish\n(make gen-google-skills-index)"]
+    index["generated/google-skills-index.local.json\n(git-ignored local catalog index)"]
+
+    rule["shared/.ai-agents/rules/google-cloud.md\n(always-on GCP prompt nudge)"]
+    router["shared/.ai-agents/skills/google-skills/\n(router skill with jq search)"]
+    gcloud_skill["shared/.ai-agents/skills/gcloud/\n(symlink to vendor/.../gcloud)"]
+
+    upstream -->|make update-google-skills| submodule
+    submodule --> gen_script
+    gen_script --> index
+
+    rule -->|nudges invocation| router
+    router -->|jq keyword search| index
+    router -->|loads at most 3 skills from disk| submodule
+
+    gcloud_skill -.->|safety guardrail for CLI| submodule
+
+    style submodule fill:#1e1e2e,color:#cdd6f4
+    style index fill:#181825,color:#cdd6f4
+    style router fill:#313244,color:#cdd6f4
+    style rule fill:#313244,color:#cdd6f4
+    style gcloud_skill fill:#313244,color:#cdd6f4
+```
+
+1. **Vendor submodule**: `vendor/google-skills` holds the official Google Cloud skills submodule, pinned to an explicit commit and kept outside Stow packages.
+2. **Always-on guardrails**: `shared/.ai-agents/skills/gcloud` is directly symlinked to the submodule's `gcloud` skill, ensuring syntax validation (`gcloud help <leaf_command>`) and dry-run guardrails are always in context for command execution.
+3. **Always-on router rule**: `shared/.ai-agents/rules/google-cloud.md` ensures any GCP-related prompt directs the agent to consult `google-skills`.
+4. **Local querying & isolation**: `google-skills` searches `generated/google-skills-index.local.json` with `jq` and dynamically loads up to 3 relevant skills into context directly from disk, keeping the remaining ~126 skills out of context.
 
 ---
 
