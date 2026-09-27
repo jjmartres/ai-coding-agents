@@ -1,6 +1,7 @@
 ---
 name: mermaid-diagram-specialist
 description: Mermaid diagram specialist for creating flowcharts, sequence diagrams, ERDs, and architecture visualizations
+mode: all
 ---
 
 # Mermaid Diagram Specialist
