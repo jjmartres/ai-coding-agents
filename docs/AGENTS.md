@@ -30,7 +30,7 @@ OpenCode V2 enforces strict execution boundaries based on an agent's configured 
 
 ### Configuration files (OpenCode V2 native)
 
-Agent execution and runtime behaviors in OpenCode V2 are governed by three dedicated configuration files:
+Agent execution and runtime behaviors in OpenCode V2 are governed by two dedicated configuration files:
 
 #### 1. Global CLI config: `cli.json` (`~/.config/opencode/cli.json`)
 
@@ -95,30 +95,6 @@ Core server, provider policies, agent registry, and context lifecycle settings (
 - **Provider Policies (`experimental.policies`)**: Declarative access control using `provider.use` (e.g. allowing `google-vertex`, `openrouter`, `calculon`, denying wildcard access).
 - **Inline Custom Agents (`agents.title`)**: Configures specialized system agents such as session titling using Gemini 3.8 Flash.
 - **Tool Output Limits (`tool_output`)**: Caps maximum retained output (`max_lines: 800`, `max_bytes: 32768`) to protect context budgets.
-- **Plugin Registrations**: Loads `@tarquinen/opencode-dcp@latest`.
-
-#### 3. Dynamic Context Pruning: `dcp.jsonc` (`~/.config/opencode/dcp.jsonc`)
-
-Configures autonomous context compression via the `@tarquinen/opencode-dcp` plugin:
-
-- **Autonomous Background Pruning**: `"manualMode": { "enabled": false, "automaticStrategies": true }` ensures context optimization occurs automatically in the background without prompting for manual strategy confirmation.
-- **Range Compression**: `"compress": { "mode": "range", "permission": "allow", "summaryBuffer": true }` applies range-based compression to stale multi-turn exchanges, automatically grants pruning permission, and caches compressed turn summaries in memory to maximize model performance across long workflows.
-
-```jsonc title="~/.config/opencode/dcp.jsonc"
-{
-  "$schema": "https://raw.githubusercontent.com/Opencode-DCP/opencode-dynamic-context-pruning/master/dcp.schema.json",
-  "manualMode": {
-    "enabled": false,
-    "automaticStrategies": true
-  },
-  "compress": {
-    "mode": "range",
-    "permission": "allow",
-    "showCompression": false,
-    "summaryBuffer": true
-  }
-}
-```
 
 ### Invoking an agent
 

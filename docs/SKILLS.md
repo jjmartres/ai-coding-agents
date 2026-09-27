@@ -17,7 +17,9 @@ Skills are reusable instruction packs that inject domain-specific guidance into 
 | [document-code](#document-code) | Apply Google Style documentation standards to Python, Go, TypeScript, and Terraform code. | opencode, pi-mono |
 | [document-project](#document-project) | Generate comprehensive project documentation structures: README, ARCHITECTURE, USER_GUIDE, DEVELOPER_GUIDE, and CONTRIBUTING. | opencode, pi-mono |
 | [file-organizer](#file-organizer) | Intelligently organizes files and folders by understanding context, finding duplicates, and suggesting better structures. | opencode, pi-mono |
+| [gcloud](#gcloud) | Safety-critical validation, guardrails, and data reduction for `gcloud` CLI operations across GCP services. | opencode, pi-mono |
 | [glab](#glab) | Expert guidance for using the GitLab CLI (`glab`) to manage issues, MRs, pipelines, and repositories. | opencode, pi-mono |
+| [google-skills](#google-skills) | On-demand router loading official Google Cloud skills (125+ services) from a local pinned catalog without context bloat. | opencode, pi-mono |
 | [graphify](#graphify) | Turn any corpus (code, docs, papers) into a clustered knowledge graph with interactive HTML, GraphRAG JSON, and audit reports. | opencode, pi-mono |
 | [httpie](#httpie) | Make HTTP requests, test APIs, call REST endpoints, and debug web services using the HTTPie CLI (`http` command). | opencode, pi-mono |
 | [humanizer](#humanizer) | Remove signs of AI-generated writing from text to make it sound natural and human-written. | opencode, pi-mono |
@@ -99,11 +101,67 @@ Understands file context to suggest better directory structures, identify duplic
 
 ---
 
+## gcloud
+
+**Trigger:** Planning, generating, constructing, proposing, describing, or executing any `gcloud` CLI commands across Google Cloud Platform services.
+
+Direct symlink (`shared/.ai-agents/skills/gcloud` → `../../../vendor/google-skills/skills/cloud/gcloud`) exposing the official Google Cloud `gcloud` safety guardrail skill. Unlike the other ~129 specialized Google Cloud skills that are queried on demand, `gcloud` is directly linked into OpenCode so its safety-critical guardrails are active at all times.
+
+### Safety-critical guardrails & validation
+
+- **Mandatory leaf-level syntax validation**: All static training knowledge of `gcloud` commands, flags, and arguments is treated as potentially stale. Before proposing flags, executing commands, or drafting plans, the agent **must** run `gcloud help <leaf_command>` (e.g. `gcloud help compute instances create`). Validation is strictly non-transitive: parent group help (e.g. `gcloud help compute`) is never sufficient.
+- **Mandatory 4-step execution plan**:
+  1. **Step 1 — Syntax validation**: Execute `gcloud help <leaf_command>`.
+  2. **Step 2 — Parameter verification**: Confirm required and optional flags, and verify whether `--dry-run` or `--validate-only` is supported.
+  3. **Step 3 — Dry-run proposal**: Propose a `--dry-run` or `--validate-only` command invocation first if supported.
+  4. **Step 4 — Command proposal & authorization**: If a command is on the prohibited/destructive operations list, autonomous execution is strictly forbidden and explicit user authorization is required.
+- **Forbidden web search fallback**: The agent is explicitly prohibited from searching the web for `gcloud` syntax. `gcloud help <leaf_command>` is the sole authorized authority.
+- **Data reduction**: Enforces context-saving flags (`--format`, `--filter`, `--limit`) to keep CLI outputs compact and prevent context window exhaustion.
+
+---
+
 ## glab
 
 **Trigger:** Any interaction with GitLab resources — issues, merge requests, CI/CD pipelines, repositories — from the command line.
 
 Expert guidance for the `glab` CLI. Covers creating and reviewing MRs, managing issues, checking pipeline status, cloning repositories, and performing GitLab operations without leaving the terminal. Includes common patterns for day-to-day GitLab workflows.
+
+---
+
+## google-skills
+
+**Trigger:** Finding and loading official Google Cloud skills (GKE, Vertex AI, BigQuery, Cloud Run, Cloud SQL, Cloud Build, Cloud Monitoring, Cloud Logging, IAM, VPC networking, Cloud Storage, Filestore, SLO alerting, etc.) at the start of any task touching a Google Cloud product.
+
+Implements an **on-demand access architecture** for Google Cloud skills. Instead of exposing all ~129 skills directly inside the Stow packages (which would severely bloat the LLM context window and degrade tool calling), the repository vendors official Google Cloud skills externally and routes them locally on demand.
+
+### Architecture & design
+
+- **Submodule catalog (`vendor/google-skills`)**: Pinned git submodule tracking `github.com/google/skills`. Located under `vendor/` strictly outside Stow packages to prevent context window saturation.
+- **Local index (`generated/google-skills-index.local.json`)**: A compact, machine-readable JSON catalog containing skill names, descriptions, and local absolute entrypoints (`SKILL.md`). Generated via `scripts/google-skills-gen-index.fish` (`make gen-google-skills-index`). Ignored by git to prevent machine-specific path contamination.
+- **Router skill (`shared/.ai-agents/skills/google-skills/SKILL.md`)**: A lightweight router that prompts the agent to search the local index with `jq` and load only the relevant skills into active context.
+
+### Search and loading instructions
+
+1. **Query by keyword**: The agent filters the catalog on disk using `jq` without reading the full index into context:
+   ```bash
+   jq -r '.skills[] | select((.name+" "+.description)|test("KEYWORD1|KEYWORD2";"i")) | "\(.name)\t\(.entrypoint)"' generated/google-skills-index.local.json
+   ```
+2. **Shortlist specific skills**: The agent inspects matched descriptions and shortlists at most **3 skills**, prioritizing the most specific to the current task.
+3. **Load from disk**: The agent reads the local `SKILL.md` from the resolved entrypoint path on disk and adopts its domain-specific guidelines.
+4. **Offline and deterministic**: All skill resolutions occur locally from disk. Network fetches are prohibited. If no skill matches, the agent proceeds cleanly without hallucinating skills.
+
+### Submodule lifecycle management
+
+- **Regenerate index**: `make gen-google-skills-index` runs `scripts/google-skills-gen-index.fish` to parse frontmatter from `vendor/google-skills/skills/cloud/` and rebuild `generated/google-skills-index.local.json`.
+- **Review and update upstream**: `make update-google-skills` runs `scripts/update-google-skills.fish` to fetch upstream changes, display commit logs and diff stats, and prompt for human confirmation before advancing the submodule pin.
+
+---
+
+## graphify
+
+**Trigger:** Turning any folder of files (code, documents, research papers) into a structured, navigable knowledge graph with community detection.
+
+Extracts AST and semantic relationships across code and documentation to produce a persistent graph (`graphify-out/graph.json`), interactive visual HTML (`graph.html`), and an audit report (`GRAPH_REPORT.md`). Supports BFS/DFS graph queries, pathfinding, and serving via stdio MCP.
 
 ---
 
@@ -176,6 +234,14 @@ Generates a complete, professional documentation structure tailored to Python or
 **Trigger:** Writing, reviewing, or refactoring code; any task where precision and minimal-change discipline matter.
 
 Provides behavioral guidelines derived from Andrej Karpathy's observations on common LLM coding mistakes. Instructs the agent to avoid overcomplication, make surgical targeted changes, surface assumptions explicitly, and define verifiable success criteria before acting. Reduces hallucinated complexity and unnecessary rewrites.
+
+---
+
+## nibbler
+
+**Trigger:** Fintecture GCP infrastructure operations, alert investigation, past incident memory retrieval, runbooks, real-time GCP service health, JIT PAM access, and IaC/Helm validation.
+
+Integrates with Fintecture's operational GCP companion running on Cloud Run via the `nibbler` MCP server. Enables automated alert triage, runbook fetching, heartbeat checks, and infrastructure compliance auditing.
 
 ---
 

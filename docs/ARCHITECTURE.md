@@ -12,6 +12,7 @@ This document describes the structure of `ai-coding-agents`, how the three Stow 
 - [OpenCode V2 architecture & migration](#opencode-v2-architecture--migration)
 - [Pi-mono extensions](#pi-mono-extensions)
 - [Extension interaction map](#extension-interaction-map)
+- [On-demand Google Cloud skills catalog](#on-demand-google-cloud-skills-catalog)
 - [Memory bank location](#memory-bank-location)
 
 ---
@@ -23,9 +24,10 @@ The repository contains three independent [GNU Stow](https://www.gnu.org/softwar
 ```
 ai-coding-agents/
 ├── shared/          # → $HOME  (agents, skills, commands, rules)
-├── opencode/        # → $HOME  (opencode V2 config: opencode.jsonc, cli.json, dcp.jsonc)
+├── opencode/        # → $HOME  (opencode V2 config: opencode.jsonc, cli.json)
 ├── pi-mono/         # → $HOME  (pi settings and TypeScript extensions)
-├── scripts/         # Utility scripts (JSONC validator)
+├── vendor/          # Vendored submodules outside Stow (e.g. google-skills catalog)
+├── scripts/         # Utility scripts (JSONC validator, Google skills scripts)
 ├── docs/            # Project documentation
 ├── Makefile
 └── .pre-commit-config.yaml
@@ -47,7 +49,7 @@ flowchart TD
 
     subgraph home["$HOME (symlinks)"]
         ai_agents["~/.ai-agents/\nagents/ · skills/\ncommands/ · rules/"]
-        oc_config["~/.config/opencode/\nopencode.jsonc · cli.json\ndcp.jsonc · plugins/ · themes/"]
+        oc_config["~/.config/opencode/\nopencode.jsonc · cli.json\nplugins/ · themes/"]
         pi_config["~/.pi/agent/\nsettings.json · models.json\nextensions/*.ts"]
     end
 
@@ -81,7 +83,7 @@ flowchart LR
     subgraph shared["shared/.ai-agents/"]
         direction TB
         agents["agents/\n(103 .md files\nin 11 categories)"]
-        skills["skills/\n(24 skill packs\neach with SKILL.md)"]
+        skills["skills/\n(26 skill packs\neach with SKILL.md)"]
         commands["commands/\n(15 slash commands\n.md files)"]
         rules["rules/\n(always-on\nbehavioural rules)"]
     end
@@ -130,7 +132,6 @@ flowchart LR
     subgraph config["opencode/.config/opencode/"]
         oc_json["opencode.jsonc\n(V2 Server & Agents)"]
         cli_json["cli.json\n(V2 Terminal & TUI)"]
-        dcp_json["dcp.jsonc\n(DCP Plugin Config)"]
         themes_dir["themes/\n(README & Documentation)"]
     end
 
@@ -151,7 +152,6 @@ flowchart LR
 
     oc_json --> core
     cli_json --> core
-    dcp_json --> core
     shared_links --> agents_reg
     core --> policies
     core --> compaction
@@ -160,7 +160,7 @@ flowchart LR
 
 ### OpenCode V2 native configuration files
 
-OpenCode V2 separates concerns across three dedicated configuration files:
+OpenCode V2 separates concerns across two dedicated configuration files:
 
 1. **`opencode.jsonc`** (`~/.config/opencode/opencode.jsonc`):
    - Schema: `https://opencode.ai/config.json`
@@ -188,13 +188,6 @@ OpenCode V2 separates concerns across three dedicated configuration files:
    - **Theme Configuration (`"theme": { "name": "zenburn" }`)**: Selects the active syntax and UI palette (`zenburn`, with alternatives like `tokyonight` or `catppuccin-macchiato`).
    - **Attention Alerts (`"attention": { ... }`)**: Configures desktop notifications (`"notifications": true`) when the terminal window is in the background, and plays attention sounds (`"sound": true`, `"volume": 0.4`) on events such as permission prompts, user questions, task completions, and subagent completion (`subagent_done`).
 
-3. **`dcp.jsonc`** (`~/.config/opencode/dcp.jsonc`):
-   - Schema: `https://raw.githubusercontent.com/Opencode-DCP/opencode-dynamic-context-pruning/master/dcp.schema.json`
-   - Dynamic Context Pruning (`@tarquinen/opencode-dcp` plugin) settings.
-   - **Autonomous Context Pruning**:
-     - `"manualMode": { "enabled": false, "automaticStrategies": true }`: Operates autonomously in the background without prompting for manual strategy confirmation.
-     - `"compress": { "mode": "range", "permission": "allow", "showCompression": false, "summaryBuffer": true }`: Applies range-based compression to stale multi-turn exchanges, auto-approves compression actions, and retains intermediate summaries in memory across extended multi-agent interactions.
-
 ### Key V1 to V2 migration changes
 
 | Area | OpenCode V1 (Legacy) | OpenCode V2 (Native) |
@@ -212,7 +205,6 @@ OpenCode V2 separates concerns across three dedicated configuration files:
 | **Agent Invocation** | Native V1 `@agent` prompts | Dynamic `/call-agent` slash command (fuzzy matching) + `subagent` tool delegation |
 | **Theme Bundling** | Custom JSON theme files in `themes/` | Native themes (`theme.name: "zenburn"`, `catppuccin-macchiato`, etc.), obsolete V1 theme files removed |
 | **Tool Execution Grouping** | Ungrouped or unstructured | `session.grouping: "none"` (individual item rendering) in `cli.json` |
-| **Context Pruning** | Manual or unconfigured | `@tarquinen/opencode-dcp` with autonomous compression (`manualMode.enabled: false`) |
 | **Configuration Reload** | Full restart required | Hot reload via `opencode reload` command without dropping sessions |
 
 ### Agent invocation in OpenCode V2
@@ -316,6 +308,45 @@ sequenceDiagram
 
 All other inter-extension communication happens through pi's built-in lifecycle
 events (`session_start`, `turn_start`, `before_agent_start`, `tool_call`, etc.).
+
+---
+
+## On-demand Google Cloud skills catalog
+
+Rather than checking ~129 official Google Cloud skills into `shared/.ai-agents/skills/` (which would flood the agent's context window and degrade prompt attention), the repository uses a decoupled on-demand architecture:
+
+```mermaid
+flowchart TD
+    upstream["github.com/google/skills (upstream)"]
+    submodule["vendor/google-skills/\n(git submodule, pinned commit)"]
+    gen_script["scripts/google-skills-gen-index.fish\n(make gen-google-skills-index)"]
+    index["generated/google-skills-index.local.json\n(git-ignored local catalog index)"]
+
+    rule["shared/.ai-agents/rules/google-cloud.md\n(always-on GCP prompt nudge)"]
+    router["shared/.ai-agents/skills/google-skills/\n(router skill with jq search)"]
+    gcloud_skill["shared/.ai-agents/skills/gcloud/\n(symlink to vendor/.../gcloud)"]
+
+    upstream -->|make update-google-skills| submodule
+    submodule --> gen_script
+    gen_script --> index
+
+    rule -->|nudges invocation| router
+    router -->|jq keyword search| index
+    router -->|loads at most 3 skills from disk| submodule
+
+    gcloud_skill -.->|safety guardrail for CLI| submodule
+
+    style submodule fill:#1e1e2e,color:#cdd6f4
+    style index fill:#181825,color:#cdd6f4
+    style router fill:#313244,color:#cdd6f4
+    style rule fill:#313244,color:#cdd6f4
+    style gcloud_skill fill:#313244,color:#cdd6f4
+```
+
+1. **Vendor submodule**: `vendor/google-skills` holds the official Google Cloud skills submodule, pinned to an explicit commit and kept outside Stow packages.
+2. **Always-on guardrails**: `shared/.ai-agents/skills/gcloud` is directly symlinked to the submodule's `gcloud` skill, ensuring syntax validation (`gcloud help <leaf_command>`) and dry-run guardrails are always in context for command execution.
+3. **Always-on router rule**: `shared/.ai-agents/rules/google-cloud.md` ensures any GCP-related prompt directs the agent to consult `google-skills`.
+4. **Local querying & isolation**: `google-skills` searches `generated/google-skills-index.local.json` with `jq` and dynamically loads up to 3 relevant skills into context directly from disk, keeping the remaining ~126 skills out of context.
 
 ---
 

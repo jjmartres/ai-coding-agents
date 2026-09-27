@@ -6,6 +6,26 @@ Rules are always-on behavioural constraints loaded from `shared/.ai-agents/rules
 
 ---
 
+## google-cloud
+
+**Source:** `shared/.ai-agents/rules/google-cloud.md`
+
+### Purpose
+
+Ensures the agent uses official, authoritative Google Cloud architecture and service guidance rather than relying on stale model training data or guessing service patterns.
+
+The rule states:
+> For any Google Cloud task, use the `google-skills` skill first to find the relevant official skill.
+
+### How it works
+
+1. **Automatic nudge**: Applied to every session. Whenever a user prompt touches a Google Cloud Platform service (such as BigQuery, Cloud Run, GKE, Vertex AI, IAM, Cloud Storage, Cloud Spanner, or VPC networking), this always-on rule instructs the agent to invoke the `google-skills` router first.
+2. **On-demand routing**: The agent invokes `google-skills` to query the local catalog (`generated/google-skills-index.local.json`) with keyword filtering.
+3. **Context isolation**: Only the specific official skill files needed for the task (at most 3) are loaded from disk (`vendor/google-skills/skills/cloud/<service>/SKILL.md`), keeping the remaining ~126 skills out of the prompt context.
+4. **Command safety**: For tasks requiring `gcloud` CLI commands, the loaded service skill pairs with the directly symlinked `gcloud` skill to enforce leaf-level syntax validation (`gcloud help <command>`), execution plan structures, and authorization safeguards.
+
+---
+
 ## memory-bank
 
 **Source:** `shared/.ai-agents/rules/memory-bank.md`

@@ -43,9 +43,9 @@ Three [GNU Stow](https://www.gnu.org/software/stow/) packages, all targeting
 `$HOME`, that deploy:
 
 - **80+ agent persona files** shared between opencode and pi-mono
-- **19 reusable skill packs** covering diagrams, code docs, Jira, Datadog, robotics, and more
+- **26 reusable skill packs** covering diagrams, code docs, Jira, Datadog, robotics, Google Cloud, and more (plus 125+ on-demand official Google Cloud skills)
 - **14 slash commands** for common workflows (commit, review, test, speckit, …)
-- **opencode-specific** configuration (migrated natively to OpenCode V2): `opencode.jsonc`, `cli.json`, `dcp.jsonc`, MCP servers, plugins
+- **opencode-specific** configuration (migrated natively to OpenCode V2): `opencode.jsonc`, `cli.json`, MCP servers, plugins
 - **pi-mono-specific** configuration: settings, models, TypeScript extensions
 
 ## Prerequisites
@@ -58,11 +58,13 @@ Three [GNU Stow](https://www.gnu.org/software/stow/) packages, all targeting
 | [Node.js](https://nodejs.org/) v18+ | JSONC validation script | Yes |
 | [TypeScript](https://www.typescriptlang.org/) | pi-mono extension typechecking | Yes (`npm install -g typescript`) |
 | [pre-commit](https://pre-commit.com/) | Git hook framework | Optional |
+| [jq](https://jqlang.github.io/jq/) | JSON query engine (Google skills index) | Yes |
+| [Fish](https://fishshell.com/) | Shell runtime for Google skills scripts | Yes |
 
 **macOS:**
 
 ```bash
-brew install stow node pre-commit
+brew install stow node pre-commit jq fish
 npm install -g typescript
 ```
 
@@ -101,17 +103,24 @@ ai-coding-agents/
 │       │   ├── speckit.polish.md
 │       │   └── test.md
 │       ├── rules/
+│       │   ├── google-cloud.md      # Router rule for Google Cloud skills
 │       │   └── memory-bank.md
 │       ├── scripts/                 # Shared helper utilities
 │       │   └── match-agent.js       # Dynamic fuzzy agent matching with alias & typo tolerance
 │       └── skills/                  # Reusable skill packs
 │           ├── asdf/
+│           ├── astro-dso-doc/
 │           ├── content-research-writer/
+│           ├── corp-branding/
+│           ├── corp-operations-infrastructure/
 │           ├── datadog/
 │           ├── document-code/
 │           ├── document-project/
 │           ├── file-organizer/
+│           ├── gcloud/              # Direct symlink to vendor/google-skills/.../gcloud (guardrail)
 │           ├── glab/
+│           ├── google-skills/       # On-demand router for official Google Cloud skills
+│           ├── graphify/
 │           ├── httpie/
 │           ├── humanizer/
 │           ├── jira/
@@ -120,6 +129,7 @@ ai-coding-agents/
 │           ├── mcp-builder/
 │           ├── meeting-insights-analyzer/
 │           ├── mermaid-diagrams/
+│           ├── nibbler/
 │           ├── reachy-mini-sdk/     # git submodule
 │           ├── work-on-ticket/
 │           ├── worktrunk/
@@ -130,7 +140,6 @@ ai-coding-agents/
 │       ├── opencode.jsonc           # Server & agent config (providers, compaction, default_agent)
 │       ├── cost-guard.config.jsonc
 │       ├── cli.json                 # Terminal & TUI config (replaces legacy V1 tui.jsonc)
-│       ├── dcp.jsonc                # Dynamic Context Pruning config (autonomous pruning)
 │       └── themes/                  # Theme documentation (Catppuccin bundled natively in V2)
 │
 ├── pi-mono/                         # Stow package 3 — pi-mono-specific
@@ -154,7 +163,12 @@ ai-coding-agents/
 │           ├── tps.ts
 │           └── usage.ts
 │
+├── vendor/                          # Submodules outside Stow (avoids context bloat)
+│   └── google-skills/               # Pinned submodule: 125+ official Google Cloud skills
+│
 ├── scripts/
+│   ├── google-skills-gen-index.fish # Generates local index for on-demand Google skills
+│   ├── update-google-skills.fish    # Interactive updater for google-skills submodule
 │   └── validate-jsonc.js
 ├── .pre-commit-config.yaml
 ├── .stowrc
@@ -174,7 +188,7 @@ skill packs, slash commands, and rules. Stow maps the contents of
 
 OpenCode V2 native application configuration: main `opencode.jsonc` (migrated to V2 declarative schema with
 `experimental.policies` and native autocompaction), cost-guard settings, terminal & TUI preferences
-(`cli.json`, which replaces legacy V1 `tui.jsonc`), dynamic context pruning (`dcp.jsonc`), plugins,
+(`cli.json`, which replaces legacy V1 `tui.jsonc`), plugins,
 and bundled Catppuccin theme integration.
 
 **Shared symlinks (not managed by Stow)**
@@ -207,7 +221,7 @@ search, session management, git checkpoints, usage tracking, and more).
 git clone --recurse-submodules https://github.com/jjmartres/ai-coding-agents.git
 cd ai-coding-agents
 
-# Stow all packages, init submodules, and create the shared symlinks
+# Stow all packages, init submodules, generate local Google skills index, and create shared symlinks
 make install
 
 # (Optional) Install pre-commit hooks
@@ -221,7 +235,7 @@ here; changes take effect immediately.
 
 ```
 Installation
-  install              Stow all packages + init submodules + create shared symlinks
+  install              Stow all packages + init submodules + gen local index + create shared symlinks
   submodules           Initialize and update git submodules
   stow-install         Stow all packages only
   link-shared          Create ~/.config/opencode/{skills,commands,rules,scripts} and flat agents symlinks
@@ -230,6 +244,10 @@ Installation
   unlink-shared        Remove ~/.config/opencode/{agents,skills,commands,rules,scripts} symlinks
   uninstall            Remove shared symlinks + unstow all packages
   restow               Re-run stow (use after adding/removing files)
+
+Google Cloud Skills
+  gen-google-skills-index Generate local index for Google Cloud skills
+  update-google-skills Check upstream diff and prompt to update Google Cloud skills submodule
 
 Utilities
   check                Verify setup (directories, stow binary, .stowrc)
@@ -274,6 +292,22 @@ symlinked.
 
 Create a subdirectory under `shared/.ai-agents/skills/` with a `SKILL.md`
 entry point. Same as agents: no re-stowing needed.
+
+### Updating Google Cloud skills
+
+Official Google Cloud skills are vendored as a pinned git submodule in `vendor/google-skills` (~129 skills). To inspect upstream changes and update the pin safely:
+
+```bash
+make update-google-skills
+```
+
+This interactive script fetches upstream, displays commit history and diff statistics, and requests explicit user confirmation before advancing the submodule pointer. Once confirmed, it automatically regenerates the local search index (`generated/google-skills-index.local.json`).
+
+To regenerate the index manually:
+
+```bash
+make gen-google-skills-index
+```
 
 ### Adding or removing files in a stow package
 
