@@ -260,3 +260,71 @@ Run the full test suite with coverage and diagnose failures.
 ```
 /test
 ```
+
+---
+
+## `/worktree`
+
+Unified slash command to create, list, delete, and prune git worktrees under `.worktree/`.
+
+- Dispatches to `/worktree-create`, `/worktree-list`, `/worktree-delete`, or `/worktree-delete --merged`.
+- Automatically calls `tools.opencode.session_move` to align OpenCode's working directory with the active worktree.
+
+**Examples:**
+
+```
+/worktree create feat-auth
+/worktree list
+/worktree delete feat-auth
+/worktree clean
+```
+
+---
+
+## `/worktree-create`
+
+Create an isolated git worktree under `.worktree/<branch>` and relocate the OpenCode session there.
+
+- Ensures `.worktree/` is ignored in `.gitignore`.
+- Creates `.worktree/<branch>` from the latest remote/local refs.
+- Copies local `.env` and configuration files from the repo root if needed.
+- Calls `tools.opencode.session_move` to switch OpenCode into the worktree.
+
+**Example:**
+
+```
+/worktree-create feature-oauth-integration
+```
+
+---
+
+## `/worktree-list`
+
+List all active git worktrees with current branch status, uncommitted changes, and PR/MR status.
+
+- Shows commit SHAs and uncommitted diff status.
+- Integrates with GitLab (`glab`) and GitHub (`gh`) to check if the branch's PR/MR is Open, Merged, or Closed.
+- Highlights merged worktrees ready for deletion.
+
+**Example:**
+
+```
+/worktree-list
+```
+
+---
+
+## `/worktree-delete`
+
+Remove a worktree from `.worktree/` and delete its branch, or clean up all merged worktrees.
+
+- Safe session repositioning: if the active session is currently inside the worktree being deleted, it moves the session back to the primary repository root before deletion.
+- Supports `--merged` flag to auto-delete all worktrees whose PR/MR has already merged.
+- Prunes worktree metadata with `git worktree prune`.
+
+**Examples:**
+
+```
+/worktree-delete feature-oauth-integration
+/worktree-delete --merged
+```

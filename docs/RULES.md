@@ -99,3 +99,20 @@ When triggered by an explicit **update memory bank** request, `activeContext.md`
 - The directory check and creation happen before any read or write operation.
 - Memory Bank files are the AI's only link to previous sessions; their accuracy directly determines the AI's effectiveness.
 - Files are maintained in plain Markdown for human readability and version control compatibility.
+
+---
+
+## git-worktree
+
+**Source:** `shared/.ai-agents/rules/git-worktree.md`
+
+### Purpose
+
+Enforces isolated `git worktree` instances inside `.worktree/` for all feature branches, bugfixes, and multi-session work. Prevents conflicting branch switches and file churn across concurrent OpenCode sessions working on the same repository.
+
+### Key mandates
+
+1. **Storage under `.worktree/`**: All task worktrees must live in `<repo-root>/.worktree/<branch-name>`, and `.worktree/` must be in `.gitignore`.
+2. **No in-place branch switching**: The primary repository root must never run `git checkout -b` or dirty uncommitted branches.
+3. **Session repositioning (`session_move`)**: Immediately relocates OpenCode's working directory to the target worktree via `tools.opencode.session_move`.
+4. **Auto-deletion on PR/MR merge**: Whenever a PR/MR is merged (or when executing `/worktree-delete --merged`), OpenCode repositions back to the repository root, deletes the worktree with `git worktree remove --force`, prunes metadata with `git worktree prune`, and removes the merged local branch.
