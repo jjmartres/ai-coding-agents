@@ -1,6 +1,7 @@
 ---
 name: general-purpose
 description: Default agent for handling complex, multi-step tasks with automatic delegation capabilities
+mode: all
 ---
 
 ## General Purpose Agent
