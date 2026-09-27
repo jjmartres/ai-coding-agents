@@ -78,44 +78,33 @@ Create a branch name using this format:
 # Example: "Migrate existing MCP server" -> "migrate-existing-mcp-server"
 ```
 
-### 4. Check Current Git State
+### 4. Create Isolated Worktree under `.worktree/`
 
-Before creating a branch, check the current state:
-
-```bash
-# Check current branch
-git branch --show-current
-
-# Check for uncommitted changes
-git status --porcelain
-```
-
-**If uncommitted changes exist:**
-
-- STOP and inform User
-- Suggest: "You have uncommitted changes. Should I commit them first, stash them, or continue anyway?"
-- Wait for User's decision
-
-**If not on staging/main:**
-
-- STOP and inform User
-- Suggest: "You're currently on branch [CURRENT_BRANCH]. Should I switch to staging first?"
-- Wait for User's decision
-
-### 5. Create Branch
-
-Once it's safe to proceed:
+In accordance with the Git Worktree Policy, do NOT run `git checkout -b` in the primary workspace. Create an isolated worktree under `.worktree/`:
 
 ```bash
-# Ensure we're on the latest staging
-git checkout staging
-git pull origin staging
+BRANCH_NAME="[TICKET_ID]-[kebab-case-summary]"
+REPO_ROOT=$(git rev-parse --show-toplevel)
 
-# Create and checkout new branch
-git checkout -b [TICKET_ID]-[kebab-case-summary]
+# Ensure .worktree/ is ignored
+grep -q "^\.worktree/" .gitignore 2>/dev/null || echo ".worktree/" >> .gitignore
+
+# Fetch latest default branch
+git fetch origin
+
+# Create isolated worktree under .worktree/
+git worktree add ".worktree/${BRANCH_NAME}" -b "${BRANCH_NAME}"
 ```
 
-Confirm to User: "Created and checked out branch: [BRANCH_NAME]"
+### 5. Relocate OpenCode Session
+
+Immediately move the active OpenCode session to the new worktree using `execute`:
+
+```javascript
+await tools.opencode.session_move({ directory: `${REPO_ROOT}/.worktree/${BRANCH_NAME}` });
+```
+
+Confirm to User: "Created isolated worktree at `.worktree/${BRANCH_NAME}` and relocated session."
 
 ### 6. Build Task Planning Prompt
 
