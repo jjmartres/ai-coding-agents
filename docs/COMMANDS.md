@@ -267,7 +267,7 @@ Run the full test suite with coverage and diagnose failures.
 
 Unified slash command to create, list, delete, and prune git worktrees under `.worktree/`.
 
-- Dispatches to `/worktree-create`, `/worktree-list`, `/worktree-delete`, or `/worktree-delete --merged`.
+- Dispatches to `/worktree.create`, `/worktree.list`, `/worktree.delete`, or `/worktree.delete --merged`.
 - Automatically calls `tools.opencode.session_move` to align OpenCode's working directory with the active worktree.
 
 **Examples:**
@@ -281,7 +281,7 @@ Unified slash command to create, list, delete, and prune git worktrees under `.w
 
 ---
 
-## `/worktree-create`
+## `/worktree.create`
 
 Create an isolated git worktree under `.worktree/<branch>` and relocate the OpenCode session there.
 
@@ -293,12 +293,12 @@ Create an isolated git worktree under `.worktree/<branch>` and relocate the Open
 **Example:**
 
 ```
-/worktree-create feature-oauth-integration
+/worktree.create feature-oauth-integration
 ```
 
 ---
 
-## `/worktree-list`
+## `/worktree.list`
 
 List all active git worktrees with current branch status, uncommitted changes, and PR/MR status.
 
@@ -309,12 +309,12 @@ List all active git worktrees with current branch status, uncommitted changes, a
 **Example:**
 
 ```
-/worktree-list
+/worktree.list
 ```
 
 ---
 
-## `/worktree-delete`
+## `/worktree.delete`
 
 Remove a worktree from `.worktree/` and delete its branch, or clean up all merged worktrees.
 
@@ -325,6 +325,6 @@ Remove a worktree from `.worktree/` and delete its branch, or clean up all merge
 **Examples:**
 
 ```
-/worktree-delete feature-oauth-integration
-/worktree-delete --merged
+/worktree.delete feature-oauth-integration
+/worktree.delete --merged
 ```

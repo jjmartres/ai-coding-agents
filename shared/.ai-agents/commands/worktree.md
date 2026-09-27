@@ -21,13 +21,13 @@ Unified command to manage isolated git worktrees in `.worktree/` and handle sess
 
 1. Parse action from `$ARGUMENTS`:
    - If action is `create` or starts with `add` / `new`:
-     - Delegate to `/worktree-create` workflow with remaining arguments.
+     - Delegate to `/worktree.create` workflow with remaining arguments.
    - If action is `list` or `ls` or empty:
-     - Delegate to `/worktree-list` workflow.
+     - Delegate to `/worktree.list` workflow.
    - If action is `delete`, `rm`, `remove`:
-     - Delegate to `/worktree-delete` workflow with remaining arguments.
+     - Delegate to `/worktree.delete` workflow with remaining arguments.
    - If action is `clean`, `prune`, `clean-merged`, or `merged`:
-     - Delegate to `/worktree-delete --merged` workflow.
+     - Delegate to `/worktree.delete --merged` workflow.
    - If an argument is given without an action verb (e.g. `/worktree feature-foo`):
      - Check if it matches an existing worktree -> switch session there using `tools.opencode.session_move`.
-     - Otherwise, assume creation -> run `/worktree-create` workflow.
+     - Otherwise, assume creation -> run `/worktree.create` workflow.

@@ -11,8 +11,8 @@ Removes an isolated git worktree from `.worktree/` and deletes the associated br
 1. **Parse Arguments**:
    - Inspect `$ARGUMENTS`.
    - Supported modes:
-     - Specific branch or folder: e.g. `/worktree-delete feature-auth` or `/worktree-delete .worktree/feature-auth`.
-     - Merged cleanup: `/worktree-delete --merged`, `/worktree-delete merged`, or no argument if asking to prune merged trees.
+     - Specific branch or folder: e.g. `/worktree.delete feature-auth` or `/worktree.delete .worktree/feature-auth`.
+     - Merged cleanup: `/worktree.delete --merged`, `/worktree.delete merged`, or no argument if asking to prune merged trees.
 
 2. **Handle Merged Worktrees Cleanup (`--merged`)**:
    When cleaning merged trees:

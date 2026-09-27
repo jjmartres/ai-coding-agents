@@ -32,4 +32,4 @@ Lists all git worktrees associated with the current repository, focusing on acti
    - **Path**: Path relative to repo root (e.g., `.worktree/<branch>`).
    - **Git Status**: Clean / Uncommitted changes (`+` / `-`).
    - **PR / MR Status**: `Open`, `Merged`, `Closed`, or `No PR/MR`.
-   - **Action Recommendation**: If `Merged`, recommend `/worktree-delete <branch>` or highlight auto-deletion.
+   - **Action Recommendation**: If `Merged`, recommend `/worktree.delete <branch>` or highlight auto-deletion.
