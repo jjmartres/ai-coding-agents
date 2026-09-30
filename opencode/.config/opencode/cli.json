@@ -14,7 +14,8 @@
   },
   "animations": true,
   "plugins": [
-    "./plugins/tui-clock"
+    "./plugins/tui-clock",
+    "./herdr-opencode"
   ],
   "keybinds": {
     "prompt.queue": "return"

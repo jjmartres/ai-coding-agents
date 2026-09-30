@@ -21,6 +21,7 @@ Skills are reusable instruction packs that inject domain-specific guidance into 
 | [glab](#glab) | Expert guidance for using the GitLab CLI (`glab`) to manage issues, MRs, pipelines, and repositories. | opencode, pi-mono |
 | [google-skills](#google-skills) | On-demand router loading official Google Cloud skills (125+ services) from a local pinned catalog without context bloat. | opencode, pi-mono |
 | [graphify](#graphify) | Turn any corpus (code, docs, papers) into a clustered knowledge graph with interactive HTML, GraphRAG JSON, and audit reports. | opencode, pi-mono |
+| [herdr](#herdr) | Control Herdr terminal multiplexer workspaces, tabs, panes, and agent sessions (installed on-demand via `make install`). | opencode, pi-mono |
 | [httpie](#httpie) | Make HTTP requests, test APIs, call REST endpoints, and debug web services using the HTTPie CLI (`http` command). | opencode, pi-mono |
 | [humanizer](#humanizer) | Remove signs of AI-generated writing from text to make it sound natural and human-written. | opencode, pi-mono |
 | [jira](#jira) | Create, view, update, and manage Jira issues, sprints, and backlogs. | opencode, pi-mono |
@@ -32,7 +33,6 @@ Skills are reusable instruction packs that inject domain-specific guidance into 
 | [nibbler](#nibbler) | Interact with Fintecture's GCP companion on Cloud Run for alert investigation, JIT PAM access, runbooks, and IaC validation. | opencode, pi-mono |
 | [reachy-mini-sdk](#reachy-mini-sdk) | Programming guide for the Reachy Mini robot using the Python SDK and REST API. | opencode, pi-mono |
 | [work-on-ticket](#work-on-ticket) | Fetch Jira ticket details, create a named branch, and initiate task planning. | opencode, pi-mono |
-| [worktrunk](#worktrunk) | Use the `wt` CLI for git worktree management, parallel AI agent sessions, and lifecycle automation. | opencode, pi-mono |
 | [writing-clearly-and-concisely](#writing-clearly-and-concisely) | Apply Strunk's timeless rules for clearer, stronger prose in documentation, commits, and UI text. | opencode, pi-mono |
 
 ---
@@ -165,6 +165,14 @@ Extracts AST and semantic relationships across code and documentation to produce
 
 ---
 
+## herdr
+
+**Trigger:** Explicit mentions of Herdr, or requests to use Herdr to inspect or control panes, tabs, workspaces, commands, or neighboring agent sessions. Requires `HERDR_ENV=1`.
+
+Enables AI agents to interact with the Herdr terminal multiplexer. Downloaded automatically during `make install` matching the locally installed `herdr --version`, and deployed to `shared/.ai-agents/skills/herdr/` (git-ignored). Guides the agent on checking `HERDR_ENV`, inspecting session state, managing layout panes and tabs, and coordinating background agent processes.
+
+---
+
 ## httpie
 
 **Trigger:** Making HTTP requests, testing APIs, calling REST endpoints, debugging web services, sending JSON/form data, working with auth tokens, uploading files.
@@ -258,14 +266,6 @@ Covers the Python SDK v1.2.6 and REST API for the Reachy Mini robot. Includes SD
 **Trigger:** "work on [TICKET_ID]" or similar phrases where the user wants to start implementing a Jira ticket.
 
 Fetches the specified Jira ticket, extracts acceptance criteria and context, creates an appropriately named Git branch, and initiates the task planning workflow. Acts as the entry point for ticket-driven development, bridging project management and version control.
-
----
-
-## worktrunk
-
-**Trigger:** Any mention of `wt`, Worktrunk, git worktree management, parallel AI agent sessions, `wt.toml`, `wt switch`/`wt list`/`wt merge`/`wt remove`/`wt step`, or LLM commit messages.
-
-Complete reference for the Worktrunk (`wt`) CLI — a tool that manages git worktrees to enable parallel AI agent sessions on isolated branches. Covers the full lifecycle: `wt switch`, `wt list`, `wt merge`, `wt remove`, and `wt step`; hook configuration in `wt.toml`; automating dev server, database, and dependency setup per worktree; and LLM-generated commit messages.
 
 ---
 

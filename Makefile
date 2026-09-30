@@ -34,8 +34,24 @@ submodules: ## Initialize and update git submodules
 	@echo "✓ Submodules ready"
 
 .PHONY: install
-install: check submodules gen-google-skills-index stow-install link-shared ## Install all packages and extra symlinks
+install: check submodules gen-google-skills-index stow-install link-shared install-skills ## Install all packages, skills, and extra symlinks
 	@echo "✓ Installation complete"
+
+.PHONY: install-skills
+install-skills: ## Install herdr skill based on installed herdr version
+	@if command -v herdr >/dev/null 2>&1; then \
+		version=$$(herdr --version | awk '{print $$NF}'); \
+		echo "Installing herdr skill (v$$version)..."; \
+		mkdir -p "$(CURDIR)/shared/.ai-agents/skills/herdr"; \
+		if curl -sSfL "https://raw.githubusercontent.com/herdrdev/herdr/v$${version}/skills/herdr/SKILL.md" \
+			-o "$(CURDIR)/shared/.ai-agents/skills/herdr/SKILL.md"; then \
+			echo "✓ herdr skill v$$version installed to shared/.ai-agents/skills/herdr/SKILL.md"; \
+		else \
+			echo "⚠ Failed to download herdr skill for v$$version"; \
+		fi; \
+	else \
+		echo "⚠ herdr not installed - skipping herdr skill install"; \
+	fi
 
 .PHONY: stow-install
 stow-install: ## Stow all packages to $HOME
@@ -139,6 +155,10 @@ unlink-shared: unlink-agents ## Remove ~/.config/opencode/{skills,commands,rules
 			echo "✓ Removed $$name symlink: $$dst"; \
 		fi; \
 	done
+	@if [ -e "$(CURDIR)/shared/.ai-agents/skills/herdr" ] || [ -L "$(CURDIR)/shared/.ai-agents/skills/herdr" ]; then \
+		rm -rf "$(CURDIR)/shared/.ai-agents/skills/herdr"; \
+		echo "✓ Removed herdr skill"; \
+	fi
 
 .PHONY: unlink-agents
 unlink-agents: ## Remove ~/.config/opencode/agents/ directory and symlinks
