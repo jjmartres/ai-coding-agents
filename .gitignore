@@ -100,8 +100,11 @@ $RECYCLE.BIN/
 node_modules/
 pi-mono/.pi/agent/git/
 pi-mono/.pi/agent/extensions/codeisland.ts
+herdr-agent-state.ts
+herdr-agent-state.js
 shared/.ai-agents/skills/corp-branding
 shared/.ai-agents/skills/corp-operations-infrastructure
+shared/.ai-agents/skills/herdr
 shared/.ai-agents/skills/nibbler/SKILL.md
 generated/
 .worktree/
