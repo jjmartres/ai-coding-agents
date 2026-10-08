@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := help
-STOW_PACKAGES := shared opencode pi-mono
+STOW_PACKAGES := shared opencode
 STOW          := $(shell command -v stow 2>/dev/null)
 
 # Shared resources → opencode symlink mappings
