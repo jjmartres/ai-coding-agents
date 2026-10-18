@@ -1,12 +1,12 @@
 # Validation, Structured Output, Verification, and Reporting
 
-### Phase 3: Independently validate every candidate
+## Phase 3: Independently validate every candidate
 
 After the clean coverage-critic pass or an explicitly recorded early stop, consolidate Phase 2 candidates and carried same-source prior confirmations by stable fingerprint and root cause. Give every unique proposed `confirmed` and `needs_validation` candidate to a fresh `general` verifier that did not hunt it. A carried prior confirmation follows the same current verification path even though hunters exclude that unchanged root cause. A verifier may read hunter or prior artifacts but must re-read every cited current source location and independently run any decisive check it can reproduce safely.
 
 Assign each verifier a canonical lowercase unique ID and `<output-dir>/agents/<verifier-id>/scratch/` plus parent-owned `artifacts/`. The verifier writes only to `scratch/` and never writes retained artifacts. It receives only the candidate, its linked coverage-unit checks and artifact paths, architecture facts needed to interpret the path, exact relevant companion validation blocks, the promotion procedure block below, the source/local execution boundary, the `confirmed`, `needs_validation`, and `rejected` branches of `report-schema.json` copied verbatim, and prior records with the same fingerprint. It must not receive another verifier's conclusion.
 
-#### Candidate-verifier prompt
+### Candidate-verifier prompt
 
 ```text
 You did not write this candidate. Try to refute it from repository source and bounded
@@ -92,7 +92,7 @@ When verifier evidence updates a ledger check, set that check's `agent_id` to th
 
 If a strict total-agent budget cannot cover every candidate, set the run status to incomplete and follow the deterministic budget rule in `SKILL.md`. An unvalidated candidate remains only in the ledger. It does not enter `findings.json` under any verdict.
 
-### Phase 4: Write and validate `findings.json`
+## Phase 4: Write and validate `findings.json`
 
 The parent writes all independently decided records to `<output-dir>/findings.json`, sorted by fingerprint. Include:
 
@@ -117,7 +117,7 @@ node <skill-dir>/validate-coverage-ledger.cjs <output-dir>/coverage-ledger.json
 
 Fix every structural and semantic error before continuing. The findings validator rejects input beyond 5 MiB, 1,000 top-level findings, or 64 nesting levels, and caps reported error output at 100 messages. Validator success proves format and ledger consistency only.
 
-### Phase 5: Verify the final records with fresh eyes
+## Phase 5: Verify the final records with fresh eyes
 
 Launch one fresh `research` verifier per final `confirmed` and `needs_validation` record, in parallel. This verifier checks the structured record, not the hunter write-up, and remains inside source/local boundaries.
 
@@ -148,11 +148,11 @@ After every applied replacement, rerun both validators and update linked ledger 
 
 Do not verify only `confirmed` records. A misleading `needs_validation` handoff wastes owner time and can preserve a false premise.
 
-### Phase 6: Produce target-neutral reports from final records
+## Phase 6: Produce target-neutral reports from final records
 
 Only after Phase 5 passes for every record retained in `findings.json`, derive prose from the final records, the ledger, and the hunter `hardening` notes retained in ledger bookkeeping. An incomplete run may report independently verified records, but it must identify each unresolved ledger candidate and must not present it as a finding. The prose files never change a verdict, severity, blocker, or demonstrated impact.
 
-#### `REPORT.md`
+### `REPORT.md`
 
 Write:
 
@@ -166,7 +166,7 @@ Write:
 
 Do not describe rejected records as findings. Mention their fingerprints only when they explain a prior disagreement or coverage decision.
 
-#### `FINDINGS-DETAIL.md`
+### `FINDINGS-DETAIL.md`
 
 For each confirmed `medium`, `high`, or `critical` record, copy the complete source path and target-neutral local reproduction:
 
@@ -177,7 +177,7 @@ For each confirmed `medium`, `high`, or `critical` record, copy the complete sou
 - conditions and containment;
 - source-level remediation and regression case.
 
-#### `NEEDS-VALIDATION.md`
+### `NEEDS-VALIDATION.md`
 
 For every unresolved record, copy the source trace, verified evidence, exact blocker, affected boundary, and each applicable bounded local or owner-observed resolution plan. Keep these as prioritized leads without severity. Do not turn them into live test guidance or assume the missing deployment fact.
 

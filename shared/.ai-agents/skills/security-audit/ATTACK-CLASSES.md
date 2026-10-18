@@ -1,6 +1,6 @@
 # Attack Classes
 
-#### Attack classes — choose and split based on Phase 1
+## Attack classes — choose and split based on Phase 1
 
 Select attack classes relevant to the application type. Not every class applies to every codebase. The list below is a starting point; add application-specific classes from Phase 1 and split large codebases per subsystem. Frame work as finding, validating, fixing, and prioritizing vulnerabilities. Keep validation to source review and bounded local fixtures; do not develop payload chains, test availability on live services, or take action in shared environments.
 

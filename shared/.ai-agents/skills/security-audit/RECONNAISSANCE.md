@@ -1,6 +1,6 @@
 # Reconnaissance
 
-### Phase 1: Map the source and plan coverage
+## Phase 1: Map the source and plan coverage
 
 The parent initializes `run-metadata.json`, applies the strict pre-reconnaissance budget gate in `SKILL.md`, then creates agent scratch roots and the shared ledger before hunting. If the gate fails, record the incomplete status in metadata and launch no reconnaissance agent. Reconnaissance reads the target and locally available build/configuration state only. It does not contact deployed endpoints, external identity providers, registries, brokers, cloud APIs, or other shared services.
 
@@ -141,7 +141,7 @@ The parent may add bookkeeping fields but keeps the semantic fields above stable
 Enforce this state table exactly:
 
 | Status | Unit `agent_id` | `reviewed_paths` / `local_checks` | `result_fingerprints` | `unresolved` |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | `planned` | null | empty | empty | empty |
 | `not_applicable`, `out_of_scope`, `deferred` | null | empty | empty | nonempty reason |
 | `in_progress` | canonical owner | empty | empty | empty |

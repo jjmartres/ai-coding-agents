@@ -1,6 +1,6 @@
 # Vulnerability Hunting
 
-### Phase 2: Run coverage-led hunting waves
+## Phase 2: Run coverage-led hunting waves
 
 The parent assigns `planned` ledger units to `general` agents. Use enough focused hunters to cover the units without combining unrelated boundaries. One hunter may own closely related units in one subsystem; no unit may be silently unassigned because of an agent-count limit — a unit the budget cannot reach is explicitly `deferred` with reason `budget_cannot_reserve_critics_and_validation`.
 
@@ -24,7 +24,7 @@ Every hunter prompt contains these parts in this order:
 
 A prompt may select several companion blocks when the same path crosses several domains. Keep their constraints together. Scope is the hunter's coverage obligation, not permission to duplicate excluded work. If an unexpected different boundary appears, return it under `uncovered` so the parent creates a stable ledger unit and assigns it in the next wave.
 
-#### Core hunting method — include in every hunter prompt
+### Core hunting method — include in every hunter prompt
 
 ```text
 ## Defensive vulnerability-finding method
@@ -96,7 +96,7 @@ outside source is not proof either way. If one such fact is decisive, return a
 needs_validation record with the exact missing observation and safe owner-observed check.
 ```
 
-#### Promotion procedure — copy this promotion procedure verbatim into every hunter prompt
+### Promotion procedure — copy this promotion procedure verbatim into every hunter prompt
 
 ```text
 Artifact promotion procedure (trusted parent-side code only):
@@ -135,7 +135,7 @@ file separately:
     promotion blocker.
 ```
 
-#### Core validation rules — include in every hunter prompt
+### Core validation rules — include in every hunter prompt
 
 ```text
 ## Candidate gate

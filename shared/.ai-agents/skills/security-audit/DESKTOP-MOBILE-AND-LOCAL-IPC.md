@@ -1,6 +1,6 @@
 # Desktop, Mobile, and Local IPC Hunting
 
-#### When to use this file
+## When to use this file
 
 Reach for this file when the target is a desktop or mobile app, privileged helper, updater, local daemon, webview host, deep-link handler, browser native-messaging host, or local IPC client/server. Relevant untrusted actors may be a downloaded document, remote web content, another local app, another OS user, a sandboxed process, or a lower-privilege account. State that starting capability instead of treating all local users as equivalent.
 

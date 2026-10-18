@@ -1,6 +1,6 @@
 # Resource Exhaustion and Availability Hunting
 
-#### When to use this file
+## When to use this file
 
 Reach for this file when untrusted requests, messages, files, tenant state, or agent work can consume CPU, memory, disk, connections, worker slots, paid APIs, or queue capacity, or can deadlock/crash a shared service. This domain distinguishes a source-reviewable availability vulnerability from a general performance issue. Never validate by stressing a shared or live service.
 

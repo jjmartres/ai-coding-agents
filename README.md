@@ -136,6 +136,7 @@ ai-coding-agents/
 │           ├── mermaid-diagrams/
 │           ├── nibbler/
 │           ├── reachy-mini-sdk/     # git submodule
+│           ├── security-audit/      # Source-first security review, attack classes & ledger validators
 │           ├── work-on-ticket/
 │           └── writing-clearly-and-concisely/
 │
@@ -144,6 +145,8 @@ ai-coding-agents/
 │       ├── opencode.jsonc           # Server & agent config (providers, compaction, default_agent)
 │       ├── cost-guard.config.jsonc
 │       ├── cli.json                 # Terminal & TUI config (replaces legacy V1 tui.jsonc)
+│       ├── plugins/                 # OpenCode TUI plugins
+│       │   └── workspace-manager/   # Recency-based workspace switcher & sidebar session monitor
 │       └── themes/                  # Theme documentation (Catppuccin bundled natively in V2)
 │
 ├── pi-mono/                         # Stow package 3 — pi-mono-specific
