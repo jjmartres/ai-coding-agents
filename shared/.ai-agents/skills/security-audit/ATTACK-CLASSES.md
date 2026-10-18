@@ -28,6 +28,7 @@ Use `confirmed` only when source evidence and bounded validation establish the f
 
 **Injection** (subagent_type: `general`)
 Trace untrusted input from entry point to dangerous sink. What counts as a "dangerous sink" depends on the application:
+
 - Web apps: SQL queries, HTML output, shell commands, template engines, file paths, HTTP redirects, deserialization
 - Libraries: any function that processes caller-supplied data without validation — buffer operations, parsers, format strings
 - CLI tools: shell command construction, file path handling, environment variable interpolation
@@ -38,6 +39,7 @@ Do not stop at the obvious direct paths. Look for indirect injection: data store
 
 **Access control** (subagent_type: `general`)
 Verify that a caller cannot do something outside its authority. Go beyond checking whether permission checks exist — verify they check the *right* permission for the *right* resource via the *right* mechanism:
+
 - Is there a path to the same state change that checks a different (weaker) permission?
 - Can a field in the request body override what the permission system intended to restrict?
 - Are there endpoints that gate on authentication but forget authorization?
@@ -47,6 +49,7 @@ Verify that a caller cannot do something outside its authority. Go beyond checki
 For complex access models, split into separate agents for auth bypass vs authorization logic.
 
 **Resource and file handling** (subagent_type: `general`)
+
 - Path traversal (reading/writing outside intended directories) — including through symlinks, encoded sequences, and null bytes
 - SSRF (making the application fetch attacker-controlled URLs) — including through redirects, DNS rebinding, and URL parser differentials
 - Unsafe deserialization, archive extraction (zip slip), temp file handling
@@ -54,6 +57,7 @@ For complex access models, split into separate agents for auth bypass vs authori
 - Race conditions on file operations (TOCTOU between check and use)
 
 **Cryptography and secrets** (subagent_type: `general`)
+
 - Weak randomness for security-critical values (tokens, keys, nonces)
 - Hardcoded secrets, secrets in logs, error messages, URLs, or client-visible responses
 - Broken key derivation, missing HMAC verification, nonce reuse
@@ -63,6 +67,7 @@ For complex access models, split into separate agents for auth bypass vs authori
 
 **Business logic** (subagent_type: `general`)
 Hunt logic errors by hand: standard scanners cannot find them, and they yield high-impact findings. For each major workflow:
+
 - **State machine violations**: Can you skip steps? Go backwards? Reach an invalid state? What happens if you replay a completed flow? What about partial failure — if step 2 of 3 fails, is step 1 rolled back?
 - **Race conditions with business impact**: Concurrent operations that produce invalid states (double-spend, double-approve, lost updates). Focus on operations that check-then-act non-atomically.
 - **Numeric/quantity manipulation**: Negative values, zero values, overflow, precision loss, type coercion between string and number.
@@ -73,6 +78,7 @@ Hunt logic errors by hand: standard scanners cannot find them, and they yield hi
 
 **Feature abuse and data leakage** (subagent_type: `general`)
 Legitimate features used for unintended purposes. Look for bugs in the design, not only in the code:
+
 - **Export/backup as exfiltration**: Can a low-privilege user trigger an export, snapshot, or backup that includes data above their access level? Can they export other users' data? Does the export include deleted/draft/private content? Revision history that was supposed to be pruned?
 - **Import/restore as injection**: Can import overwrite existing data? Can it create records that bypass normal validation? Can it inject content into collections the user has no write access to? Does it respect the same permission model as the UI?
 - **Search/filter/sort as oracle**: Can search queries reveal whether content exists that the user cannot directly access? Do filter parameters let users probe statuses, roles, or fields they should not know about? Does sorting by a hidden field reveal its values through result ordering?
@@ -82,6 +88,7 @@ Legitimate features used for unintended purposes. Look for bugs in the design, n
 
 **Chained vulnerabilities and trust boundaries** (subagent_type: `general`)
 Individually allowed or contained behavior can become a vulnerability when another component or lifecycle step relies on a stronger guarantee:
+
 - **Multi-step boundary failures**: Map what a low-privilege principal may read, write, invoke, and retain, then connect only concrete outputs to later trust decisions. Confirm each prerequisite and do not assume a downstream effect.
 - **Cross-component trust gaps**: Component A validates input and passes it to component B. Compare the exact guarantee A produces with what B assumes, including truncation, type coercion, normalization, tenant scope, and plugin/extension access.
 - **Second-order use**: Data safe when stored may become dangerous in a later context. A field name becomes a JSON path, a slug becomes a file path, escaped text enters raw rendering, or a stored string becomes a URL, regex, template, or policy expression.
@@ -95,6 +102,7 @@ You are not given a category. Find vulnerabilities outside the standard classes 
 Read code that looks boring or disconnected from security. Follow incomplete, experimental, compatibility, and fallback features, but retain the same concrete boundary and validation requirements as every other class.
 
 Use these starting points, but do not limit yourself to them:
+
 - What is the strangest code in the codebase? Why does it exist? What happens if it is abused?
 - Are there any features that feel half-finished, experimental, or bolted on? Those have the weakest security because they got the least review.
 - What happens if you use the API in a way the frontend never would? The UI constrains users, but the API does not. What API calls are possible but never made by the client?
@@ -110,6 +118,7 @@ Pursue anomalies inside your assigned scope until the invariant is settled. If s
 
 **Obvious things** (subagent_type: `general`)
 Other agents hunt subtle bugs. This agent checks the basic exposures that are easy to overlook because everyone assumes someone else already checked them:
+
 - Are there any hardcoded passwords, API keys, tokens, or secrets in the source? (grep for `password`, `secret`, `apikey`, `token`, `Bearer`, `-----BEGIN`, common default passwords)
 - Are there any TODO/FIXME/HACK/XXX comments that reference security? (`TODO: add auth`, `FIXME: validate input`, `HACK: skip permission check`)
 - Is debug mode / dev mode properly gated? Can it be enabled in production via environment variable, query parameter, or header?
