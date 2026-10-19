@@ -98,6 +98,8 @@ $RECYCLE.BIN/
 
 # Coding agent
 node_modules/
+__pycache__/
+*.py[cod]
 pi-mono/.pi/agent/git/
 pi-mono/.pi/agent/extensions/codeisland.ts
 shared/.ai-agents/skills/corp-branding
