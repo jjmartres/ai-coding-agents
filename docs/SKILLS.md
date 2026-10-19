@@ -31,6 +31,7 @@ Skills are reusable instruction packs that inject domain-specific guidance into 
 | [mermaid-diagrams](#mermaid-diagrams) | Comprehensive guide for creating software diagrams using Mermaid syntax. | opencode, pi-mono |
 | [nibbler](#nibbler) | Interact with Fintecture's GCP companion on Cloud Run for alert investigation, JIT PAM access, runbooks, and IaC validation. | opencode, pi-mono |
 | [reachy-mini-sdk](#reachy-mini-sdk) | Programming guide for the Reachy Mini robot using the Python SDK and REST API. | opencode, pi-mono |
+| [security-audit](#security-audit) | Security guidance and vulnerability review for codebases, APIs, runtimes, and models. | opencode, pi-mono |
 | [work-on-ticket](#work-on-ticket) | Fetch Jira ticket details, create a named branch, and initiate task planning. | opencode, pi-mono |
 | [writing-clearly-and-concisely](#writing-clearly-and-concisely) | Apply Strunk's timeless rules for clearer, stronger prose in documentation, commits, and UI text. | opencode, pi-mono |
 
@@ -249,6 +250,14 @@ Integrates with Fintecture's operational GCP companion running on Cloud Run via 
 **Trigger:** Programming Reachy Mini robots, controlling head/antennas/body movements, accessing sensors, recording motions, or building AI applications for the robot.
 
 Covers the Python SDK v1.2.6 and REST API for the Reachy Mini robot. Includes SDK patterns, coordinate systems, interpolation methods, app management, and OpenAPI client generation. Useful for robotics demos and Hugging Face deployments.
+
+---
+
+## security-audit
+
+**Trigger:** Security questions, focused vulnerability reviews, vulnerability research, security audits, or penetration testing requests.
+
+Provides a comprehensive, defensive, source-first security audit and vulnerability review workflow. Covers 11 attack classes (binary/memory safety, AI/LLM/agent trust, web protocols and auth, client-side UI, supply chain, cloud/deployment, IPC, data lifecycle, resource exhaustion, and messaging). Features dual operating modes (guidance vs. full audit), deterministic coverage ledgers, and automated CLI validators (`validate-findings.cjs`, `validate-coverage-ledger.cjs`) enforcing strict schema integrity.
 
 ---
 
