@@ -21,7 +21,6 @@ Skills are reusable instruction packs that inject domain-specific guidance into 
 | [glab](#glab) | Expert guidance for using the GitLab CLI (`glab`) to manage issues, MRs, pipelines, and repositories. | opencode, pi-mono |
 | [google-skills](#google-skills) | On-demand router loading official Google Cloud skills (125+ services) from a local pinned catalog without context bloat. | opencode, pi-mono |
 | [graphify](#graphify) | Turn any corpus (code, docs, papers) into a clustered knowledge graph with interactive HTML, GraphRAG JSON, and audit reports. | opencode, pi-mono |
-| [herdr](#herdr) | Control Herdr terminal multiplexer workspaces, tabs, panes, and agent sessions (installed on-demand via `make install`). | opencode, pi-mono |
 | [httpie](#httpie) | Make HTTP requests, test APIs, call REST endpoints, and debug web services using the HTTPie CLI (`http` command). | opencode, pi-mono |
 | [humanizer](#humanizer) | Remove signs of AI-generated writing from text to make it sound natural and human-written. | opencode, pi-mono |
 | [jira](#jira) | Create, view, update, and manage Jira issues, sprints, and backlogs. | opencode, pi-mono |
@@ -162,14 +161,6 @@ Implements an **on-demand access architecture** for Google Cloud skills. Instead
 **Trigger:** Turning any folder of files (code, documents, research papers) into a structured, navigable knowledge graph with community detection.
 
 Extracts AST and semantic relationships across code and documentation to produce a persistent graph (`graphify-out/graph.json`), interactive visual HTML (`graph.html`), and an audit report (`GRAPH_REPORT.md`). Supports BFS/DFS graph queries, pathfinding, and serving via stdio MCP.
-
----
-
-## herdr
-
-**Trigger:** Explicit mentions of Herdr, or requests to use Herdr to inspect or control panes, tabs, workspaces, commands, or neighboring agent sessions. Requires `HERDR_ENV=1`.
-
-Enables AI agents to interact with the Herdr terminal multiplexer. Downloaded automatically during `make install` matching the locally installed `herdr --version`, and deployed to `shared/.ai-agents/skills/herdr/` (git-ignored). Guides the agent on checking `HERDR_ENV`, inspecting session state, managing layout panes and tabs, and coordinating background agent processes.
 
 ---
 

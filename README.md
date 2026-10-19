@@ -43,7 +43,7 @@ Three [GNU Stow](https://www.gnu.org/software/stow/) packages, all targeting
 `$HOME`, that deploy:
 
 - **103 agent persona files** shared between opencode and pi-mono
-- **26 reusable skill packs** covering diagrams, code docs, Jira, Datadog, robotics, Herdr, Google Cloud, and more (plus 125+ on-demand official Google Cloud skills)
+- **25 reusable skill packs** covering diagrams, code docs, Jira, Datadog, robotics, Google Cloud, and more (plus 125+ on-demand official Google Cloud skills)
 - **18 slash commands** for common workflows (worktree isolation, commit, review, test, speckit, …)
 - **opencode-specific** configuration (migrated natively to OpenCode V2): `opencode.jsonc`, `cli.json`, MCP servers, plugins
 - **pi-mono-specific** configuration: settings, models, TypeScript extensions
@@ -125,7 +125,6 @@ ai-coding-agents/
 │           ├── glab/
 │           ├── google-skills/       # On-demand router for official Google Cloud skills
 │           ├── graphify/
-│           ├── herdr/               # Installed on-demand via make install (git-ignored)
 │           ├── httpie/
 │           ├── humanizer/
 │           ├── jira/
@@ -240,7 +239,6 @@ here; changes take effect immediately.
 ```
 Installation
   install              Stow all packages + init submodules + gen local index + create shared symlinks
-  install-skills       Install herdr skill based on installed herdr version
   submodules           Initialize and update git submodules
   stow-install         Stow all packages only
   link-shared          Create ~/.config/opencode/{skills,commands,rules,scripts} and flat agents symlinks
