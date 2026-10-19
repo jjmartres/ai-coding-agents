@@ -32,7 +32,6 @@ Skills are reusable instruction packs that inject domain-specific guidance into 
 | [nibbler](#nibbler) | Interact with Fintecture's GCP companion on Cloud Run for alert investigation, JIT PAM access, runbooks, and IaC validation. | opencode, pi-mono |
 | [reachy-mini-sdk](#reachy-mini-sdk) | Programming guide for the Reachy Mini robot using the Python SDK and REST API. | opencode, pi-mono |
 | [work-on-ticket](#work-on-ticket) | Fetch Jira ticket details, create a named branch, and initiate task planning. | opencode, pi-mono |
-| [worktrunk](#worktrunk) | Use the `wt` CLI for git worktree management, parallel AI agent sessions, and lifecycle automation. | opencode, pi-mono |
 | [writing-clearly-and-concisely](#writing-clearly-and-concisely) | Apply Strunk's timeless rules for clearer, stronger prose in documentation, commits, and UI text. | opencode, pi-mono |
 
 ---
@@ -258,14 +257,6 @@ Covers the Python SDK v1.2.6 and REST API for the Reachy Mini robot. Includes SD
 **Trigger:** "work on [TICKET_ID]" or similar phrases where the user wants to start implementing a Jira ticket.
 
 Fetches the specified Jira ticket, extracts acceptance criteria and context, creates an appropriately named Git branch, and initiates the task planning workflow. Acts as the entry point for ticket-driven development, bridging project management and version control.
-
----
-
-## worktrunk
-
-**Trigger:** Any mention of `wt`, Worktrunk, git worktree management, parallel AI agent sessions, `wt.toml`, `wt switch`/`wt list`/`wt merge`/`wt remove`/`wt step`, or LLM commit messages.
-
-Complete reference for the Worktrunk (`wt`) CLI — a tool that manages git worktrees to enable parallel AI agent sessions on isolated branches. Covers the full lifecycle: `wt switch`, `wt list`, `wt merge`, `wt remove`, and `wt step`; hook configuration in `wt.toml`; automating dev server, database, and dependency setup per worktree; and LLM-generated commit messages.
 
 ---
 

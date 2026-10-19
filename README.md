@@ -43,7 +43,7 @@ Three [GNU Stow](https://www.gnu.org/software/stow/) packages, all targeting
 `$HOME`, that deploy:
 
 - **103 agent persona files** shared between opencode and pi-mono
-- **26 reusable skill packs** covering diagrams, code docs, Jira, Datadog, robotics, Google Cloud, and more (plus 125+ on-demand official Google Cloud skills)
+- **25 reusable skill packs** covering diagrams, code docs, Jira, Datadog, robotics, Google Cloud, and more (plus 125+ on-demand official Google Cloud skills)
 - **18 slash commands** for common workflows (worktree isolation, commit, review, test, speckit, …)
 - **opencode-specific** configuration (migrated natively to OpenCode V2): `opencode.jsonc`, `cli.json`, MCP servers, plugins
 - **pi-mono-specific** configuration: settings, models, TypeScript extensions
@@ -136,7 +136,6 @@ ai-coding-agents/
 │           ├── nibbler/
 │           ├── reachy-mini-sdk/     # git submodule
 │           ├── work-on-ticket/
-│           ├── worktrunk/
 │           └── writing-clearly-and-concisely/
 │
 ├── opencode/                        # Stow package 2 — opencode-specific (OpenCode V2 native)
