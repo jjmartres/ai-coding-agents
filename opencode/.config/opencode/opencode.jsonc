@@ -26,6 +26,18 @@
         "location": "{env:VERTEXAI_REGION}",
       },
       "models": {
+        "gemini-4-argon": {
+          "cost": [
+            {
+              "input": 2,
+              "output": 10,
+              "cache": {
+                "read": 0.1,
+                "write": 0,
+              },
+            },
+          ],
+        },
         "gemini-3.8-flash": {
           "cost": [
             {
@@ -33,42 +45,6 @@
               "output": 3.75,
               "cache": {
                 "read": 0.075,
-                "write": 0,
-              },
-            },
-          ],
-        },
-        "gemini-3.5-flash": {
-          "cost": [
-            {
-              "input": 1.5,
-              "output": 9,
-              "cache": {
-                "read": 0.15,
-                "write": 0,
-              },
-            },
-          ],
-        },
-        "gemini-3.1-pro-preview": {
-          "cost": [
-            {
-              "input": 2,
-              "output": 12,
-              "cache": {
-                "read": 0.2,
-                "write": 0,
-              },
-            },
-            {
-              "tier": {
-                "type": "context",
-                "size": 200000,
-              },
-              "input": 4,
-              "output": 18,
-              "cache": {
-                "read": 0.4,
                 "write": 0,
               },
             },
