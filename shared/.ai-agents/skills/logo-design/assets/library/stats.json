@@ -1,0 +1,392 @@
+{
+ "count": 1432,
+ "anchors_all": {
+  "p10": 23.0,
+  "p25": 37.0,
+  "median": 75.0,
+  "p75": 155.0,
+  "p90": 257.8,
+  "p95": 379.45
+ },
+ "anchors_square": {
+  "p10": 21.0,
+  "p25": 31.0,
+  "median": 53.0,
+  "p75": 95.5,
+  "p90": 194.0,
+  "p95": 274.0
+ },
+ "shapes_all": {
+  "p10": 2.0,
+  "p25": 2.0,
+  "median": 3.0,
+  "p75": 6.0,
+  "p90": 12.0,
+  "p95": 19.0
+ },
+ "n_colors_all": {
+  "p10": 1.0,
+  "p25": 1.0,
+  "median": 2.0,
+  "p75": 4.0,
+  "p90": 7.0,
+  "p95": 10.0
+ },
+ "n_colors_square": {
+  "p10": 1.0,
+  "p25": 1.0,
+  "median": 2.0,
+  "p75": 4.0,
+  "p90": 7.0,
+  "p95": 10.0
+ },
+ "gradient_share": 0.19,
+ "mark_types": [
+  [
+   "abstract",
+   337
+  ],
+  [
+   "combination",
+   295
+  ],
+  [
+   "pictorial",
+   289
+  ],
+  [
+   "letterform",
+   218
+  ],
+  [
+   "wordmark",
+   142
+  ],
+  [
+   "emblem",
+   54
+  ],
+  [
+   "mascot",
+   54
+  ],
+  [
+   "lettermark",
+   43
+  ]
+ ],
+ "primary_family": [
+  [
+   "multi",
+   397
+  ],
+  [
+   "blue",
+   319
+  ],
+  [
+   "mono",
+   185
+  ],
+  [
+   "red",
+   180
+  ],
+  [
+   "green",
+   93
+  ],
+  [
+   "orange",
+   92
+  ],
+  [
+   "cyan",
+   66
+  ],
+  [
+   "purple",
+   60
+  ],
+  [
+   "yellow",
+   28
+  ],
+  [
+   "pink",
+   12
+  ]
+ ],
+ "aspect_class": [
+  [
+   "square",
+   791
+  ],
+  [
+   "horizontal",
+   223
+  ],
+  [
+   "wide",
+   187
+  ],
+  [
+   "extra-wide",
+   133
+  ],
+  [
+   "tall",
+   98
+  ]
+ ],
+ "techniques": [
+  [
+   "containment",
+   453
+  ],
+  [
+   "negative-space",
+   284
+  ],
+  [
+   "line-monoline",
+   249
+  ],
+  [
+   "gradient",
+   218
+  ],
+  [
+   "color-segments",
+   204
+  ],
+  [
+   "dimensional-shading",
+   147
+  ],
+  [
+   "geometric-construction",
+   127
+  ],
+  [
+   "modular-repetition",
+   107
+  ],
+  [
+   "overlap-transparency",
+   104
+  ],
+  [
+   "hidden-meaning",
+   103
+  ],
+  [
+   "isometric-3d",
+   90
+  ],
+  [
+   "radial-symmetry",
+   87
+  ],
+  [
+   "motion-lines",
+   65
+  ],
+  [
+   "mirror-symmetry",
+   64
+  ],
+  [
+   "arrow",
+   57
+  ],
+  [
+   "letter-substitution",
+   49
+  ],
+  [
+   "stacked-layers",
+   49
+  ],
+  [
+   "bracket-code",
+   46
+  ],
+  [
+   "hand-drawn",
+   38
+  ],
+  [
+   "speech-bubble",
+   29
+  ],
+  [
+   "ligature",
+   16
+  ],
+  [
+   "infinity-loop",
+   15
+  ],
+  [
+   "pixel",
+   5
+  ],
+  [
+   "impossible-figure",
+   2
+  ]
+ ],
+ "geometry": [
+  [
+   "circle",
+   367
+  ],
+  [
+   "organic",
+   197
+  ],
+  [
+   "square",
+   196
+  ],
+  [
+   "freeform",
+   179
+  ],
+  [
+   "triangle",
+   116
+  ],
+  [
+   "hexagon",
+   114
+  ],
+  [
+   "rounded-square",
+   99
+  ],
+  [
+   "radial",
+   92
+  ],
+  [
+   "grid-modular",
+   56
+  ],
+  [
+   "diamond",
+   51
+  ],
+  [
+   "shield",
+   16
+  ],
+  [
+   "star",
+   11
+  ]
+ ],
+ "industries": [
+  [
+   "developer-tools",
+   295
+  ],
+  [
+   "framework-library",
+   247
+  ],
+  [
+   "cloud-infrastructure",
+   97
+  ],
+  [
+   "database-data",
+   90
+  ],
+  [
+   "testing-monitoring",
+   89
+  ],
+  [
+   "productivity-collaboration",
+   81
+  ],
+  [
+   "marketing-analytics",
+   78
+  ],
+  [
+   "programming-language",
+   70
+  ],
+  [
+   "social-communication",
+   61
+  ],
+  [
+   "os-platform",
+   46
+  ],
+  [
+   "payments-fintech",
+   37
+  ],
+  [
+   "design-creative",
+   35
+  ],
+  [
+   "security-identity",
+   34
+  ],
+  [
+   "hosting-cdn",
+   32
+  ],
+  [
+   "media-entertainment",
+   30
+  ],
+  [
+   "education",
+   23
+  ],
+  [
+   "ecommerce-retail",
+   20
+  ],
+  [
+   "open-source-community",
+   16
+  ],
+  [
+   "hardware-devices",
+   14
+  ],
+  [
+   "ai-ml",
+   12
+  ],
+  [
+   "other",
+   11
+  ],
+  [
+   "gaming",
+   5
+  ],
+  [
+   "travel-transport",
+   4
+  ],
+  [
+   "finance-banking",
+   4
+  ],
+  [
+   "health",
+   1
+  ]
+ ]
+}

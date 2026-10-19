@@ -1,0 +1,31 @@
+<svg width="256" height="178" viewBox="0 0 256 178" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_2_15220)">
+<path d="M153.6 177.98L51.1936 0.604736H102.401L204.807 177.98H153.6Z" fill="#FF4081"/>
+<path d="M153.6 177.98L179.201 133.636L204.807 177.98H153.6Z" fill="white" fill-opacity="0.2"/>
+<path d="M128 133.636L153.6 177.98L179.201 133.636H128.001H128Z" fill="white" fill-opacity="0.1"/>
+<path d="M102.4 89.2922L128 133.636L153.6 89.2922H102.401H102.4Z" fill="black" fill-opacity="0.1"/>
+<path d="M102.4 89.2922L128 44.9485L153.6 89.2922H102.401H102.4Z" fill="black" fill-opacity="0.2"/>
+<path d="M76.8001 44.9485L102.401 89.2922L128.001 44.9485H76.8011H76.8001Z" fill="black" fill-opacity="0.3"/>
+<path d="M76.8001 44.9485L102.401 0.604736L128.001 44.9485H76.8011H76.8001Z" fill="black" fill-opacity="0.4"/>
+<path d="M51.1936 0.604736L76.8001 44.9485L102.401 0.604736H51.1936Z" fill="black" fill-opacity="0.5"/>
+<path d="M51.1936 177.98L-0.0133667 89.2922L25.5931 44.9485L102.4 177.98H51.1926H51.1936Z" fill="#536DFE"/>
+<path d="M51.1936 177.98L76.8001 133.636L102.401 177.98H51.1936Z" fill="white" fill-opacity="0.2"/>
+<path d="M25.5931 133.636L51.1936 177.98L76.8001 133.636H25.5931Z" fill="white" fill-opacity="0.1"/>
+<path d="M-0.0133667 89.2922L25.5931 133.636L51.1936 89.2922H-0.0133667Z" fill="black" fill-opacity="0.1"/>
+<path d="M-0.0133667 89.2922L25.5931 44.9485L51.1936 89.2922H-0.0133667Z" fill="black" fill-opacity="0.2"/>
+<path d="M51.1936 89.2922L25.5931 44.9485L51.1936 0.604736L76.8001 44.9485L51.1936 89.2922Z" fill="#303F9F"/>
+<path d="M76.8001 44.9485L51.1936 0.604736L25.5931 44.9485H76.8001Z" fill="black" fill-opacity="0.2"/>
+<path d="M204.806 177.98L179.2 133.636L204.806 89.2922L230.407 133.636L204.806 177.98Z" fill="#3F51B5"/>
+<path d="M230.407 133.636L204.806 177.98L179.2 133.636H230.407Z" fill="black" fill-opacity="0.2"/>
+<path d="M230.407 133.636L153.6 0.604736H204.807L256.014 89.2922L230.408 133.636H230.407Z" fill="#7986CB"/>
+<path d="M204.806 89.2922L230.407 133.636L256.013 89.2922H204.806Z" fill="white" fill-opacity="0.2"/>
+<path d="M204.806 89.2922L230.407 44.9485L256.013 89.2922H204.806Z" fill="white" fill-opacity="0.1"/>
+<path d="M179.2 44.9485L204.806 0.604736L230.407 44.9485H179.2Z" fill="black" fill-opacity="0.1"/>
+<path d="M153.6 0.604736L179.201 44.9485L204.807 0.604736H153.6Z" fill="black" fill-opacity="0.2"/>
+</g>
+<defs>
+<clipPath id="clip0_2_15220">
+<rect width="256" height="178" fill="white"/>
+</clipPath>
+</defs>
+</svg>

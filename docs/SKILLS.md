@@ -25,6 +25,7 @@ Skills are reusable instruction packs that inject domain-specific guidance into 
 | [humanizer](#humanizer) | Remove signs of AI-generated writing from text to make it sound natural and human-written. | opencode, pi-mono |
 | [jira](#jira) | Create, view, update, and manage Jira issues, sprints, and backlogs. | opencode, pi-mono |
 | [karpathy-guidelines](#karpathy-guidelines) | Behavioral guidelines to reduce common LLM coding mistakes: avoid overcomplication, make surgical changes, surface assumptions. | opencode, pi-mono |
+| [logo-design](#logo-design) | Professional logo and brand-mark design, from brief to production SVG files, variants, and guidelines. | opencode, pi-mono |
 | [marp-slide](#marp-slide) | Create professional Marp presentation slides with 7 built-in themes. | opencode, pi-mono |
 | [mcp-builder](#mcp-builder) | Guide for creating high-quality MCP (Model Context Protocol) servers in Python or Node/TypeScript. | opencode, pi-mono |
 | [meeting-insights-analyzer](#meeting-insights-analyzer) | Analyze meeting transcripts to uncover behavioral patterns, communication insights, and actionable feedback. | opencode, pi-mono |
@@ -234,6 +235,14 @@ Generates a complete, professional documentation structure tailored to Python or
 **Trigger:** Writing, reviewing, or refactoring code; any task where precision and minimal-change discipline matter.
 
 Provides behavioral guidelines derived from Andrej Karpathy's observations on common LLM coding mistakes. Instructs the agent to avoid overcomplication, make surgical targeted changes, surface assumptions explicitly, and define verifiable success criteria before acting. Reduces hallucinated complexity and unnecessary rewrites.
+
+---
+
+## logo-design
+
+**Trigger:** Requests to design, redesign, refresh, critique, or compare logos, logotypes, wordmarks, monograms, brand marks, symbols, app icons, or favicons; design briefs, logo guidelines, or identity systems.
+
+Guides professional identity design from discovery brief to production files across 8 mark types. Includes geometric SVG construction rules, optical refinement techniques, color/typography systems, and rigorous testing checklists (16 px favicon, one-colour, reversed, squint/blur, and shelf tests). Bundles a searchable reference library of 1,400+ real-world SVG logos with metadata, plus Python CLI utilities for SVG auditing (`svg_audit.py`), test sheet generation (`preview_sheet.py`, `concept_sheet.py`), and asset export (`export_variants.py`).
 
 ---
 
