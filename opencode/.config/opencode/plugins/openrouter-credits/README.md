@@ -22,14 +22,14 @@ When using [OpenRouter](https://openrouter.ai) as an LLM provider, API keys freq
 Placed cleanly in the right pane (`sidebar.content` slot) immediately between **Workspaces** and the built-in **Context** panel:
 
 ```text
-OpenRouter                             🪙 Active
-  RESET_LIMIT: $296.26 / $300.00 (weekly)
+OpenRouter
+  Weekly: $96.26 / $100.00
   Spend: $3.74 today • $979.80 total
   Credit: $420.20 available
 ```
 
-- **Header**: **OpenRouter** with real-time status icon and text (`🪙 Active`, `⚠️ Low Balance`, `🚫 Limit Reached`).
-- **RESET_LIMIT**: Remaining balance / key limit and reset interval (`RESET_LIMIT: $296.26 / $300.00 (weekly)`).
+- **Header**: Clean **OpenRouter** section title matching the native sidebar style.
+- **Weekly / Monthly / Daily**: Dynamic spending limit line showing remaining amount out of configured key cap (e.g. `Weekly: $96.26 / $100.00` or `Monthly: ...`).
 - **Spend**: Daily spend today and cumulative key spend (`Spend: $3.74 today • $979.80 total`).
 - **Credit**: Net account-wide credits available (`Credit: $420.20 available`).
 - **Interactive**: Click anywhere on the sidebar section to open the full dashboard.

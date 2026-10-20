@@ -1,20 +1,15 @@
 # Active Context: OpenRouter Credits Extension
 
 ## Current Work Focus
-- Refactored `openrouter-credits` UI to be exclusively placed in the right sidebar between Workspaces and Context.
-- Removed footer badge contributions from `prompt.footer` and `home.footer.status`.
-- Updated sidebar lines to:
-  1. `RESET_LIMIT: $296.26 / $300.00 (weekly)`
-  2. `Spend: $3.74 today • $979.80 total`
-  3. `Credit: $420.20 available`
-- Enhanced `api.ts` to always fetch account-level credits from `/credits`.
-- All 20 unit tests passing, strict `tsc` passing with 0 errors.
+- Streamlined sidebar header by removing `🪙 Active` status.
+- Replaced `RESET_LIMIT` with dynamic interval prefix (e.g. `Weekly: $96.26 / $100.00` or `Monthly: ...`).
+- All 20 unit tests and strict TypeScript typechecking passing with 0 errors.
 
 ## Recent Changes
-- Updated `tui.tsx` to render solely in `sidebar.content`.
-- Implemented `repositionAboveContext` to ensure the widget sits stably below Workspaces and above Context.
-- Updated `index.ts` to reflect the clean summary format.
-- Updated `README.md` documentation.
+- Updated `tui.tsx` to display dynamic `Weekly:` / `Monthly:` / `Daily:` label.
+- Removed redundant status emoji and label from header.
+- Updated `index.ts` summary text.
+- Updated `README.md`.
 
 ## Next Steps
-- Commit, push, create PR, merge, remove worktree, and restart OpenCode service.
+- Commit, push, create PR, merge, clean up worktree, and restart OpenCode service.
