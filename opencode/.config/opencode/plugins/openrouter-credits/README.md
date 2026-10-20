@@ -7,8 +7,8 @@ OpenCode extension that displays real-time OpenRouter account credits, spending 
 When using [OpenRouter](https://openrouter.ai) as an LLM provider, API keys frequently have hard spending limits or prepaid credit ceilings. Hitting these limits mid-session results in sudden HTTP 402/403 failures that disrupt coding workflows.
 
 `openrouter-credits` solves this by giving you:
-1. **Prompt Footer Badge**: A real-time, color-coded badge in OpenCode's prompt footer showing remaining credits (e.g. `🪙 $42.50` or `⚠️ $1.15 left` or `🚫 Limit reached`).
-2. **Interactive Dashboard**: Accessible via `/openrouter`, `/credits`, or clicking the footer badge to view detailed spend breakdowns (today, this week, this month), budget reset times, and free-model daily quotas.
+1. **Right Sidebar Widget**: Located cleanly between the Workspaces section and the Context section on the right side.
+2. **Interactive Dashboard**: Accessible via `/openrouter`, `/credits`, or clicking the sidebar widget to view detailed spend breakdowns, budget reset times, and free-model daily quotas.
 3. **Agent Tool (`openrouter_credits`)**: Enables AI agents to proactively verify credit headroom before kicking off token-heavy tasks.
 4. **Proactive Toast Alerts**: Warns you with desktop TUI toasts when your credits transition to low or when your spending limit is reached.
 5. **Zero-Configuration Key Discovery**: Automatically detects your OpenRouter API key from OpenCode's stored credentials (`auth.json`), environment variables, or config options.
@@ -17,22 +17,22 @@ When using [OpenRouter](https://openrouter.ai) as an LLM provider, API keys freq
 
 ## Features
 
-### 1. UI Widgets & Badges in TUI
+### 1. Right Sidebar Widget (Between Workspaces and Context)
 
-- **Right Sidebar Widget (Right above Context)**: Placed in the right pane (`sidebar.content` slot) immediately above the built-in **Context** panel. Displays:
-  - Header: **OpenRouter** with status icon and text (`🪙 Active`, `⚠️ Low Balance`, `🚫 Limit Reached`).
-  - Key Balance & Limit: Remaining amount and limit (e.g. `$42.50 left of $100.00`).
-  - Spend Stats: Daily spend today and total spend.
-  - Reset / Budget: Reset schedule (Monthly/Weekly/Daily) or effective budget headroom.
-  - Interactive: Click anywhere on the sidebar section to open the full dashboard.
-- **Prompt Footer**: Displayed on the prompt bar (`prompt.footer` slot). Clickable to open the detailed dashboard.
-- **Home Footer**: Contributes to the home screen status row (`home.footer.status` slot).
-- **Color-Coded Health States**:
-  - `🪙 Green` (`theme.text.feedback.success`): Balance healthy, plenty of headroom.
-  - `⚠️ Amber/Yellow` (`theme.text.feedback.warning`): Credits below threshold (< $2.00 or < 10% remaining).
-  - `🚫 Red` (`theme.text.feedback.error`): Limit reached ($0.00 left) or budget exhausted.
-  - `🔑 Muted`: No OpenRouter key configured.
-  - `❌ Red`: Network or authorization error.
+Placed cleanly in the right pane (`sidebar.content` slot) immediately between **Workspaces** and the built-in **Context** panel:
+
+```text
+OpenRouter                             🪙 Active
+  RESET_LIMIT: $296.26 / $300.00 (weekly)
+  Spend: $3.74 today • $979.80 total
+  Credit: $420.20 available
+```
+
+- **Header**: **OpenRouter** with real-time status icon and text (`🪙 Active`, `⚠️ Low Balance`, `🚫 Limit Reached`).
+- **RESET_LIMIT**: Remaining balance / key limit and reset interval (`RESET_LIMIT: $296.26 / $300.00 (weekly)`).
+- **Spend**: Daily spend today and cumulative key spend (`Spend: $3.74 today • $979.80 total`).
+- **Credit**: Net account-wide credits available (`Credit: $420.20 available`).
+- **Interactive**: Click anywhere on the sidebar section to open the full dashboard.
 
 ### 2. Interactive Dashboard (`/openrouter` / `/credits`)
 

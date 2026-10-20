@@ -1,6 +1,6 @@
 /**
  * @fileoverview OpenCode CLI/TUI Plugin for OpenRouter Credits & Limits.
- * Renders a reactive status badge in the prompt footer and home status bar,
+ * Renders in the right sidebar between Workspaces and Context,
  * and provides the `/openrouter` interactive dashboard.
  */
 
@@ -41,10 +41,6 @@ export default Plugin.define({
   setup(context) {
     const options = (context.options ?? {}) as OpenRouterCreditsOptions
     const pollInterval = Math.max(15, options.pollIntervalSeconds ?? 60) * 1000
-    const badgeStyle = options.badgeFormat ?? "compact"
-    const showSidebar = options.showInSidebar !== false
-    const showPromptFooter = options.showInPromptFooter !== false
-    const showHomeFooter = options.showInHomeFooter !== false
 
     const client = new OpenRouterClient()
 
@@ -171,7 +167,7 @@ export default Plugin.define({
         if (current.accountCredits) {
           const ac = current.accountCredits
           dialogOptions.push({
-            title: `Account Total Balance: ${formatCurrency(ac.remainingCredits)}`,
+            title: `Account Total Available: ${formatCurrency(ac.remainingCredits)}`,
             value: "info_account_balance",
             category: "Account-Wide Credits",
             description: `Total Purchased: ${formatCurrency(ac.totalCredits)} | Total Used: ${formatCurrency(ac.totalUsage)}`,
@@ -353,66 +349,7 @@ export default Plugin.define({
       // In case keymap layer was already registered
     }
 
-    // Initial fetch & background poll
-    void fetchAndUpdate()
-    const timer = setInterval(() => void fetchAndUpdate(), pollInterval)
-
-    // Listen to session events to refresh after LLM completions
-    const unlisten = context.data.listen(({ details: event }) => {
-      if (
-        event?.type === "session.execution.succeeded" ||
-        event?.type === "session.idle" ||
-        event?.type === "session.usage.updated"
-      ) {
-        setTimeout(() => {
-          void fetchAndUpdate(true)
-        }, 1500)
-      }
-    })
-
-    // Component: Badge for prompt footer
-    const PromptFooterBadge = () => {
-      const text = () => formatBadgeText(state(), badgeStyle)
-      const color = () => getStatusColor(state().status, context.theme)
-
-      return (
-        <box
-          flexDirection="row"
-          flexShrink={0}
-          paddingRight={1}
-          onMouseDown={() => {
-            void openCreditsDialog()
-          }}
-        >
-          <text fg={color()} wrapMode="none">
-            {text()}
-          </text>
-        </box>
-      )
-    }
-
-    // Component: Badge for home footer status bar
-    const HomeFooterBadge = () => {
-      const text = () => formatBadgeText(state(), "compact")
-      const color = () => getStatusColor(state().status, context.theme)
-
-      return (
-        <box
-          flexDirection="row"
-          flexShrink={0}
-          paddingRight={1}
-          onMouseDown={() => {
-            void openCreditsDialog()
-          }}
-        >
-          <text fg={color()} wrapMode="none">
-            {text()}
-          </text>
-        </box>
-      )
-    }
-
-    // Component: Right sidebar widget (placed directly above Context)
+    // Component: Right sidebar widget (placed directly between Workspaces and Context)
     const SidebarCreditsWidget = () => {
       let rootBoxRef: any = null
 
@@ -464,17 +401,62 @@ export default Plugin.define({
         } catch {}
       }
 
+      // Schedule repositioning on mount and updates
+      const scheduleReposition = () => {
+        setTimeout(repositionAboveContext, 0)
+        setTimeout(repositionAboveContext, 50)
+        setTimeout(repositionAboveContext, 200)
+      }
+
       const st = () => state()
       const details = () => st().keyDetails
       const statusColor = () => getStatusColor(st().status, context.theme)
       const statusEmoji = () => getStatusEmoji(st().status)
       const statusLabel = () => getStatusLabel(st().status)
 
+      // Format RESET_LIMIT: $remaining / $key_limit (interval)
+      const resetLimitText = () => {
+        const d = details()
+        if (!d) return "RESET_LIMIT: Checking…"
+        if (d.limit === null || d.limit === undefined) {
+          return "RESET_LIMIT: Unlimited"
+        }
+        const rem = formatCurrency(d.limitRemaining)
+        const lim = formatCurrency(d.limit)
+        const interval = d.limitReset ? ` (${d.limitReset})` : ""
+        return `RESET_LIMIT: ${rem} / ${lim}${interval}`
+      }
+
+      // Format Spend: $today today • $total total
+      const spendText = () => {
+        const d = details()
+        const today = formatCurrency(d?.usageDaily ?? 0)
+        const total = formatCurrency(d?.usage ?? 0)
+        return `Spend: ${today} today • ${total} total`
+      }
+
+      // Format Credit: $available available
+      const creditText = () => {
+        const ac = st().accountCredits
+        if (ac) {
+          return `Credit: ${formatCurrency(ac.remainingCredits)} available`
+        }
+        return "Credit: Checking…"
+      }
+
+      const creditColor = () => {
+        const ac = st().accountCredits
+        if (ac && ac.remainingCredits <= (options.lowCreditThresholdUsd ?? 2.0)) {
+          return getStatusColor("low", context.theme)
+        }
+        return context.theme.text.base
+      }
+
       return (
         <box
           ref={(el: any) => {
             rootBoxRef = el
-            setTimeout(repositionAboveContext, 0)
+            scheduleReposition()
           }}
           flexDirection="column"
           gap={0}
@@ -509,43 +491,20 @@ export default Plugin.define({
               </text>
             ) : (
               <>
-                {/* Balance row */}
-                <box flexDirection="row" gap={1}>
-                  <text fg={statusColor()}>
-                    {details()?.limit !== null && details()?.limit !== undefined ? (
-                      `${formatCurrency(details()?.limitRemaining)} left`
-                    ) : st().accountCredits ? (
-                      `${formatCurrency(st().accountCredits?.remainingCredits)} balance`
-                    ) : (
-                      "Unlimited key"
-                    )}
-                  </text>
-                  {details()?.limit !== null && details()?.limit !== undefined && (
-                    <text fg={context.theme.text.muted}>
-                      {`(${formatCurrency(details()?.limit)} limit)`}
-                    </text>
-                  )}
-                </box>
-
-                {/* Spend row */}
-                <text fg={context.theme.text.muted} wrapMode="none">
-                  {`Spend: ${formatCurrency(details()?.usageDaily ?? 0)} today • ${formatCurrency(details()?.usage ?? 0)} total`}
+                {/* Line 1: RESET_LIMIT: $remaining / $key_limit */}
+                <text fg={statusColor()} wrapMode="none">
+                  {resetLimitText()}
                 </text>
 
-                {/* Reset / Budget / Quota row */}
-                {details()?.effectiveBudget ? (
-                  <text fg={context.theme.text.muted} wrapMode="none">
-                    {`Budget: ${formatCurrency(details()?.effectiveBudget?.remaining_usd)} left (${details()?.effectiveBudget?.scope})`}
-                  </text>
-                ) : details()?.limitReset ? (
-                  <text fg={context.theme.text.muted} wrapMode="none">
-                    {`Reset: ${formatResetInterval(details()?.limitReset)}`}
-                  </text>
-                ) : details()?.freeModelQuota ? (
-                  <text fg={context.theme.text.muted} wrapMode="none">
-                    {`Free: ${details()?.freeModelQuota?.remaining}/${details()?.freeModelQuota?.limit} reqs left`}
-                  </text>
-                ) : null}
+                {/* Line 2: Keep Spend line */}
+                <text fg={context.theme.text.muted} wrapMode="none">
+                  {spendText()}
+                </text>
+
+                {/* Line 3: Credit: TOTAL_ACCOUNT_CREDIT_AVAILABLE */}
+                <text fg={creditColor()} wrapMode="none">
+                  {creditText()}
+                </text>
 
                 {/* Warning row if limit reached or low */}
                 {st().status === "limit_reached" ? (
@@ -564,37 +523,32 @@ export default Plugin.define({
       )
     }
 
-    // Register slots
-    let removePromptSlot: (() => void) | undefined
-    let removeHomeSlot: (() => void) | undefined
-    let removeSidebarSlot: (() => void) | undefined
+    // Register ONLY the sidebar slot (between Workspaces and Context)
+    const removeSidebarSlot = context.ui.slot({
+      prepend: "sidebar.content",
+      render: () => <SidebarCreditsWidget />,
+    })
 
-    if (showSidebar) {
-      removeSidebarSlot = context.ui.slot({
-        prepend: "sidebar.content",
-        render: () => <SidebarCreditsWidget />,
-      })
-    }
+    // Initial fetch & background poll
+    void fetchAndUpdate()
+    const timer = setInterval(() => void fetchAndUpdate(), pollInterval)
 
-    if (showPromptFooter) {
-      removePromptSlot = context.ui.slot({
-        append: "prompt.footer",
-        render: () => <PromptFooterBadge />,
-      })
-    }
-
-    if (showHomeFooter) {
-      removeHomeSlot = context.ui.slot({
-        append: "home.footer.status",
-        render: () => <HomeFooterBadge />,
-      })
-    }
+    // Listen to session events to refresh after LLM completions
+    const unlisten = context.data.listen(({ details: event }) => {
+      if (
+        event?.type === "session.execution.succeeded" ||
+        event?.type === "session.idle" ||
+        event?.type === "session.usage.updated"
+      ) {
+        setTimeout(() => {
+          void fetchAndUpdate(true)
+        }, 1500)
+      }
+    })
 
     return () => {
       clearInterval(timer)
       unlisten()
-      removePromptSlot?.()
-      removeHomeSlot?.()
       removeSidebarSlot?.()
     }
   },
