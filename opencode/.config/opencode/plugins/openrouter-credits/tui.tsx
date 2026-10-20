@@ -414,17 +414,19 @@ export default Plugin.define({
       const statusEmoji = () => getStatusEmoji(st().status)
       const statusLabel = () => getStatusLabel(st().status)
 
-      // Format RESET_LIMIT: $remaining / $key_limit (interval)
+      // Format dynamic interval limit: Weekly / Monthly / Daily / Limit: $remaining / $key_limit
       const resetLimitText = () => {
         const d = details()
-        if (!d) return "RESET_LIMIT: Checking…"
+        if (!d) return "Limit: Checking…"
         if (d.limit === null || d.limit === undefined) {
-          return "RESET_LIMIT: Unlimited"
+          return "Limit: Unlimited"
         }
         const rem = formatCurrency(d.limitRemaining)
         const lim = formatCurrency(d.limit)
-        const interval = d.limitReset ? ` (${d.limitReset})` : ""
-        return `RESET_LIMIT: ${rem} / ${lim}${interval}`
+        const prefix = d.limitReset
+          ? d.limitReset.charAt(0).toUpperCase() + d.limitReset.slice(1).toLowerCase()
+          : "Limit"
+        return `${prefix}: ${rem} / ${lim}`
       }
 
       // Format Spend: $today today • $total total
@@ -466,12 +468,9 @@ export default Plugin.define({
           }}
         >
           {/* Header row */}
-          <box flexDirection="row" justifyContent="space-between">
+          <box flexDirection="row">
             <text fg={context.theme.text.base}>
               <b>OpenRouter</b>
-            </text>
-            <text fg={statusColor()}>
-              {statusEmoji()} {statusLabel()}
             </text>
           </box>
 

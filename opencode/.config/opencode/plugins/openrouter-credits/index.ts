@@ -50,10 +50,12 @@ function buildSummaryMarkdown(state: OpenRouterState): string {
   if (details?.limit !== null && details?.limit !== undefined) {
     const rem = details.limitRemaining ?? 0
     const lim = details.limit
-    const interval = details.limitReset ? ` (${details.limitReset})` : ""
-    lines.push(`- **RESET_LIMIT**: **${formatCurrency(rem)} / ${formatCurrency(lim)}**${interval}`)
+    const prefix = details.limitReset
+      ? details.limitReset.charAt(0).toUpperCase() + details.limitReset.slice(1).toLowerCase()
+      : "Limit"
+    lines.push(`- **${prefix}**: **${formatCurrency(rem)} / ${formatCurrency(lim)}**`)
   } else {
-    lines.push(`- **RESET_LIMIT**: Unlimited`)
+    lines.push(`- **Limit**: Unlimited`)
   }
 
   lines.push(`- **Spend**: ${formatCurrency(details?.usageDaily ?? 0)} today • ${formatCurrency(details?.usage ?? 0)} total`)
