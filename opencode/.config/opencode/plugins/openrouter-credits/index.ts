@@ -50,22 +50,17 @@ function buildSummaryMarkdown(state: OpenRouterState): string {
   if (details?.limit !== null && details?.limit !== undefined) {
     const rem = details.limitRemaining ?? 0
     const lim = details.limit
-    const usedPct = lim > 0 ? ((lim - rem) / lim) * 100 : 0
-
-    lines.push(`- **Remaining Limit**: **${formatCurrency(rem)}** of ${formatCurrency(lim)} (${formatPercent(usedPct)} spent)`)
-    lines.push(`- **Limit Reset**: ${formatResetInterval(details.limitReset)}`)
+    const interval = details.limitReset ? ` (${details.limitReset})` : ""
+    lines.push(`- **RESET_LIMIT**: **${formatCurrency(rem)} / ${formatCurrency(lim)}**${interval}`)
   } else {
-    lines.push(`- **Spending Limit**: Unlimited (no per-key limit set)`)
+    lines.push(`- **RESET_LIMIT**: Unlimited`)
   }
+
+  lines.push(`- **Spend**: ${formatCurrency(details?.usageDaily ?? 0)} today • ${formatCurrency(details?.usage ?? 0)} total`)
 
   if (state.accountCredits) {
-    lines.push(`- **Account Total Balance**: **${formatCurrency(state.accountCredits.remainingCredits)}** (${formatCurrency(state.accountCredits.totalUsage)} used of ${formatCurrency(state.accountCredits.totalCredits)} purchased)`)
+    lines.push(`- **Credit**: **${formatCurrency(state.accountCredits.remainingCredits)}** available`)
   }
-
-  lines.push(`- **Total Key Spend**: ${formatCurrency(details?.usage ?? 0)}`)
-  lines.push(`- **Spend Today**: ${formatCurrency(details?.usageDaily ?? 0)}`)
-  lines.push(`- **Spend This Week**: ${formatCurrency(details?.usageWeekly ?? 0)}`)
-  lines.push(`- **Spend This Month**: ${formatCurrency(details?.usageMonthly ?? 0)}`)
 
   if ((details?.byokUsage ?? 0) > 0) {
     lines.push(`- **BYOK Spend**: ${formatCurrency(details?.byokUsage)}`)

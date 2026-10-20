@@ -210,10 +210,8 @@ export class OpenRouterClient {
       const keyDetails = await this.fetchKeyDetails(apiKey, signal)
       let accountCredits: OpenRouterAccountCredits | null = null
 
-      // If key is a management key or if no key limit is set, attempt to get account credits
-      if (keyDetails.isManagementKey || keyDetails.limit === null) {
-        accountCredits = await this.fetchAccountCredits(apiKey, signal)
-      }
+      // Attempt to get account-level credits from /credits
+      accountCredits = await this.fetchAccountCredits(apiKey, signal)
 
       const status = this.evaluateStatus(keyDetails, accountCredits, options)
 
