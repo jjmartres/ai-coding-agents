@@ -1,0 +1,21 @@
+{
+  "name": "opencode-openrouter-credits",
+  "version": "1.0.0",
+  "description": "OpenCode extension to monitor OpenRouter account credits, spending limits, and quota status",
+  "type": "module",
+  "exports": {
+    ".": "./index.ts",
+    "./tui": "./tui.tsx"
+  },
+  "scripts": {
+    "test": "node --test --experimental-strip-types test/*.test.ts"
+  },
+  "dependencies": {
+    "@opencode/plugin": "2.0.21"
+  },
+  "peerDependencies": {
+    "@opentui/core": "^0.5.14",
+    "@opentui/solid": "^0.5.14",
+    "solid-js": "^1.9.12"
+  }
+}
