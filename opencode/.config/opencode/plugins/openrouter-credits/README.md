@@ -32,29 +32,13 @@ OpenRouter
 - **Weekly / Monthly / Daily**: Dynamic spending limit line showing remaining amount out of configured key cap (e.g. `Weekly: $96.26 / $100.00` or `Monthly: ...`).
 - **Spend**: Daily spend today and cumulative key spend (`Spend: $3.74 today • $979.80 total`).
 - **Credit**: Net account-wide credits available (`Credit: $420.20 available`).
-- **Interactive**: Click anywhere on the sidebar section to open the full dashboard.
 
-### 2. Interactive Dashboard (`/openrouter` / `/credits`)
+### 2. Live Consumption Refresh
 
-Running `/openrouter`, `/credits`, `/orc`, or clicking the footer badge opens an interactive modal:
-
-- **Key Information**: Masked key label (`sk-or-v1-abc...7890`) and tier status (Standard / Free Tier).
-- **Spending Limit & Remaining**: Shows remaining dollars and percentage of key limit spent.
-- **Limit Reset Interval**: Clearly displays whether limits reset Daily, Weekly, Monthly, or Never (lifetime).
-- **Usage Breakdown**:
-  - Spend Today (UTC)
-  - Spend This Week (Monday–Sunday)
-  - Spend This Month
-  - Lifetime Key Spend
-  - BYOK (Bring Your Own Key) External Spend
-- **Free-Model Daily Quota**: Remaining free requests today out of daily quota (resets at UTC midnight).
-- **Guardrail / Workspace Budgets**: Displays effective budget ceilings if configured on your team/workspace.
-- **Account Total Balance**: Displays total purchased credits and account-level balance if using a management key.
-- **Interactive Actions**:
-  - `🔄 Refresh Credits Now`: Force-queries OpenRouter API immediately.
-  - `🔑 Set / Change OpenRouter API Key`: Prompts to input a new key, validates it against the API, and saves it directly to `~/.local/share/opencode/auth.json`.
-  - `🌐 View OpenRouter Dashboard`: Quick link / guidance to open `openrouter.ai/settings/keys`.
-  - `❌ Close`: Dismiss dialog.
+The widget automatically synchronizes live token consumption:
+- Listens to execution and usage events (`session.step.ended`, `session.execution.succeeded`, `session.usage.updated`, `session.idle`).
+- Automatically queries OpenRouter in the background to reflect newly billed tokens.
+- Periodic 15-second background refresh ensures figures remain fresh without manual intervention.
 
 ### 3. Agent Tool (`openrouter_credits`)
 
@@ -108,19 +92,6 @@ You can customize the extension behavior in `cli.json` or `opencode.jsonc`:
   ]
 }
 ```
-
----
-
-## Keyboard & Slash Commands
-
-| Command / Trigger | Action |
-| --- | --- |
-| `/openrouter` | Open interactive credits & limits dashboard |
-| `/credits` | Alias for `/openrouter` |
-| `/orc` | Short alias for `/openrouter` |
-| `/openrouter refresh` | Force refresh balance immediately and show toast |
-| Command Palette (`Ctrl+P`) | Select "OpenRouter: Check Credits & Limits" |
-| Click on prompt footer | Open interactive credits & limits dashboard |
 
 ---
 
