@@ -153,26 +153,7 @@ export default Plugin.define({
       })
     })
 
-    // 2. Register server command `openrouter-credits`
-    const cmdReg = await ctx.command.transform((editor) => {
-      editor.add({
-        name: "openrouter-credits",
-        description: "Display current OpenRouter account credits, spending limits, and usage",
-        execute: async ({ sessionID, delivery }) => {
-          const apiKey = await resolveApiKey(options)
-          const state = await client.getState(apiKey, options, true)
-          const summary = buildSummaryMarkdown(state)
-
-          await ctx.session.prompt({
-            sessionID,
-            text: summary,
-            delivery,
-          })
-        },
-      })
-    })
-
-    // 3. Background periodic sync to keep cached state fresh
+    // 2. Background periodic sync to keep cached state fresh
     const syncState = async () => {
       try {
         const apiKey = await resolveApiKey(options)
@@ -191,7 +172,6 @@ export default Plugin.define({
     return async () => {
       clearInterval(timer)
       await toolReg.dispose()
-      await cmdReg.dispose()
     }
   },
 })
