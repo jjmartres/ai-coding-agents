@@ -85,7 +85,10 @@
   "update": "auto",
   "instructions": ["~/.ai-agents/rules/*.md"],
   "share": "disabled",
-  "plugins": ["./plugins/session-namer"],
+  "plugins": [
+    "./plugins/session-namer",
+    "./plugins/openrouter-credits",
+  ],
   "mcp": {
     "servers": {
       "nibbler": {

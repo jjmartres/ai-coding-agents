@@ -14,7 +14,8 @@
   },
   "animations": true,
   "plugins": [
-    "./plugins/workspace-manager"
+    "./plugins/workspace-manager",
+    "./plugins/openrouter-credits"
   ],
   "keybinds": {
     "prompt.queue": "return"
