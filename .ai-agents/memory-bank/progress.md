@@ -1,14 +1,15 @@
-# Progress: LLM Council Skill
+# Progress: ASD-STE100 Skill
 
 ## Status: Complete
 
 ## What Works
-- [x] Create skill directory `shared/.ai-agents/skills/llm-council/`
-- [x] Implement `SKILL.md` with frontmatter, 5 advisors, peer review protocol, chairman synthesis, and markdown formatting
+- [x] Create skill directory `shared/.ai-agents/skills/asd-ste100/`
+- [x] Install `SKILL.md`, `README.md`, `LICENSE`, `references/`, `examples/`, and `scripts/` from `danyuchn/asd-ste100-skill`
+- [x] Verify `ste-lint.py` functionality and selftest
 - [x] Update `docs/SKILLS.md` quick reference table and detailed guide
-- [x] Update `README.md` (reusable skill pack count to 28, directory tree)
-- [x] Run pre-commit hooks and markdownlint checks
-- [ ] Push branch and open GitHub PR
+- [x] Update `README.md` (reusable skill pack count to 29, directory tree)
+- [x] Run markdownlint checks and verify clean linting
+- [x] Push branch and open GitHub PR (#31)
 
 ## Known Issues
 - None.

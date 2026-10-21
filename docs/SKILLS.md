@@ -9,6 +9,7 @@ Skills are reusable instruction packs that inject domain-specific guidance into 
 | Skill | Description | Compatibility |
 |-------|-------------|---------------|
 | [asdf](#asdf) | Universal version manager — installs, configures, and troubleshoots asdf and `.tool-versions` files across all shells and runtimes. | opencode, pi-mono |
+| [asd-ste100](#asd-ste100) | Simplified Technical English (ASD-STE100) — rewrites ambiguous instructions, tool descriptions, and agent messages for error-free parsing. | opencode, pi-mono |
 | [astro-dso-doc](#astro-dso-doc) | Bootstrap DSO astrophotography projects and generate PixInsight docs, checklists, AstroBin exports, and process icons. | opencode, pi-mono |
 | [content-research-writer](#content-research-writer) | Collaborative writing assistant that conducts research, adds citations, refines outlines, and gives section-by-section feedback. | opencode, pi-mono |
 | [corp-branding](#corp-branding) | Apply discrete Fintecture corporate branding (logo, navy/mint palette, confidentiality tagline, footer mark) to HTML documents. | opencode, pi-mono |
@@ -44,6 +45,14 @@ Skills are reusable instruction packs that inject domain-specific guidance into 
 **Trigger:** Any mention of asdf, `.tool-versions` files, managing runtime versions, or migrating from nvm/pyenv/rbenv/goenv/tfenv.
 
 Provides a complete reference for installing and configuring the asdf universal version manager. Covers plugin management (`asdf plugin add`), version installation, the `.tool-versions` file format, shell configuration for Bash/Zsh/Fish, shim troubleshooting, and the `.asdfrc` options. Also explains the modern `asdf set` API introduced in v0.15+ and how to onboard an existing project with `asdf install`.
+
+---
+
+## asd-ste100
+
+**Trigger:** "disambiguate", "STE100 rewrite", "apply Simplified Technical English", "plain-language rewrite", "controlled-language rewrite", or when English text must be parsed without human clarification (tool descriptions, error messages, inter-agent instructions, system prompts, status reports).
+
+Rewrites dense, ambiguous English into ASD-STE100 Simplified Technical English (Issue 9) principles to ensure AI agents and downstream systems parse instructions without misreading. Enforces active voice, short sentences (≤20 words for instructions, ≤25 for descriptions), simple tenses, no phrasal verbs, no semicolons, bounded noun clusters (≤3 words), explicit subjects/articles, and strict hedge/modality preservation. Supports two operational modes: **Strict** (for tool descriptions, error messages, procedures) and **STE-flavored** (for READMEs, PRs, changelogs). Includes a deterministic Python linter (`ste-lint.py`) for automated structural checks.
 
 ---
 
