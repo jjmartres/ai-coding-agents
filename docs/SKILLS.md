@@ -25,6 +25,7 @@ Skills are reusable instruction packs that inject domain-specific guidance into 
 | [humanizer](#humanizer) | Remove signs of AI-generated writing from text to make it sound natural and human-written. | opencode, pi-mono |
 | [jira](#jira) | Create, view, update, and manage Jira issues, sprints, and backlogs. | opencode, pi-mono |
 | [karpathy-guidelines](#karpathy-guidelines) | Behavioral guidelines to reduce common LLM coding mistakes: avoid overcomplication, make surgical changes, surface assumptions. | opencode, pi-mono |
+| [llm-council](#llm-council) | Run questions, ideas, or decisions through 5 AI advisors with anonymous peer review and chairman synthesis. | opencode, pi-mono |
 | [logo-design](#logo-design) | Professional logo and brand-mark design, from brief to production SVG files, variants, and guidelines. | opencode, pi-mono |
 | [marp-slide](#marp-slide) | Create professional Marp presentation slides with 7 built-in themes. | opencode, pi-mono |
 | [mcp-builder](#mcp-builder) | Guide for creating high-quality MCP (Model Context Protocol) servers in Python or Node/TypeScript. | opencode, pi-mono |
@@ -235,6 +236,14 @@ Generates a complete, professional documentation structure tailored to Python or
 **Trigger:** Writing, reviewing, or refactoring code; any task where precision and minimal-change discipline matter.
 
 Provides behavioral guidelines derived from Andrej Karpathy's observations on common LLM coding mistakes. Instructs the agent to avoid overcomplication, make surgical targeted changes, surface assumptions explicitly, and define verifiable success criteria before acting. Reduces hallucinated complexity and unnecessary rewrites.
+
+---
+
+## llm-council
+
+**Trigger:** "council this", "run the council", "war room this", "pressure-test this", "stress-test this", "debate this", or weighing tough decisions, tradeoffs, and strategy.
+
+Runs questions, ideas, or decisions through a council of five AI advisors representing distinct thinking styles: The Contrarian (failure modes and fatal flaws), The First Principles Thinker (stripping assumptions), The Expansionist (unseen upside), The Outsider (fresh eyes without domain curse), and The Executor (immediate Monday-morning execution). Advisors review each other anonymously to expose blind spots before a chairman synthesizes a final verdict with high-confidence convergence points, explicit clashes, and a concrete first step.
 
 ---
 
