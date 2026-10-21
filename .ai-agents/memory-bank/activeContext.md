@@ -1,14 +1,17 @@
-# Active Context: LLM Council Skill
+# Active Context: ASD-STE100 Skill
 
 ## Current Work Focus
-- Added `llm-council` skill pack based on Andrej Karpathy's LLM Council methodology adapted from `aiwithremy/claude-skills-llm-council`.
+- Installed `asd-ste100` skill pack from `https://github.com/danyuchn/asd-ste100-skill`.
 - Registered and documented skill across `docs/SKILLS.md` and `README.md`.
+- Creating a PR to integrate the skill into `ai-coding-agents`.
 
 ## Recent Changes
-- Created `shared/.ai-agents/skills/llm-council/SKILL.md` defining the 5 advisor personas (Contrarian, First Principles, Expansionist, Outsider, Executor), anonymous peer review, and chairman verdict synthesis.
-- Updated `docs/SKILLS.md` quick reference table and detailed section.
-- Updated `README.md` skill count (28) and directory tree.
+- Installed `shared/.ai-agents/skills/asd-ste100/` including `SKILL.md`, `README.md`, `LICENSE`, `examples/` (`before-after.md`, `linter-edge-cases.md`), `references/` (`writing-rules.md`), and `scripts/` (`ste-lint.py`).
+- Formatted markdown files to satisfy markdownlint rules.
+- Updated `docs/SKILLS.md` with `asd-ste100` quick reference entry and detailed section.
+- Updated `README.md` skill pack count (29) and directory tree.
 
 ## Next Steps
-- Verify pre-commit hooks.
-- Commit, push branch, and open GitHub PR.
+- Verify pre-commit hooks and tests.
+- Commit changes and push branch.
+- Create pull request via `gh pr create`.
