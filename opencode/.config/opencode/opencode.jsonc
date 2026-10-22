@@ -88,6 +88,7 @@
   "plugins": [
     "./plugins/session-namer",
     "./plugins/openrouter-credits",
+    "@rizal72/oc-coffee",
   ],
   "mcp": {
     "servers": {
